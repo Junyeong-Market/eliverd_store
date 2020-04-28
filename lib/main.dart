@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:eliverdstore/common/theme.dart';
-import 'package:eliverdstore/common/string.dart';
+import 'package:Eliverd/common/theme.dart';
+import 'package:Eliverd/common/string.dart';
 
-import 'package:eliverdstore/ui/pages/home.dart';
+import 'package:Eliverd/ui/pages/home.dart';
 
 void main() {
   runApp(EliverdStore());
