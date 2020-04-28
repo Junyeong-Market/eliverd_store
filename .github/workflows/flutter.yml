@@ -2,25 +2,32 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ '*', '*/*', '!master' ]
+    branches: [ 'master', 'develop' ]
   pull_request:
     branches: [ '*', '*/*', '!master' ]
 
 jobs:
   build:
-    name: Build APK
-    runs-on: ubuntu-latest
+    name: Eliverd Test
+    runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-java@v1
+    - name: Clone Flutter repository
+      uses: actions/checkout@v2
       with:
-        java-version: '12.x'
-    - uses: subosito/flutter-action@v1
-      with:
-        channel: 'stable'
-    - name: Fetch all dependencies on flutter project
+        repository: 'flutter/flutter'
+        ref: 'master'
+        path: 'flutter'
+        fetch-depth: 0
+      - run: echo "::add-path::/$GITHUB_WORKSPACE/flutter/bin"
+      - name: Doctor Flutter repository
+        run: flutter doctor -v
+    - name: Clone Eliverd repository
+      uses: actions/checkout@v2
+    - name: Fetch all dependencies on Flutter project
       run: flutter pub get
-    - name: Test flutter project
+    - name: Analyze Dart code
+      run: flutter analyze
+    - name: Test Flutter project
       run: flutter test
-    - name: Build and export to apk from flutter project
+    - name: Build and export to apk from Flutter project
       run: flutter build apk
