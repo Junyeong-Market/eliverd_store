@@ -1,0 +1,42 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ '*', '*/*', '!master' ]
+  pull_request:
+    branches: [ '*', '*/*', '!master' ]
+
+jobs:
+  build:
+    name: Eliverd Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone Flutter repository
+      uses: actions/checkout@v2
+      with:
+        repository: 'flutter/flutter'
+        ref: 'master'
+        path: 'flutter'
+        fetch-depth: 0
+    - name: Add Flutter PATH
+      run: echo "::add-path::/$GITHUB_WORKSPACE/flutter/bin"
+    - name: Doctor Flutter repository
+      run: flutter doctor -v
+
+    - name: Clone Eliverd repository
+      uses: actions/checkout@v2
+      with:
+        path: 'eliverd'
+
+    - name: Fetch all dependencies on Flutter project
+      run: flutter pub get
+      working-directory: eliverd
+    - name: Analyze Dart code
+      run: flutter analyze
+      working-directory: eliverd
+    - name: Test Flutter project
+      run: flutter test
+      working-directory: eliverd
+    - name: Build and export to apk from Flutter project
+      run: flutter build apk
+      working-directory: eliverd
