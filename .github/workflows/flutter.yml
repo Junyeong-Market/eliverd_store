@@ -18,11 +18,13 @@ jobs:
         ref: 'master'
         path: 'flutter'
         fetch-depth: 0
-      - run: echo "::add-path::/$GITHUB_WORKSPACE/flutter/bin"
-      - name: Doctor Flutter repository
-        run: flutter doctor -v
+    - run: echo "::add-path::/$GITHUB_WORKSPACE/flutter/bin"
+    - name: Doctor Flutter repository
+      run: flutter doctor -v
+
     - name: Clone Eliverd repository
       uses: actions/checkout@v2
+
     - name: Fetch all dependencies on Flutter project
       run: flutter pub get
     - name: Analyze Dart code
