@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'flutter/flutter'
-        ref: 'master'
+        ref: 'stable'
         path: 'flutter'
         fetch-depth: 0
     - run: echo "::add-path::/$GITHUB_WORKSPACE/flutter/bin"
@@ -24,12 +24,18 @@ jobs:
 
     - name: Clone Eliverd repository
       uses: actions/checkout@v2
+      with:
+        path: 'eliverd'
 
     - name: Fetch all dependencies on Flutter project
       run: flutter pub get
+      working-directory: eliverd
     - name: Analyze Dart code
       run: flutter analyze
+      working-directory: eliverd
     - name: Test Flutter project
       run: flutter test
+      working-directory: eliverd
     - name: Build and export to apk from Flutter project
       run: flutter build apk
+      working-directory: eliverd
