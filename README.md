@@ -14,6 +14,23 @@ Eliverd 플랫폼의 상점용 모바일 애플리케이션입니다.
 - [🔗Unperknown](https://github.com/Unperknown)
 - [🔗GSM Park](https://github.com/Parkjonghyo)
 
+## 📲 실행
+
+### 불러오기
+```shell script
+git clone https://github.com/Junyeong-Market/eliverd_store.git -b master
+```
+
+### 실행
+```shell script
+flutter pub get
+flutter run
+```
+
+Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하게 실행할 수 있습니다!
+
+## 🏗️ 디자인
+
 ## License
  
 The MIT License (MIT)
