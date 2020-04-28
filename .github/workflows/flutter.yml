@@ -9,16 +9,17 @@ on:
 jobs:
   build:
     name: Eliverd Test
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Clone Flutter repository
       uses: actions/checkout@v2
       with:
         repository: 'flutter/flutter'
-        ref: 'stable'
+        ref: 'master'
         path: 'flutter'
         fetch-depth: 0
-    - run: echo "::add-path::/$GITHUB_WORKSPACE/flutter/bin"
+    - name: Add Flutter PATH
+      run: echo "::add-path::/$GITHUB_WORKSPACE/flutter/bin"
     - name: Doctor Flutter repository
       run: flutter doctor -v
 
