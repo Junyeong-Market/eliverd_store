@@ -40,17 +40,17 @@ Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하�
 |:-:|:-:|:-:|:-:|
 | 구현할 기능 | 최소한 enhancement는 포함해야 함 | 자기 자신(또는 기여에 참여하는 모든 사람) | Eliverd 스프린트 중 가장 최신 |
 
-#### 1. Branch 생성하기
+#### 2. Branch 생성하기
 
 자신의 Github username과 구현할 기능에 대한 이름을 지어서 **`develop` Branch를 기반으로** `username/기능` 형식을 지켜 만듭니다.
 
 *예시: Unperknown이 인증 절차 관련 기능을 구현할 때에 `unperknown/auth` Branch를 만든다.*
 
-#### 2. 기능 구현하기
+#### 3. 기능 구현하기
 
 이 레포지토리에 참여하는 모든 기여자는 Conventional Commits를 준수해야 합니다. 이를 숙지하여 Commit 메시지를 작성하도록 합니다.
 
-#### 3. Pull Request 요청하기
+#### 4. Pull Request 요청하기
 
 아래 메뉴얼에 따라 PR를 남기면 CI 통과 여부와 리뷰 결과에 따라서 Merge 여부를 결정합니다.
 
