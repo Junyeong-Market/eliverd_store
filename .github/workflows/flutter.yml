@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Eliverd Test ${{ matrix.os }}
+    name: Eliverd Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
