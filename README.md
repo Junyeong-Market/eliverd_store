@@ -47,6 +47,8 @@ Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하�
 
 아래 메뉴얼에 따라 PR를 남기면 CI 통과 여부와 리뷰 결과에 따라서 Merge 여부를 결정합니다.
 
+**주의: PR를 올릴 때 Base Branch는 반드시 `develop` Branch로 명시해야 합니다!**
+
 | Title | Labels | Assignees | Reviewers | Projects | Linked Issues
 |:-:|:-:|:-:|:-:|:-:|:-:|
 | 구현한 기능에 대한 요약 | enhancement | 자기 자신<br/>(또는 기여에 참여하는 모든 사람) | 최소한<br/>Unperknown(개발 담당)은 포함해야 함 | 할당된 Eliverd 스프린트 | 1번 과정에서 생성한 Issue |
