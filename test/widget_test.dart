@@ -5,8 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:Eliverd/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Splash Screen Test', (WidgetTester tester) async {
     await tester.pumpWidget(EliverdStore());
+
+    expect(find.text('Eliverd'), findsOneWidget);
+
+    await tester.pumpAndSettle(const Duration(seconds: 3));
 
     expect(find.text('0'), findsOneWidget);
     expect(find.text('1'), findsNothing);
@@ -16,5 +20,6 @@ void main() {
 
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
+
   });
 }
