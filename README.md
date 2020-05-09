@@ -29,9 +29,11 @@ Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하�
 
 #### 1. Issue 생성하기
 
-| Title | Labels | Assignees | Projects |
-|:-:|:-:|:-:|:-:|
-| 구현할 기능 | 최소한 enhancement는 포함해야 함 | 자기 자신(또는 기여에 참여하는 모든 사람) | Eliverd 스프린트 중 가장 최신 |
+아래 메뉴얼에 따라서 구현할 기능에 필요한 백로그 리스트를 모두 Issue에 올립니다.
+
+| Title | Labels | Assignees | Projects | Milestone |
+|:-:|:-:|:-:|:-:|:-:|
+| 구현할 기능 | backlog로 고정 | 기여에 참여하는 모든 사람 | Eliverd 스프린트 중 가장 최신 | Eliverd 스프린트 중 가장 최신 |
 
 #### 2. Branch 생성하기
 
@@ -39,19 +41,23 @@ Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하�
 
 *예시: Unperknown이 인증 절차 관련 기능을 구현할 때에 `unperknown/auth` Branch를 만든다.*
 
-#### 3. 기능 구현하기
+#### 3. Pull Request 만들기
 
-이 레포지토리에 참여하는 모든 기여자는 Conventional Commits를 준수해야 합니다. 이를 숙지하여 Commit 메시지를 작성하도록 합니다.
-
-#### 4. Pull Request 요청하기
-
-아래 메뉴얼에 따라 PR를 남기면 CI 통과 여부와 리뷰 결과에 따라서 Merge 여부를 결정합니다.
+반드시 아래 메뉴얼에 따라 PR를 남기고 나서 기능 구현을 진행하도록 합니다.
 
 **주의: PR를 올릴 때 Base Branch는 반드시 `develop` Branch로 명시해야 합니다!**
 
-| Title | Labels | Assignees | Reviewers | Projects | Linked Issues
-|:-:|:-:|:-:|:-:|:-:|:-:|
-| 구현한 기능에 대한 요약 | enhancement | 자기 자신<br/>(또는 기여에 참여하는 모든 사람) | 최소한<br/>Unperknown(개발 담당)은 포함해야 함 | 할당된 Eliverd 스프린트 | 1번 과정에서 생성한 Issue |
+| Title | Labels | Assignees | Reviewers | Projects | Milestone | Linked Issues |
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| 구현한 기능에 대한 요약 | new feature로 고정 | 기여에 참여하는 모든 사람 | 최소한 Unperknown(개발 담당)은 포함해야 함 | 할당된 Eliverd 스프린트 | 할당된 Eliverd 스프린트 | 1번 과정에서 만든 모든 Issue(백로그) |
+
+#### 4. 기능 구현하기
+
+이 레포지토리에 참여하는 모든 기여자는 Conventional Commits를 준수해야 합니다. 이를 숙지하여 Commit 메시지를 작성하도록 합니다.
+
+#### 5. 마무리하기
+
+3번 과정에서 올린 PR에서 CI 통과 여부와 리뷰 결과에 따라서 Merge되면 기능 구현이 마무리됩니다.
 
 ### 그 외
 
@@ -77,6 +83,12 @@ Issue를 올려서 앞 경우를 제외한 기여를 할 수 있습니다(Pull R
 
 ### 개발
 #### 5/8(금) - 프로젝트 착수 👩‍💻👨‍💻
+#### 5/18(월) - 1차 스프린트 마감1️⃣
+#### 5/28(목) - 2차 스프린트 마감2️⃣
+#### 6/7(일) - 3차 스프린트 마감3️⃣
+#### 6/17(수) - 4차 스프린트 마감4️⃣
+#### 6/27(토) - 5차 스프린트 마감5️⃣
+#### 7/7(화) - 6차 스프린트 마감6️⃣
 #### 7/8(수) - 산출물 시연(& 프리젠테이션) 👨‍🏫👩‍🏫
 
 ## License
