@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key('SplashScreenPage'),
       backgroundColor: Colors.white,
       body: Center(
         child: Text(title),
