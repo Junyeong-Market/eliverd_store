@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:Eliverd/common/string.dart';
-import './home.dart';
+import './login.dart';
 
 class SplashScreenPage extends StatefulWidget {
   @override
@@ -17,15 +17,16 @@ class _SplashScreenState extends State<SplashScreenPage> {
     Timer(
       Duration(seconds: 3),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (BuildContext context) => HomePage())));
+        builder: (BuildContext context) => LoginPage())));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key('SplashScreenPage'),
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(title),
+      body: Center(
+        child: Text(title),
       ),
     );
   }
