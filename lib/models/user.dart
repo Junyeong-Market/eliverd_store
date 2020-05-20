@@ -1,12 +1,12 @@
 class User {
   int _pid;
-  String _user_id;
+  String _userId;
   String _password;
   String _nickname;
   bool _isSeller;
 
   int get pid => _pid;
-  String get user_id => _user_id;
+  String get userId => _userId;
   String get password => _password;
   String get nickname => _nickname;
   bool get isSeller => _isSeller;
