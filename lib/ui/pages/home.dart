@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:Eliverd/common/string.dart';
-import 'package:Eliverd/common/color.dart';
+import 'package:Eliverd/ui/widgets/header.dart';
+
+import 'add_product.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,37 +10,64 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       key: Key('HomePage'),
-      body: Center(child: Text(title)),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            title: Text(addProduct),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.payment),
-            title: Text(checkOut),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.remove),
-            title: Text(removeProduct),
-          ),
+      appBar: Header(
+        height: height / 4.0,
+        child: Column(
+          children: <Widget>[
+            AppBar(
+              backgroundColor: Colors.lightBlue,
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  tooltip: '재고 검색',
+                  onPressed: () {
+                    // TO-DO: 상품 조건적 검색 BLOC 구현
+                    // TO-DO: 상품 검색 페이지로 Navigate
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  tooltip: '재고 등록',
+                  onPressed: () {
+                    Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => AddProductPage()));
+                  },
+                ),
+              ],
+              elevation: 0.0,
+            ),
+            Container(
+              width: width,
+              height: height / 8.0,
+              padding: const EdgeInsets.all(15.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  // TO-DO: User BLOC에서 사업장 이름 불러오기
+                  "사업장 이름",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 36.0,
+                    fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: ListView(
+        children: <Widget>[
+          // TO-DO: 재고 목록 Card 리스트를 children 속성에 넣기
+          // TO-DO: Product BLOC에서 재고 목록 불러오도록 하기
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: eliverdTappedColor,
-        onTap: _onItemTapped),
+      ),
     );
   }
 }
