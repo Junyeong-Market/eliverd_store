@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: Key('HomePage'),
       appBar: Header(
-        height: height / 4.0,
+        height: height / 5.0,
         child: Column(
           children: <Widget>[
             AppBar(
@@ -43,20 +43,15 @@ class _HomePageState extends State<HomePage> {
               ],
               elevation: 0.0,
             ),
-            Container(
-              width: width,
-              height: height / 8.0,
-              padding: const EdgeInsets.all(15.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  // TO-DO: User BLOC에서 사업장 이름 불러오기
-                  "사업장 이름",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 36.0,
-                    fontWeight: FontWeight.bold),
-                ),
+            Align(
+              alignment: FractionalOffset(0.1, 0.0),
+              child: Text(
+                // TO-DO: User BLOC에서 사업장 이름 불러오기
+                "사업장 이름",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36.0,
+                  fontWeight: FontWeight.bold),
               ),
             ),
           ],
