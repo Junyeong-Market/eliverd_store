@@ -1,3 +1,4 @@
+import 'package:Eliverd/common/string.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Eliverd/ui/widgets/header.dart';
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: Key('HomePage'),
       appBar: Header(
-        height: height / 5.0,
+        height: height / 4.8,
         child: Column(
           children: <Widget>[
             AppBar(
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
               actions: <Widget>[
                 IconButton(
                   icon: const Icon(Icons.search),
-                  tooltip: '재고 검색',
+                  tooltip: searchProductDesc,
                   onPressed: () {
                     // TO-DO: 상품 조건적 검색 BLOC 구현
                     // TO-DO: 상품 검색 페이지로 Navigate
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.add),
-                  tooltip: '재고 등록',
+                  tooltip: addProductDesc,
                   onPressed: () {
                     Navigator.push(
                       context, MaterialPageRoute(builder: (context) => AddProductPage()));

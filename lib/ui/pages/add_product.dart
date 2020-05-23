@@ -1,6 +1,8 @@
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:flutter/material.dart';
 
+import 'package:Eliverd/common/string.dart';
+
 class AddProductPage extends StatefulWidget {
   @override
   _AddProductPageState createState() => _AddProductPageState();
@@ -15,7 +17,7 @@ class _AddProductPageState extends State<AddProductPage> {
     return Scaffold(
       key: Key('AddProductPage'),
       appBar: Header(
-        height: height / 5.0,
+        height: height / 4.8,
         child: Column(
           children: <Widget>[
             AppBar(
@@ -25,7 +27,7 @@ class _AddProductPageState extends State<AddProductPage> {
             Align(
               alignment: FractionalOffset(0.1, 0.0),
               child: Text(
-                "상품 등록",
+                addProductTitle,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 36.0,
