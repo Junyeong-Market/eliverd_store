@@ -2,6 +2,7 @@ import 'package:Eliverd/common/string.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Eliverd/ui/widgets/header.dart';
+import 'package:Eliverd/ui/widgets/product.dart';
 
 import 'add_product.dart';
 
@@ -59,8 +60,13 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView(
         children: <Widget>[
-          // TO-DO: 재고 목록 Card 리스트를 children 속성에 넣기
           // TO-DO: Product BLOC에서 재고 목록 불러오도록 하기
+
+          // Rendered Example
+          ProductCard(
+            name: '손소독제',
+            manufacturer: '(주)컴퍼니',
+          ),
         ],
       ),
     );

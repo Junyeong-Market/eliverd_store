@@ -11,3 +11,6 @@ const updateProductTitle = '재고 수정';
 
 const searchProductDesc = '재고 검색';
 const addProductDesc = '재고 등록';
+const updateProductDesc = '재고 수정';
+const checkOutProductDesc = '상품 결제';
+const deleteProductDesc = '재고 폐기';
