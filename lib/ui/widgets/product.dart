@@ -29,11 +29,20 @@ class _ProductCardState extends State<ProductCard> {
     return new Card(
       margin: EdgeInsets.zero,
       elevation: 0.0,
+      shape: Border(
+        bottom: BorderSide(
+          color: Colors.black12,
+          width: 1,
+        ),
+      ),
       child: Column(
         children: <Widget>[
-          SizedBox(height: height / 80.0),
           Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: EdgeInsets.only(
+              left: 12.0,
+              top: 12.0,
+              right: 15.0,
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
