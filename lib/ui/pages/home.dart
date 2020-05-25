@@ -64,8 +64,33 @@ class _HomePageState extends State<HomePage> {
 
           // Rendered Example
           ProductCard(
-            name: '손소독제',
-            manufacturer: '(주)컴퍼니',
+            name: '클린 투 클린 핸드 세니타이저',
+            manufacturer: '(주)코리안코스팩',
+          ),
+          ProductCard(
+            name: '깔끔대장 강력한편백수 피톤치드',
+            manufacturer: '(주)자연',
+            price: 5600,
+          ),
+          ProductCard(
+            name: '애니케어 황사마스크 대형',
+            manufacturer: '(주)네오인터네셔날',
+            price: 8700,
+          ),
+          ProductCard(
+            name: '죽염청신원치약',
+            manufacturer: '(주)엘지생활건강',
+            price: 10500,
+          ),
+          ProductCard(
+            name: '수세미수세미',
+            manufacturer: '(주)스펀지',
+            price: 9999900,
+          ),
+          ProductCard(
+            name: '그냥 컵',
+            manufacturer: '(유)그릇전문',
+            price: 100000000,
           ),
         ],
       ),
