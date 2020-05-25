@@ -60,10 +60,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView(
         children: <Widget>[
-          // TO-DO: Product BLOC에서 재고 목록 불러오도록 하기
-
-          // Rendered Example
           SizedBox(height: height / 40.0),
+
+          // TO-DO: Product BLOC에서 재고 목록 불러오도록 하기
+          // Rendered Example
           ProductCard(
             name: '클린 투 클린 핸드 세니타이저',
             manufacturer: '(주)코리안코스팩',

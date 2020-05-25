@@ -24,11 +24,10 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-
     return new Card(
       margin: EdgeInsets.zero,
       elevation: 0.0,
+      color: Colors.transparent,
       shape: Border(
         bottom: BorderSide(
           color: Colors.black12,
