@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView(
         children: <Widget>[
-          SizedBox(height: height / 40.0),
+          SizedBox(height: height / 80.0),
 
           // TO-DO: Product BLOC에서 재고 목록 불러오도록 하기
           // Rendered Example

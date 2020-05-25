@@ -57,7 +57,7 @@ class _ProductCardState extends State<ProductCard> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 19.0,
+                          fontSize: 18.0,
                         ),
                       ),
                       Text(
@@ -77,37 +77,83 @@ class _ProductCardState extends State<ProductCard> {
                   maxLines: 1,
                   textAlign: TextAlign.right,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 20.0,
                   ),
                 ),
               ],
             ),
           ),
-          ButtonBar(
-            buttonPadding: EdgeInsets.all(0.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.open_in_new),
-                tooltip: updateProductDesc,
-                onPressed: () {
-                  Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => UpdateProductPage()));
-                },
+              Image(
+                width: 100.0,
+                height: 50.0,
+                image: AssetImage('assets/images/barcode_example.png'),
               ),
-              IconButton(
-                icon: const Icon(Icons.payment),
-                tooltip: checkOutProductDesc,
-                onPressed: () {
-                  // TO-DO: 상품 결제 페이지로 Navigate
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                tooltip: deleteProductDesc,
-                onPressed: () {
-                  // TO-DO: 재고 폐기 Alert 창 팝업
-                },
+              ButtonBar(
+                buttonMinWidth: 25.0,
+                buttonHeight: 25.0,
+                buttonPadding: EdgeInsets.all(0.0),
+                children: <Widget>[
+                  ButtonTheme(
+                    minWidth: 25.0,
+                    height: 25.0,
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0.0),
+                      textColor: Colors.blue,
+                      child: Text(
+                        '􀈎',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 22.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => UpdateProductPage()));
+                      },
+                    ),
+                  ),
+                  ButtonTheme(
+                    minWidth: 25.0,
+                    height: 25.0,
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0.0),
+                      textColor: Colors.blue,
+                      child: Text(
+                        '􀈕',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 22.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        // TO-DO: 상품 결제 페이지로 Navigate
+                      },
+                    ),
+                  ),
+                  ButtonTheme(
+                    minWidth: 25.0,
+                    height: 25.0,
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0.0),
+                      textColor: Colors.blue,
+                      child: Text(
+                        '􀈑',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 22.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        // TO-DO: 재고 폐기 Alert 창 팝업
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
