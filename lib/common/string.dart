@@ -14,3 +14,5 @@ const addProductDesc = '재고 등록';
 const updateProductDesc = '재고 수정';
 const checkOutProductDesc = '상품 결제';
 const deleteProductDesc = '재고 폐기';
+
+const priceUndefined = '가격 미정';
