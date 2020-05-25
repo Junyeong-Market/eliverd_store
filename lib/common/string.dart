@@ -16,3 +16,7 @@ const checkOutProductDesc = '상품 결제';
 const deleteProductDesc = '재고 폐기';
 
 const priceUndefined = '가격 미정';
+
+const deleteWarningContent = '한 번 삭제하면 영원히 복구할 수 없습니다.';
+const cancel = '취소';
+const delete = '삭제';

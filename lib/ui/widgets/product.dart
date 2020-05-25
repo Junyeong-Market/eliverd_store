@@ -149,7 +149,7 @@ class _ProductCardState extends State<ProductCard> {
                         ),
                       ),
                       onPressed: () {
-                        // TO-DO: 재고 폐기 Alert 창 팝업
+                        showDeleteProductAlertDialog(context, widget.name);
                       },
                     ),
                   ),
@@ -172,4 +172,62 @@ class _ProductCardState extends State<ProductCard> {
       symbol: '₩',
     )?.format(price);
   }
+}
+
+showDeleteProductAlertDialog(BuildContext context, String productTitle) {
+  Widget cancelButton = FlatButton(
+    child: Text(
+      cancel,
+      style: TextStyle(
+        color: Colors.blue,
+        fontWeight: FontWeight.w400,
+        fontSize: 17.0,
+      ),
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  Widget deleteButton = FlatButton(
+    child: Text(
+      delete,
+      style: TextStyle(
+        color: Colors.blue,
+        fontWeight: FontWeight.w700,
+        fontSize: 17.0,
+      ),
+    ),
+    onPressed: () {
+      // TO-DO: Product 삭제 BLOC 구현 및 불러오기
+    },
+  );
+
+  CupertinoAlertDialog alertDialog = CupertinoAlertDialog(
+    title: Text(
+      productTitle + "을(를) 삭제하시겠습니까?",
+      style: TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 18.0,
+      ),
+    ),
+    content: Text(
+      deleteWarningContent,
+      style: TextStyle(
+        fontWeight: FontWeight.w400,
+        fontSize: 14.0,
+      ),
+    ),
+    actions: <Widget>[
+      cancelButton,
+      deleteButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alertDialog;
+    },
+  );
 }
