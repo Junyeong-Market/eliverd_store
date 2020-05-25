@@ -12,16 +12,16 @@ class Header extends PreferredSize {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: preferredSize.height,
-      alignment: Alignment.center,
-      child: child,
-      decoration: BoxDecoration(
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(50.0),
+        bottomRight: Radius.circular(50.0),
+      ),
+      child: Container(
+        child: child,
+        height: preferredSize.height,
+        alignment: Alignment.center,
         color: Colors.lightBlue,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50.0),
-          bottomRight: Radius.circular(50.0),
-        ),
       ),
     );
   }
