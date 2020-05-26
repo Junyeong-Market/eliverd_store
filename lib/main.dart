@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:Eliverd/ui/pages/splash_screen.dart';
 
 import 'package:Eliverd/common/theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(EliverdStore());
 }
 
