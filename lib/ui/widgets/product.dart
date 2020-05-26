@@ -174,8 +174,9 @@ class _ProductCardState extends State<ProductCard> {
   }
 }
 
+// TO-DO: BLOC 구현 후 요청된 Product 개체를 매개변수로 받도록 수정(productTitle)
 showDeleteProductAlertDialog(BuildContext context, String productTitle) {
-  Widget cancelButton = FlatButton(
+  Widget cancelButton = CupertinoButton(
     child: Text(
       cancel,
       style: TextStyle(
@@ -189,7 +190,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     },
   );
 
-  Widget deleteButton = FlatButton(
+  Widget deleteButton = CupertinoButton(
     child: Text(
       delete,
       style: TextStyle(
@@ -200,6 +201,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     ),
     onPressed: () {
       // TO-DO: Product 삭제 BLOC 구현 및 불러오기
+      Navigator.pop(context);
     },
   );
 
