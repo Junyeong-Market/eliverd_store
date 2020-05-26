@@ -112,7 +112,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   ),
                 ),
                 TextField(
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.numberWithOptions(
                     decimal: true,
                   ),
