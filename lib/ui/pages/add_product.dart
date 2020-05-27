@@ -210,7 +210,7 @@ class _AddProductPageState extends State<AddProductPage> {
                           keyboardType: TextInputType.numberWithOptions(),
                           inputFormatters: [
                             WhitelistingTextInputFormatter.digitsOnly,
-                            // TO-DO: Currency mask 추가하기
+                            CurrencyInputFormatter(),
                           ],
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(2.0),
@@ -296,6 +296,24 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CurrencyInputFormatter extends TextInputFormatter {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String formattedPrice = newValue.text.replaceAll(',', '');
+
+    int price = int.parse(formattedPrice);
+
+    String newText = NumberFormat.currency(
+      locale: 'ko',
+      symbol: '',
+    ).format(price);
+
+    return newValue.copyWith(
+      text: newText,
+      selection: new TextSelection.collapsed(offset: newText.length)
     );
   }
 }
