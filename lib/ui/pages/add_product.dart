@@ -13,6 +13,12 @@ import 'package:Eliverd/common/string.dart';
 // import 'package:camera/camera.dart';
 
 class AddProductPage extends StatefulWidget {
+  const AddProductPage({Key key, this.name, this.price, this.manufacturer}) : super(key: key);
+
+  final String name;
+  final int price;
+  final String manufacturer;
+
   @override
   _AddProductPageState createState() => _AddProductPageState();
 }
@@ -21,6 +27,8 @@ class _AddProductPageState extends State<AddProductPage> {
   // TO-DO: Camera 인터페이스 구현 후 선언하도록 하기
   // CameraController _controller;
   // Future<void> _initializeControllerFuture;
+
+  // TO-DO: Product BLOC 구현 후 Controller 자동 채우기 옵션
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
   final _manufacturerController = TextEditingController();
