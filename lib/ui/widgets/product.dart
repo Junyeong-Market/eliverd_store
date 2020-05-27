@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:io' show Platform;
 
 import 'package:intl/intl.dart';
 
@@ -176,7 +177,7 @@ class _ProductCardState extends State<ProductCard> {
 
 // TO-DO: BLOC 구현 후 요청된 Product 개체를 매개변수로 받도록 수정(productTitle)
 showDeleteProductAlertDialog(BuildContext context, String productTitle) {
-  Widget cancelButton = CupertinoButton(
+  Widget cancelButton = FlatButton(
     child: Text(
       cancel,
       style: TextStyle(
@@ -189,7 +190,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     },
   );
 
-  Widget deleteButton = CupertinoButton(
+  Widget deleteButton = FlatButton(
     child: Text(
       delete,
       style: TextStyle(
@@ -203,7 +204,34 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     },
   );
 
-  CupertinoAlertDialog alertDialog = CupertinoAlertDialog(
+  Widget cupertinoCancelButton = CupertinoButton(
+    child: Text(
+      cancel,
+      style: TextStyle(
+        color: Colors.blue,
+        fontWeight: FontWeight.w400,
+      ),
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  Widget cupertinoDeleteButton = CupertinoButton(
+    child: Text(
+      delete,
+      style: TextStyle(
+        color: Colors.blue,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+    onPressed: () {
+      // TO-DO: Product 삭제 BLOC 구현 및 불러오기
+      Navigator.pop(context);
+    },
+  );
+
+  AlertDialog alertDialog = AlertDialog(
     title: Text(
       productTitle + "을(를) 삭제하시겠습니까?",
       style: TextStyle(
@@ -224,10 +252,40 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     ],
   );
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alertDialog;
-    },
+  CupertinoAlertDialog cupertinoAlertDialog = CupertinoAlertDialog(
+    title: Text(
+      productTitle + "을(를) 삭제하시겠습니까?",
+      style: TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 18.0,
+      ),
+    ),
+    content: Text(
+      deleteWarningContent,
+      style: TextStyle(
+        fontWeight: FontWeight.w400,
+        fontSize: 14.0,
+      ),
+    ),
+    actions: <Widget>[
+      cupertinoCancelButton,
+      cupertinoDeleteButton,
+    ],
   );
+
+  if (Platform.isAndroid) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alertDialog;
+      },
+    );
+  } else if (Platform.isIOS) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return cupertinoAlertDialog;
+      },
+    );
+  }
 }
