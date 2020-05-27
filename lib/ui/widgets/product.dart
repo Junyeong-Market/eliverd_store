@@ -182,7 +182,6 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
       style: TextStyle(
         color: Colors.blue,
         fontWeight: FontWeight.w400,
-        fontSize: 17.0,
       ),
     ),
     onPressed: () {
@@ -196,7 +195,6 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
       style: TextStyle(
         color: Colors.blue,
         fontWeight: FontWeight.w700,
-        fontSize: 17.0,
       ),
     ),
     onPressed: () {
