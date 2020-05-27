@@ -170,7 +170,7 @@ class _AddProductPageState extends State<AddProductPage> {
                         TextField(
                           textInputAction: TextInputAction.done,
                           controller: _nameController,
-                          //enabled: _nameController.text.length == 0,
+                          enabled: _nameController.text.length == 0,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
