@@ -20,7 +20,13 @@ const priceUndefined = '가격 미정';
 const barcodeDescWhenIncompleted = '바코드가 있다면 등록하세요.';
 const nameDescWhenIncompleted = '상품 이름을 입력하세요.';
 const priceDescWhenIncompleted = '상품 가격을 입력하세요.';
-const manufacturerDescWhenImcompleted = '제조사를 입력하세요.';
+const manufacturerDescWhenIncompleted = '제조사를 입력하세요.';
+
+const barcodeDescWhenUpdate = '바코드 수정 시 클릭하세요.';
+const nameDescWhenUpdate = '상품 이름을 수정하세요.';
+const priceDescWhenUpdate = '상품 가격을 수정하세요.';
+const manufacturerDescWhenUpdate = '제조사를 수정하세요.';
+
 const noBarcodeDesc = '바코드 없음';
 const barcodeDesc = '바코드 없음';
 const nameDesc = '상품 이름';
