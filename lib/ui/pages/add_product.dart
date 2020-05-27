@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:intl/intl.dart';
 
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/common/string.dart';
@@ -28,6 +31,8 @@ class _AddProductPageState extends State<AddProductPage> {
   // TO-DO: Camera 인터페이스 구현 후 false로 변경
   bool isBarcodeAdded = false;
   bool isLastPage = false;
+
+  String get currency => NumberFormat.compactSimpleCurrency(locale: 'ko').currencySymbol;
 
   // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
   /*
@@ -117,7 +122,7 @@ class _AddProductPageState extends State<AddProductPage> {
                 barcodeDescWhenIncompleted,
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
-                  fontSize: 27.0,
+                  fontSize: 28.0,
                 ),
                 textAlign: TextAlign.left,
               ),
@@ -139,7 +144,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       isBarcodeAdded ? noBarcodeDesc : barcodeDesc,
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
-                        fontSize: 27.0,
+                        fontSize: 28.0,
                       ),
                     ),
                   ),
@@ -158,14 +163,21 @@ class _AddProductPageState extends State<AddProductPage> {
                           _nameController.text.length != 0 ? nameDesc : nameDescWhenIncompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
-                            fontSize: 27.0,
+                            fontSize: 28.0,
                           ),
                         ),
+                        SizedBox(height: height / 120.0),
                         TextField(
                           textInputAction: TextInputAction.done,
                           controller: _nameController,
+                          //enabled: _nameController.text.length == 0,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(2.0),
+                            isDense: true,
+                          ),
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 22.0,
+                            color: Colors.black54,
                           ),
                         ),
                       ],
@@ -187,16 +199,27 @@ class _AddProductPageState extends State<AddProductPage> {
                           _priceController.text.length != 0 ? priceDesc : priceDescWhenIncompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
-                            fontSize: 27.0,
+                            fontSize: 28.0,
                           ),
                         ),
+                        SizedBox(height: height / 120.0),
                         TextField(
                           textInputAction: TextInputAction.done,
                           controller: _priceController,
                           enabled: _priceController.text.length == 0,
                           keyboardType: TextInputType.numberWithOptions(),
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter.digitsOnly,
+                            // TO-DO: Currency mask 추가하기
+                          ],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(2.0),
+                            isDense: true,
+                            prefixText: currency,
+                          ),
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 22.0,
+                            color: Colors.black54,
                           ),
                         ),
                       ],
@@ -217,16 +240,22 @@ class _AddProductPageState extends State<AddProductPage> {
                           _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
-                            fontSize: 27.0,
+                            fontSize: 28.0,
                           ),
                         ),
+                        SizedBox(height: height / 120.0),
                         TextField(
                           textInputAction: TextInputAction.done,
                           controller: _manufacturerController,
                           enabled: _manufacturerController.text.length == 0,
                           onSubmitted: _stateToLastPage,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(2.0),
+                            isDense: true,
+                          ),
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 22.0,
+                            color: Colors.black54,
                           ),
                         ),
                       ],
@@ -259,6 +288,7 @@ class _AddProductPageState extends State<AddProductPage> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                fontSize: 20.0,
               ),
             ),
             onPressed: isBarcodeAdded ? (isLastPage ? _submitProduct : null) : _stateToBarcodeAdded,
