@@ -245,7 +245,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenImcompleted,
+                          _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenIncompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
