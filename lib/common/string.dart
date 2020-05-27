@@ -17,6 +17,18 @@ const deleteProductDesc = '재고 폐기';
 
 const priceUndefined = '가격 미정';
 
+const barcodeDescWhenIncompleted = '바코드가 있다면 등록하세요.';
+const nameDescWhenIncompleted = '상품 이름을 입력하세요.';
+const priceDescWhenIncompleted = '상품 가격을 입력하세요.';
+const manufacturerDescWhenImcompleted = '제조사를 입력하세요.';
+const noBarcodeDesc = '바코드 없음';
+const barcodeDesc = '바코드 없음';
+const nameDesc = '상품 이름';
+const priceDesc = '상품 가격';
+const manufacturerDesc = '제조사';
+
 const deleteWarningContent = '한 번 삭제하면 영원히 복구할 수 없습니다.';
 const cancel = '취소';
+const submit = '완료';
+const next = '다음';
 const delete = '삭제';

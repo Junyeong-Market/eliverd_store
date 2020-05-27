@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,25 +18,65 @@ class _AddProductPageState extends State<AddProductPage> {
   // TO-DO: Camera 인터페이스 구현 후 선언하도록 하기
   // CameraController _controller;
   // Future<void> _initializeControllerFuture;
+  final _nameController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _manufacturerController = TextEditingController();
 
+  // TO-DO: Camera 인터페이스 구현 후 선언하도록 하기
   // bool isCameraReady = false;
   // bool showCapturedPhoto = false;
+  // TO-DO: Camera 인터페이스 구현 후 false로 변경
+  bool isBarcodeAdded = false;
+  bool isLastPage = false;
 
-  var isBackButtonEnabled = false;
-  var isNextButtonEnabled = true;
-  var isLastPage = false;
+  // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
+  /*
+  Future<void> _initializeCamera() async {
+    final cameras = await availableCameras();
+    final selectedCamera = cameras.first;
+
+    _controller = CameraController(selectedCamera, ResolutionPreset.medium);
+    _initializeControllerFuture = _controller.initialize();
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      isCameraReady = true;
+    });
+  }
+  */
+
+  void _stateToBarcodeAdded() {
+    setState(() {
+      isBarcodeAdded = true;
+    });
+  }
+
+  void _stateToLastPage(text) {
+    if (text.length != 0) {
+      setState(() {
+        isLastPage = true;
+      });
+    }
+  }
+
+  void _submitProduct() {
+    Navigator.pop(context);
+  }
 
   @override
   void initState() {
     super.initState();
     // TO-DO: Camera 인터페이스 구현 후 호출하도록 하기
-    // _initializeCamera();
+    // initializeCamera();
   }
 
   @override
   void dispose() {
     // TO-DO: Camera 인터페이스 구현 후 호출하도록 하기
-    // _controller.dispose();
+    // controller.dispose();
     super.dispose();
   }
 
@@ -68,113 +110,162 @@ class _AddProductPageState extends State<AddProductPage> {
       body: ListView(
         children: <Widget>[
           SizedBox(height: height / 30.0),
-          Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Text(
-              '바코드 없음',
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 27.0,
+          Visibility(
+            child: Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Text(
+                barcodeDescWhenIncompleted,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 27.0,
+                ),
+                textAlign: TextAlign.left,
               ),
             ),
+            maintainSize: false,
+            maintainAnimation: true,
+            maintainState: true,
+            visible: !isBarcodeAdded,
           ),
           // TO-DO: CameraPreview 위젯을 추가하여 바코드 인식이 되도록 하기
-          Padding(
-            padding: EdgeInsets.all(15.0),
+          Visibility(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  '상품 이름을 입력하세요.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 27.0,
+                Visibility(
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Text(
+                      isBarcodeAdded ? noBarcodeDesc : barcodeDesc,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 27.0,
+                      ),
+                    ),
                   ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: true,
                 ),
-                TextField(
-                  style: TextStyle(
-                    fontSize: 20.0,
+                Visibility(
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          _nameController.text.length != 0 ? nameDesc : nameDescWhenIncompleted,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 27.0,
+                          ),
+                        ),
+                        TextField(
+                          textInputAction: TextInputAction.done,
+                          controller: _nameController,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: isBarcodeAdded,
+                ),
+                Visibility(
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          _priceController.text.length != 0 ? priceDesc : priceDescWhenIncompleted,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 27.0,
+                          ),
+                        ),
+                        TextField(
+                          textInputAction: TextInputAction.done,
+                          controller: _priceController,
+                          enabled: _priceController.text.length == 0,
+                          keyboardType: TextInputType.numberWithOptions(),
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: _nameController.text.length != 0,
+                ),
+                Visibility(
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenImcompleted,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 27.0,
+                          ),
+                        ),
+                        TextField(
+                          textInputAction: TextInputAction.done,
+                          controller: _manufacturerController,
+                          enabled: _manufacturerController.text.length == 0,
+                          onSubmitted: _stateToLastPage,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: _priceController.text.length != 0,
                 ),
               ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '상품 가격을 입력하세요.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 27.0,
-                  ),
-                ),
-                TextField(
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                ),
-              ],
-            ),
+            maintainSize: false,
+            maintainAnimation: true,
+            maintainState: true,
+            visible: isBarcodeAdded,
           ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.transparent,
         elevation: 0.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            CupertinoButton(
-              child: Text(
-                '이전',
-                style: TextStyle(
-                  color: isBackButtonEnabled ? Colors.blue : Colors.black45,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 17.0,
-                ),
+        child: Padding(
+          padding: EdgeInsets.all(15.0),
+          child: CupertinoButton(
+            color: Colors.lightBlue,
+            disabledColor: Colors.black12,
+            child: Text(
+              isBarcodeAdded ? submit : next,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-              onPressed: isBackButtonEnabled ? () {} : null,
             ),
-            CupertinoButton(
-              child: Text(
-                '다음',
-                style: TextStyle(
-                  color: isNextButtonEnabled ? Colors.blue : Colors.black45,
-                  fontWeight: isLastPage ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 17.0,
-                ),
-              ),
-              onPressed: isNextButtonEnabled ? () {} : null,
-            ),
-          ],
+            onPressed: isBarcodeAdded ? (isLastPage ? _submitProduct : null) : _stateToBarcodeAdded,
+            borderRadius: BorderRadius.circular(25.0),
+          ),
         ),
       ),
     );
   }
-
-  // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
-  /*
-  Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    final selectedCamera = cameras.first;
-
-    _controller = CameraController(selectedCamera, ResolutionPreset.medium);
-    _initializeControllerFuture = _controller.initialize();
-
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      isCameraReady = true;
-    });
-  }
-  */
 }
