@@ -23,6 +23,10 @@ flutter run
 
 Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하게 실행할 수 있습니다!
 
+## 🏗️ 디자인
+
+![상점용 Eliverd UI - 5/29](doc/images/running_app.gif)
+
 ## ✏️ 기여 방법
 
 ### 기능 구현인 경우
@@ -66,10 +70,6 @@ Issue를 올려서 앞 경우를 제외한 기여를 할 수 있습니다(Pull R
 | Title | Assignees |
 |:-:|:-:|
 | 요청할 사항 | 자기 자신 |
-
-## 🏗️ 디자인
-
-2차 스프린트가 마무리되면(5월 28일 이후) 추가될 예정입니다!
 
 ## 👪 기여자
 
