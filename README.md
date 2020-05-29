@@ -25,7 +25,7 @@ Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하�
 
 ## 🏗️ 디자인
 
-![상점용 Eliverd UI - 5/29](doc/images/running_app.gif)
+<img src="doc/images/running_app.gif" width="281.25" height="500.25">
 
 ## ✏️ 기여 방법
 
