@@ -1,3 +1,4 @@
+import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -22,6 +24,13 @@ class _LoginPageState extends State<LoginPage> {
       body: ListView(
         padding: EdgeInsets.all(height / 15.0),
         children: <Widget>[
+          SizedBox(height: height / 32.0),
+          Image(
+            width: width / 1.3,
+            height: width / 1.3,
+            image: AssetImage('assets/images/logo/eliverd_logo_original.png'),
+          ),
+          SizedBox(height: height / 64.0),
           TextField(
             key: Key('IdField'),
             obscureText: false,
@@ -56,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                 fontSize: 16.0,
               ),
             ),
-            color: Colors.lightBlue,
+            color: eliverdColor,
             borderRadius: BorderRadius.circular(15.0),
             padding: EdgeInsets.symmetric(vertical: 15.0),
             onPressed: () => {

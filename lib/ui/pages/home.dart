@@ -1,3 +1,4 @@
+import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             AppBar(
-              backgroundColor: Colors.lightBlue,
+              backgroundColor: eliverdColor,
               actions: <Widget>[
                 IconButton(
                   icon: const Icon(Icons.search),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:Eliverd/common/color.dart';
+
 final eliverdTheme = ThemeData(
-  primarySwatch: Colors.green,
+  primaryColor: eliverdDarkColor,
+  primarySwatch: eliverdSwatchColor,
   fontFamily: 'SFProText',
   visualDensity: VisualDensity.adaptivePlatformDensity,
 );

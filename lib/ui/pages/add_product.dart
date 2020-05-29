@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:Eliverd/common/color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -104,7 +105,7 @@ class _AddProductPageState extends State<AddProductPage> {
         child: Column(
           children: <Widget>[
             AppBar(
-              backgroundColor: Colors.lightBlue,
+              backgroundColor: eliverdColor,
               elevation: 0.0,
             ),
             Align(
@@ -289,7 +290,7 @@ class _AddProductPageState extends State<AddProductPage> {
         child: Padding(
           padding: EdgeInsets.all(15.0),
           child: CupertinoButton(
-            color: Colors.lightBlue,
+            color: eliverdColor,
             disabledColor: Colors.black12,
             child: Text(
               isBarcodeAdded ? submit : next,

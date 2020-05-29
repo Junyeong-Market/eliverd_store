@@ -1,3 +1,4 @@
+import 'package:Eliverd/common/color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
@@ -104,7 +105,7 @@ class _ProductCardState extends State<ProductCard> {
                     height: 25.0,
                     child: FlatButton(
                       padding: EdgeInsets.all(0.0),
-                      textColor: Colors.blue,
+                      textColor: eliverdColor,
                       child: Text(
                         '􀈎',
                         style: TextStyle(
@@ -123,7 +124,7 @@ class _ProductCardState extends State<ProductCard> {
                     height: 25.0,
                     child: FlatButton(
                       padding: EdgeInsets.all(0.0),
-                      textColor: Colors.blue,
+                      textColor: eliverdColor,
                       child: Text(
                         '􀈕',
                         style: TextStyle(
@@ -141,7 +142,7 @@ class _ProductCardState extends State<ProductCard> {
                     height: 25.0,
                     child: FlatButton(
                       padding: EdgeInsets.all(0.0),
-                      textColor: Colors.blue,
+                      textColor: eliverdColor,
                       child: Text(
                         '􀈑',
                         style: TextStyle(
@@ -181,7 +182,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     child: Text(
       cancel,
       style: TextStyle(
-        color: Colors.blue,
+        color: eliverdColor,
         fontWeight: FontWeight.w400,
       ),
     ),
@@ -194,7 +195,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     child: Text(
       delete,
       style: TextStyle(
-        color: Colors.blue,
+        color: eliverdColor,
         fontWeight: FontWeight.w700,
       ),
     ),
@@ -208,7 +209,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     child: Text(
       cancel,
       style: TextStyle(
-        color: Colors.blue,
+        color: eliverdColor,
         fontWeight: FontWeight.w400,
       ),
     ),
@@ -221,7 +222,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
     child: Text(
       delete,
       style: TextStyle(
-        color: Colors.blue,
+        color: eliverdColor,
         fontWeight: FontWeight.w700,
       ),
     ),

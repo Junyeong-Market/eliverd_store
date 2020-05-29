@@ -1,3 +1,4 @@
+import 'package:Eliverd/common/color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class Header extends PreferredSize {
         child: child,
         height: preferredSize.height,
         alignment: Alignment.center,
-        color: Colors.lightBlue,
+        color: eliverdColor,
       ),
     );
   }
