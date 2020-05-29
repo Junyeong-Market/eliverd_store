@@ -13,23 +13,24 @@ import 'package:Eliverd/common/string.dart';
 // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
 // import 'package:camera/camera.dart';
 
-class AddProductPage extends StatefulWidget {
-  const AddProductPage({Key key, this.name, this.price, this.manufacturer}) : super(key: key);
+class UpdateProductPage extends StatefulWidget {
+  // TO-DO: Product 개체를 필드로 변경
+  const UpdateProductPage({Key key, this.name, this.price, this.manufacturer}) : super(key: key);
 
   final String name;
   final int price;
   final String manufacturer;
 
   @override
-  _AddProductPageState createState() => _AddProductPageState();
+  _UpdateProductPageState createState() => _UpdateProductPageState();
 }
 
-class _AddProductPageState extends State<AddProductPage> {
+class _UpdateProductPageState extends State<UpdateProductPage> {
   // TO-DO: Camera 인터페이스 구현 후 선언하도록 하기
   // CameraController _controller;
   // Future<void> _initializeControllerFuture;
 
-  // TO-DO: Product BLOC 구현 후 Controller 자동 채우기 옵션
+  // TO-DO: Controller를 UpdateProductPage에서 가져온 Product 개체 내용으로 화모두 초기
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
   final _manufacturerController = TextEditingController();
@@ -99,7 +100,7 @@ class _AddProductPageState extends State<AddProductPage> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      key: Key('AddProductPage'),
+      key: Key('UpdateProductPage'),
       appBar: Header(
         height: height / 4.8,
         child: Column(
@@ -111,7 +112,7 @@ class _AddProductPageState extends State<AddProductPage> {
             Align(
               alignment: FractionalOffset(0.1, 0.0),
               child: Text(
-                addProductTitle,
+                updateProductTitle,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 36.0,
@@ -128,7 +129,7 @@ class _AddProductPageState extends State<AddProductPage> {
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
-                barcodeDescWhenIncompleted,
+                barcodeDescWhenUpdate,
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 28.0,
@@ -169,7 +170,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _nameController.text.length != 0 ? nameDesc : nameDescWhenIncompleted,
+                          _nameController.text.length != 0 ? nameDesc : nameDescWhenUpdate,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
@@ -205,7 +206,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          _priceController.text.length != 0 ? priceDesc : priceDescWhenIncompleted,
+                          _priceController.text.length != 0 ? priceDesc : priceDescWhenUpdate,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
@@ -246,7 +247,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenIncompleted,
+                          _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenUpdate,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
