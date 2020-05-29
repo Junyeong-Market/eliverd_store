@@ -22,12 +22,12 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       key: Key('LoginPage'),
       body: ListView(
-        padding: EdgeInsets.all(height / 15.0),
+        padding: EdgeInsets.all(50.0),
         children: <Widget>[
           SizedBox(height: height / 32.0),
           Image(
-            width: width / 1.3,
-            height: width / 1.3,
+            width: width / 1.5,
+            height: width / 1.5,
             image: AssetImage('assets/images/logo/eliverd_logo_original.png'),
           ),
           SizedBox(height: height / 64.0),

@@ -36,8 +36,8 @@ class _SplashScreenState extends State<SplashScreenPage> {
         ),
         child: Center(
           child: Image(
-            width: width / 1.3,
-            height: width / 1.3,
+            width: width / 1.5,
+            height: width / 1.5,
             image: AssetImage('assets/images/logo/eliverd_logo_white.png'),
           ),
         ),
