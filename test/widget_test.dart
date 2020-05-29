@@ -3,8 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:Eliverd/main.dart';
 
-import 'package:Eliverd/common/string.dart';
-
 void main() {
   testWidgets('Main Test', (WidgetTester tester) async {
     final splashScreenPageKey = Key('SplashScreenPage');
