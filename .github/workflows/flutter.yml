@@ -2,7 +2,14 @@ name: Flutter CI
 
 on:
   push:
+    branches-ignore:
+      - master
+      - develop
+      - '**:no-test'
   pull_request:
+    branches:
+      - master
+      - develop
 
 jobs:
   build:
