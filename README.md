@@ -41,9 +41,10 @@ Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하�
 
 #### 2. Branch 생성하기
 
-자신의 Github username과 구현할 기능에 대한 이름을 지어서 **`develop` Branch를 기반으로** `username/기능` 형식을 지켜 만듭니다.
+자신의 Github username과 구현할 기능에 대한 이름을 지어서 **`develop` Branch를 기반으로** `feature/기능` 형식을 지켜 만듭니다.
+*(단, 별도의 CI 테스트가 필요 없는 경우는 뒤에 `:no-test` 키워드를 붙여서 만들도록 합니다.)*
 
-*예시: Unperknown이 인증 절차 관련 기능을 구현할 때에 `unperknown/auth` Branch를 만든다.*
+*예시: 인증 절차 관련 기능을 구현할 때에 `feature/auth` Branch를 만든다. 그런데, CI 테스트가 필요하지 않다고 판단되어 `feature/auth:no-test`라고 할 수 있다.*
 
 #### 3. Pull Request 만들기
 
@@ -73,11 +74,10 @@ Issue를 올려서 앞 경우를 제외한 기여를 할 수 있습니다(Pull R
 
 ## 👪 기여자
 
-### 준영이네 마트(Junyeong Market) 팀
+### 준영이네 마트(Junyeong's Market) 팀
 - [🔗Hoseung Choi](https://github.com/startergate): 프로젝트 총괄(백엔드 API 구현)
 - [🔗Unperknown](https://github.com/Unperknown): 모바일 앱 개발
 - [🔗GSM Park](https://github.com/Parkjonghyo): 데스크탑 앱 개발
-
 
 ## 🗓 마일스톤
 
