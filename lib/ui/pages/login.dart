@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
       body: ListView(
         padding: EdgeInsets.all(50.0),
         children: <Widget>[
-          SizedBox(height: height / 8.0),
+          SizedBox(height: height / 16.0),
           Image(
             width: width / 1.5,
             height: width / 1.5,
