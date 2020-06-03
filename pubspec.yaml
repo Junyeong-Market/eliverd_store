@@ -16,6 +16,7 @@ dependencies:
   meta: ^1.1.6
   equatable: ^1.0.0
   flutter_bloc: ^4.0.0
+  http: ^0.12.0
   camera:
 
 dev_dependencies:
