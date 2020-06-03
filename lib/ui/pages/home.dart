@@ -1,9 +1,13 @@
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
+import 'package:Eliverd/resources/storeProvider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/ui/widgets/product.dart';
+
+import 'package:Eliverd/resources/repository.dart';
+import 'package:http/http.dart' as http;
 
 import 'add_product.dart';
 
@@ -39,7 +43,17 @@ class _HomePageState extends State<HomePage> {
                   tooltip: addProductDesc,
                   onPressed: () {
                     Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => AddProductPage()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddProductPage(
+                          storeRepository: StoreRepository(
+                            storeAPIClient: StoreAPIClient(
+                              httpClient: http.Client(),
+                            ),
+                          ),
+                        ),
+                      )
+                    );
                   },
                 ),
               ],

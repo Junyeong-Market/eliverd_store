@@ -10,15 +10,19 @@ import 'package:intl/intl.dart';
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/common/string.dart';
 
+import 'package:Eliverd/resources/repository.dart';
+
 // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
 // import 'package:camera/camera.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({Key key, this.name, this.price, this.manufacturer}) : super(key: key);
+  const AddProductPage({Key key, this.name, this.price, this.manufacturer, this.storeRepository}) : super(key: key);
 
   final String name;
   final int price;
   final String manufacturer;
+
+  final StoreRepository storeRepository;
 
   @override
   _AddProductPageState createState() => _AddProductPageState();
