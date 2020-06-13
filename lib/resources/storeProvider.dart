@@ -8,7 +8,7 @@ import 'package:Eliverd/models/store.dart';
 
 class StoreAPIClient {
   // TO-DO: 백엔드 API 공식 배포 후 수정
-  static const baseUrl = 'http://localhost:8080';
+  static const baseUrl = 'http://localhost:8000';
   final http.Client httpClient;
 
   StoreAPIClient({
