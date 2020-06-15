@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:Eliverd/models/user.dart';
+import 'package:Eliverd/resources/accountProvider.dart';
 import 'package:meta/meta.dart';
 
 import 'package:Eliverd/resources/storeProvider.dart';
@@ -33,5 +35,28 @@ class StoreRepository {
   Future<void> removeStock(String storeId, String productId) async {
     // TO-DO: 구현 이후 수정
     await storeAPIClient.removeStock(storeId, productId);
+  }
+}
+
+class AccountRepository {
+  final AccountAPIClient accountAPIClient;
+
+  AccountRepository({@required this.accountAPIClient})
+      : assert(accountAPIClient != null);
+
+  Future<User> signUpUser(Map<String, dynamic> jsonifiedUser) async {
+    final user = accountAPIClient.signUpUser(jsonifiedUser);
+
+    return user;
+  }
+
+  Future<Session> createSession(String userId, String password) async {
+    final session = accountAPIClient.createSession(userId, password);
+
+    return session;
+  }
+
+  Future<void> deleteSession(String session) async {
+    await accountAPIClient.deleteSession(session);
   }
 }

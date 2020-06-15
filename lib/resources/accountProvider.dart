@@ -32,11 +32,38 @@ class AccountAPIClient {
     return data;
   }
 
-  Future<Session> createSession(Map<String, dynamic> jsonifiedSession) async {
-    throw new UnimplementedError();
+  Future<Session> createSession(String userId, String password) async {
+    final Map<String, dynamic> user = {
+      'user_id': userId,
+      'password': password
+    };
+
+    final url = '$baseUrl/account/session';
+    final res = await this.httpClient.post(
+      url,
+      body: user,
+      encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+    );
+
+    if (res.statusCode != 201) {
+      throw Exception('Error occurred while deleting session');
+    }
+
+    final session = json.decode(res.body)['session'];
+
+    return session;
   }
 
-  Future<Session> createSession() async {
-    throw new UnimplementedError();
+  Future<void> deleteSession(String session) async {
+    final url = '$baseUrl/account/session';
+    final res = await this.httpClient.delete(url,
+      headers: {
+        'Authorization': session
+      }
+    );
+
+    if (res.statusCode != 204) {
+      throw Exception('Error occurred while deleting session');
+    }
   }
 }
