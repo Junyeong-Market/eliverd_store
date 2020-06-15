@@ -16,32 +16,31 @@ class StoreAPIClient {
   }) : assert(httpClient != null);
 
   Future<Store> createStore(Map<String, dynamic> jsonifiedStore) async {
-    final createStoreURL = '$baseUrl/store';
-
-    final storeResponse = await this.httpClient.post(
-      createStoreURL,
+    final url = '$baseUrl/store';
+    final res = await this.httpClient.post(
+      url,
       body: jsonifiedStore,
       encoding: Encoding.getByName('application/json; charset=\'utf-8\'')
     );
 
-    if (storeResponse.statusCode != 201) {
+    if (res.statusCode != 201) {
       throw Exception('Error occurred while creating your store');
     }
 
-    final data = json.decode(storeResponse.body) as Store;
+    final data = json.decode(res.body) as Store;
 
     return data;
   }
 
   Future<List<Stock>> fetchStock(int storeId) async {
-    final stockFetchURL = '$baseUrl/store/$storeId/stocks';
-    final stockResponse = await this.httpClient.get(stockFetchURL);
+    final url = '$baseUrl/store/$storeId/stocks';
+    final res = await this.httpClient.get(url);
 
-    if (stockResponse.statusCode != 200) {
+    if (res.statusCode != 200) {
       throw Exception('Error occurred while fetching all stocks on your store');
     }
 
-    final data = json.decode(stockResponse.body) as List;
+    final data = json.decode(res.body) as List;
 
     return data.map((rawStock) {
       return Stock(
@@ -54,18 +53,18 @@ class StoreAPIClient {
   }
 
   Future<Product> addStock(String storeId, Map<String, dynamic> jsonifiedStock) async {
-    final stockAdditionURL = '$baseUrl/store/$storeId/stock';
-    final stockResponse = await this.httpClient.post(
-      stockAdditionURL,
+    final url = '$baseUrl/store/$storeId/stock';
+    final res = await this.httpClient.post(
+      url,
       body: jsonifiedStock,
       encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
     );
 
-    if (stockResponse.statusCode != 201) {
+    if (res.statusCode != 201) {
       throw Exception('Error occurred while adding stock on your store');
     }
 
-    final data = json.decode(stockResponse.body) as Product;
+    final data = json.decode(res.body) as Product;
 
     return data;
   }
@@ -75,27 +74,27 @@ class StoreAPIClient {
   }
 
   Future<Product> getProduct(String productId) async {
-    final getProductURL = '$baseUrl/product/$productId';
-    final productResponse = await this.httpClient.get(getProductURL);
+    final url = '$baseUrl/product/$productId';
+    final res = await this.httpClient.get(url);
 
-    if (productResponse.statusCode != 200) {
+    if (res.statusCode != 200) {
       throw Exception('Error occurred while fetching a product');
     }
 
-    final data = json.decode(productResponse.body) as Product;
+    final data = json.decode(res.body) as Product;
 
     return data;
   }
 
   Future<Store> getStore(String storeId) async {
-    final getStoreURL = '$baseUrl/store/$storeId';
-    final storeResponse = await this.httpClient.get(getStoreURL);
+    final url = '$baseUrl/store/$storeId';
+    final res = await this.httpClient.get(url);
 
-    if (storeResponse.statusCode != 200) {
+    if (res.statusCode != 200) {
       throw Exception('Error occurred while fetching a product');
     }
 
-    final data = json.decode(storeResponse.body) as Store;
+    final data = json.decode(res.body) as Store;
 
     return data;
   }
