@@ -1,26 +1,26 @@
 import 'package:equatable/equatable.dart';
 
 class Product extends Equatable {
-  final String id;
+  final int id;
   final String name;
-  final Manufacturer manufacturer;
+  final int manufacturerId;
   final String ian;
 
-  Product({this.id, this.name, this.manufacturer, this.ian });
+  Product({this.id, this.name, this.manufacturerId, this.ian });
 
   @override
-  List<Object> get props => [ id, name, manufacturer, ian ];
+  List<Object> get props => [ id, name, manufacturerId, ian ];
 
   @override
   String toString() {
-    return 'Product { id: $id, name: $name, manufacturer: $manufacturer, ian: $ian}';
+    return 'Product { id: $id, name: $name, manufacturer: $manufacturerId, ian: $ian}';
   }
 
-  Product copyWith({ String id, String name, Manufacturer manufacturer, String ian }) {
+  Product copyWith({ int id, String name, int manufacturerId, String ian }) {
     return Product(
       id: id,
       name: name,
-      manufacturer: manufacturer,
+      manufacturerId: manufacturerId,
       ian: ian,
     );
   }
@@ -29,7 +29,7 @@ class Product extends Equatable {
     return Product(
       id: json['id'],
       name: json['name'],
-      manufacturer: json['manufacturer'],
+      manufacturerId: json['manufacturer'],
       ian: json['ian'],
     );
   }

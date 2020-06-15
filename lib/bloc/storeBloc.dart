@@ -22,7 +22,7 @@ class StockAdditionBloc extends Bloc<StockAdditionEvent, StockAdditionState> {
     if (event is AddStock) {
       yield StockNotAddedState();
       try {
-        final Product product = await storeRepository.addStock(event.storeId, event.product);
+        final Product product = await storeRepository.addStock(event.storeId, event.jsonifiedProduct);
         yield StockAddedState(product: product);
       } catch (_) {
         yield StockAdditionErrorState();

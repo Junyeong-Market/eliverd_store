@@ -1,4 +1,3 @@
-import 'package:Eliverd/models/product.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,10 +7,10 @@ abstract class StockAdditionEvent extends Equatable {
 
 class AddStock extends StockAdditionEvent {
   final String storeId;
-  final Product product;
+  final Map<String, dynamic> jsonifiedProduct;
 
-  const AddStock({@required this.storeId, @required this.product}) : assert(storeId != null && product != null);
+  const AddStock({@required this.storeId, @required this.jsonifiedProduct}) : assert(storeId != null && jsonifiedProduct != null);
 
   @override
-  List<Object> get props => [storeId, product];
+  List<Object> get props => [storeId, jsonifiedProduct];
 }
