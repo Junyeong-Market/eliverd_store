@@ -1,19 +1,58 @@
-class Product {
-  String _id;
-  String _name;
-  String _manufacturer;
-  String _ian;
+import 'package:equatable/equatable.dart';
 
-  String get id => _id;
-  String get name => _name;
-  String get manufacturer => _manufacturer;
-  String get ian => _ian;
+class Product extends Equatable {
+  final int id;
+  final String name;
+  final Manufacturer manufacturer;
+  final String ian;
+
+  Product({this.id, this.name, this.manufacturer, this.ian });
+
+  @override
+  List<Object> get props => [ id, name, manufacturer, ian ];
+
+  @override
+  String toString() {
+    return 'Product { id: $id, name: $name, manufacturer: $manufacturer, ian: $ian}';
+  }
+
+  Product copyWith({ int id, String name, Manufacturer manufacturer, String ian }) {
+    return Product(
+      id: id,
+      name: name,
+      manufacturer: manufacturer,
+      ian: ian,
+    );
+  }
+
+  static Product fromJson(dynamic json) {
+    return Product(
+      id: json['id'],
+      name: json['name'],
+      manufacturer: json['manufacturer'],
+      ian: json['ian'],
+    );
+  }
 }
 
-class Manufacturer {
-  String _id;
-  String _name;
+class Manufacturer extends Equatable {
+  final String id;
+  final String name;
 
-  String get id => _id;
-  String get name => _name;
+  Manufacturer({this.id, this.name});
+
+  @override
+  List<Object> get props => [id, name];
+
+  @override
+  String toString() {
+    return 'Manufacturer { id: $id, name: $name }';
+  }
+
+  Manufacturer copyWith({ String id, String name }) {
+    return Manufacturer(
+      id: id,
+      name: name,
+    );
+  }
 }
