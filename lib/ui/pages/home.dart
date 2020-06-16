@@ -70,13 +70,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddProductPage(
-                            storeRepository: StoreRepository(
-                              storeAPIClient: StoreAPIClient(
-                                httpClient: http.Client(),
-                              ),
-                            ),
-                          ),
+                          builder: (context) => AddProductPage(),
                         ));
                   },
                 ),

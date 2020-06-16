@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+
 import 'package:Eliverd/common/color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,19 +11,19 @@ import 'package:intl/intl.dart';
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/common/string.dart';
 
-import 'package:Eliverd/resources/repositories/repositories.dart';
+// TO-DO: BLOC 구현 후 import
+/*
+import 'package:Eliverd/bloc/events/stockEvent.dart';
+import 'package:Eliverd/bloc/stockBloc.dart';
+import 'package:Eliverd/models/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+*/
 
 // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
 // import 'package:camera/camera.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({Key key, this.name, this.price, this.manufacturer, this.storeRepository}) : super(key: key);
-
-  final String name;
-  final int price;
-  final String manufacturer;
-
-  final StoreRepository storeRepository;
+  const AddProductPage({Key key}) : super(key: key);
 
   @override
   _AddProductPageState createState() => _AddProductPageState();
@@ -81,6 +82,20 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   void _submitProduct() {
+    /*
+    final stock = Stock(
+      product: Product(
+        name: _nameController.text,
+        manufacturer: Manufacturer(
+          name: _manufacturerController.text,
+        ),
+        ian: '',
+      ),
+      price: int.parse(_priceController.text),
+      amount: 1,
+    );
+    BlocProvider.of<StockBloc>(context).add(StockAdded(-_currentStore-, stock));
+    */
     Navigator.pop(context);
   }
 
