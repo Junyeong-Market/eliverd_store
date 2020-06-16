@@ -17,37 +17,45 @@ class Store extends Equatable {
   final String registeredNumber;
   final Point location;
 
-  const Store({this.id, this.name, this.description, this.registerer, this.registeredNumber, this.location});
+  const Store(
+      {this.id,
+      this.name,
+      this.description,
+      this.registerer,
+      this.registeredNumber,
+      this.location});
 
   @override
-  List<Object> get props => [ id, name, description, registerer, registeredNumber, location ];
+  List<Object> get props =>
+      [id, name, description, registerer, registeredNumber, location];
 
   @override
   String toString() {
     return 'Store { id: $id, name: $name, description: $description, registerer: $registerer, registeredNumber: $registeredNumber, location: $location}';
   }
 
-  Store copyWith({int id, String name, String description, User registerer, String registeredNumber, Point location}) {
-    return Store(
-      id: id,
-      name: name,
-      description: description,
-      registerer: registerer,
-      registeredNumber: registeredNumber,
-      location: location
-    );
-  }
+  Store copyWith(
+          {int id,
+          String name,
+          String description,
+          User registerer,
+          String registeredNumber,
+          Point location}) =>
+      Store(
+          id: id,
+          name: name,
+          description: description,
+          registerer: registerer,
+          registeredNumber: registeredNumber,
+          location: location);
 
-  static Store fromJson(dynamic json) {
-    return Store(
+  static Store fromJson(dynamic json) => Store(
       id: json['number'],
       name: json['name'],
       description: json['description'],
       registerer: json['registerer'],
       registeredNumber: json['registerer_number'],
-      location: json['point']
-    );
-  }
+      location: json['point']);
 }
 
 class Stock extends Equatable {
@@ -59,19 +67,24 @@ class Stock extends Equatable {
   const Stock({this.store, this.product, this.price, this.amount});
 
   @override
-  List<Object> get props => [store, product, price, amount ];
+  List<Object> get props => [store, product, price, amount];
 
   @override
-  String toString() {
-    return 'Stock{store: $store, product: $product, price: $price, amount: $amount}';
-  }
+  String toString() =>
+      'Stock{store: $store, product: $product, price: $price, amount: $amount}';
 
-  Stock copyWith({ Store store, Product product, int price, int amount }) {
-    return Stock(
-      store: store,
-      product: product,
-      price: price,
-      amount: amount,
-    );
-  }
+  Stock copyWith({Store store, Product product, int price, int amount}) =>
+      Stock(
+        store: store,
+        product: product,
+        price: price,
+        amount: amount,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'ian': product.ian,
+        'name': product.name,
+        'manufacturer': product.manufacturer.name,
+        'amount': amount,
+      };
 }
