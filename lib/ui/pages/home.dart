@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:Eliverd/bloc/events/stockEvent.dart';
@@ -35,8 +34,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _refreshCompleter = Completer<void>();
     _scrollController.addListener(_onScroll);
+
+    _refreshCompleter = Completer<void>();
+    _currentStore = Store(
+      id: 1
+    );
   }
 
   @override
@@ -65,17 +68,16 @@ class _HomePageState extends State<HomePage> {
                   tooltip: addProductDesc,
                   onPressed: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddProductPage(
-                          storeRepository: StoreRepository(
-                            storeAPIClient: StoreAPIClient(
-                              httpClient: http.Client(),
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddProductPage(
+                            storeRepository: StoreRepository(
+                              storeAPIClient: StoreAPIClient(
+                                httpClient: http.Client(),
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    );
+                        ));
                   },
                 ),
               ],
@@ -87,9 +89,9 @@ class _HomePageState extends State<HomePage> {
                 // TO-DO: User BLOC에서 사업장 이름 불러오기
                 "사업장 이름",
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 36.0,
-                  fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 36.0,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -103,11 +105,11 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        child: BlocConsumer<StockBloc, StockState> (
+        child: BlocConsumer<StockBloc, StockState>(
           listener: (context, state) {
             if (state is StockNotFetchedState) {
               BlocProvider.of<StockBloc>(context)
-                .add(StockLoaded(_currentStore));
+                  .add(StockLoaded(_currentStore));
 
               _refreshCompleter?.complete();
               _refreshCompleter = Completer();
@@ -131,10 +133,11 @@ class _HomePageState extends State<HomePage> {
                     return index >= state.stocks.length
                         ? CircularProgressIndicator()
                         : ProductCard(
-                          name: state.stocks[index].product.name,
-                          manufacturer: state.stocks[index].product.manufacturer.name,
-                          price: state.stocks[index].price,
-                        );
+                            name: state.stocks[index].product.name,
+                            manufacturer:
+                                state.stocks[index].product.manufacturer.name,
+                            price: state.stocks[index].price,
+                          );
                   },
                   itemCount: state.isAllFetched
                       ? state.stocks.length
