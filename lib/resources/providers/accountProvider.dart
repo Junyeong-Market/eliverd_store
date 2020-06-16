@@ -54,6 +54,23 @@ class AccountAPIClient {
     return session;
   }
 
+  Future<Map<String, dynamic>> validateSession(String session) async {
+    final url = '$baseUrl/account/session';
+    final res = await this.httpClient.get(url,
+        headers: {
+          'Authorization': session
+        }
+    );
+
+    if (res.statusCode != 200) {
+      throw Exception('Error occurred while validating session');
+    }
+
+    final userInfo = json.decode(res.body);
+
+    return userInfo;
+  }
+
   Future<void> deleteSession(String session) async {
     final url = '$baseUrl/account/session';
     final res = await this.httpClient.delete(url,

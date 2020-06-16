@@ -10,7 +10,8 @@ import 'package:Eliverd/bloc/states/accountState.dart';
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final AccountRepository accountRepository;
 
-  AccountBloc({@required this.accountRepository}): assert(accountRepository != null);
+  AccountBloc({@required this.accountRepository})
+      : assert(accountRepository != null);
 
   @override
   AccountState get initialState => AccountExist();
@@ -32,7 +33,8 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     yield AccountExist();
   }
 
-  Stream<AccountState> _mapNewAccountRequestedToState(NewAccountRequested event) async* {
+  Stream<AccountState> _mapNewAccountRequestedToState(
+      NewAccountRequested event) async* {
     yield AccountNotExist();
   }
 
