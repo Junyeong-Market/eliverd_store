@@ -12,10 +12,9 @@ import 'package:Eliverd/models/store.dart';
 
 class StockBloc extends Bloc<StockEvent, StockState> {
   final StoreRepository storeRepository;
-  final Store currentStore;
 
-  StockBloc({@required this.storeRepository, @required this.currentStore})
-      : assert(storeRepository != null && currentStore != null);
+  StockBloc({@required this.storeRepository})
+      : assert(storeRepository != null);
 
   @override
   StockState get initialState => StockNotFetchedState();
@@ -49,12 +48,12 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     if (!_isStockAllFetched(currentState)) {
       try {
         if (currentState is StockNotFetchedState) {
-          final stocks = await storeRepository.fetchStock(currentStore);
+          final stocks = await storeRepository.fetchStock(event.currentStore);
           yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
           return;
         }
         if (currentState is StockFetchSuccessState) {
-          final stocks = await storeRepository.fetchStock(currentStore);
+          final stocks = await storeRepository.fetchStock(event.currentStore);
           yield stocks.isEmpty
               ? currentState.copyWith(isAllFetched: true)
               : StockFetchSuccessState(
