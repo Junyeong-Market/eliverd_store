@@ -1,3 +1,7 @@
+
+import 'dart:async';
+
+import 'package:Eliverd/bloc/events/stockEvent.dart';
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/resources/providers/storeProvider.dart';
@@ -7,6 +11,11 @@ import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/ui/widgets/product.dart';
 
 import 'package:Eliverd/resources/repositories/repositories.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:Eliverd/models/models.dart';
+import 'package:Eliverd/bloc/states/stockState.dart';
+import 'package:Eliverd/bloc/stockBloc.dart';
 import 'package:http/http.dart' as http;
 
 import 'add_product.dart';
@@ -17,6 +26,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 200.0;
+
+  Completer<void> _refreshCompleter;
+  Store _currentStore;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshCompleter = Completer<void>();
+    _scrollController.addListener(_onScroll);
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -73,43 +95,69 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: ListView(
-        children: <Widget>[
-          SizedBox(height: height / 80.0),
+      body: BlocProvider(
+        create: (context) => StockBloc(
+          storeRepository: StoreRepository(
+            storeAPIClient: StoreAPIClient(
+              httpClient: http.Client(),
+            ),
+          ),
+        ),
+        child: BlocConsumer<StockBloc, StockState> (
+          listener: (context, state) {
+            if (state is StockNotFetchedState) {
+              BlocProvider.of<StockBloc>(context)
+                .add(StockLoaded(_currentStore));
 
-          // TO-DO: Product BLOC에서 재고 목록 불러오도록 하기
-          // Rendered Example
-          ProductCard(
-            name: '클린 투 클린 핸드 세니타이저',
-            manufacturer: '(주)코리안코스팩',
-          ),
-          ProductCard(
-            name: '깔끔대장 강력한편백수 피톤치드',
-            manufacturer: '(주)자연',
-            price: 5600,
-          ),
-          ProductCard(
-            name: '애니케어 황사마스크 대형',
-            manufacturer: '(주)네오인터네셔날',
-            price: 8700,
-          ),
-          ProductCard(
-            name: '죽염청신원치약',
-            manufacturer: '(주)엘지생활건강',
-            price: 10500,
-          ),
-          ProductCard(
-            name: '수세미수세미',
-            manufacturer: '(주)스펀지',
-            price: 9999900,
-          ),
-          ProductCard(
-            name: '그냥 컵',
-            manufacturer: '(유)그릇전문',
-            price: 100000000,
-          ),
-        ],
+              _refreshCompleter?.complete();
+              _refreshCompleter = Completer();
+            }
+          },
+          builder: (context, state) {
+            if (state is StockFetchErrorState) {
+              return Center(
+                child: Text('Error'),
+              );
+            } else if (state is StockFetchSuccessState) {
+              return RefreshIndicator(
+                onRefresh: () {
+                  BlocProvider.of<StockBloc>(context)
+                      .add(StockLoaded(_currentStore));
+
+                  return _refreshCompleter.future;
+                },
+                child: ListView.builder(
+                  itemBuilder: (BuildContext context, int index) {
+                    return index >= state.stocks.length
+                        ? CircularProgressIndicator()
+                        : ProductCard(
+                          name: state.stocks[index].product.name,
+                          manufacturer: state.stocks[index].product.manufacturer.name,
+                          price: state.stocks[index].price,
+                        );
+                  },
+                  itemCount: state.isAllFetched
+                      ? state.stocks.length
+                      : state.stocks.length + 1,
+                  controller: _scrollController,
+                ),
+              );
+            }
+
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      BlocProvider.of<StockBloc>(context).add(StockLoaded(_currentStore));
+    }
   }
 }
