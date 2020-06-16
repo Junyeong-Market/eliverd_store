@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:Eliverd/models/user.dart';
+import 'package:Eliverd/models/product.dart';
+
 class Point {
   final double x;
   final double y;
@@ -11,7 +14,7 @@ class Store extends Equatable {
   final int id;
   final String name;
   final String description;
-  final int registerer;
+  final User registerer;
   final String registeredNumber;
   final Point location;
 
@@ -25,7 +28,7 @@ class Store extends Equatable {
     return 'Store { id: $id, name: $name, description: $description, registerer: $registerer, registeredNumber: $registeredNumber, location: $location}';
   }
 
-  Store copyWith({int id, String name, String description, int registerer, String registeredNumber, Point location}) {
+  Store copyWith({int id, String name, String description, User registerer, String registeredNumber, Point location}) {
     return Store(
       id: id,
       name: name,
@@ -49,25 +52,25 @@ class Store extends Equatable {
 }
 
 class Stock extends Equatable {
-  final int storeId;
-  final int productId;
+  final Store store;
+  final Product product;
   final int price;
   final int amount;
 
-  const Stock({this.storeId, this.productId, this.price, this.amount});
+  const Stock({this.store, this.product, this.price, this.amount});
 
   @override
-  List<Object> get props => [storeId, productId, price, amount ];
+  List<Object> get props => [store, product, price, amount ];
 
   @override
   String toString() {
-    return 'Stock{store: $storeId, product: $productId, price: $price, amount: $amount}';
+    return 'Stock{store: $store, product: $product, price: $price, amount: $amount}';
   }
 
-  Stock copyWith({ int storeId, int product, int price, int amount }) {
+  Stock copyWith({ Store store, Product product, int price, int amount }) {
     return Stock(
-      storeId: storeId,
-      productId: product,
+      store: store,
+      product: product,
       price: price,
       amount: amount,
     );

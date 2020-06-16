@@ -46,7 +46,7 @@ class AccountAPIClient {
     );
 
     if (res.statusCode != 201) {
-      throw Exception('Error occurred while deleting session');
+      throw Exception('Error occurred while creating session');
     }
 
     final session = json.decode(res.body)['session'];

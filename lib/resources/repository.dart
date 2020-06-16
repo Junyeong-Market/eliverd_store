@@ -20,8 +20,8 @@ class StoreRepository {
     return store;
   }
 
-  Future<List<Stock>> fetchStock(int storeId) async {
-    final stocks = await storeAPIClient.fetchStock(storeId);
+  Future<List<Stock>> fetchStock(Store store) async {
+    final stocks = await storeAPIClient.fetchStock(store);
 
     return stocks;
   }

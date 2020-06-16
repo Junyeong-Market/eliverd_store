@@ -32,7 +32,8 @@ class StoreAPIClient {
     return data;
   }
 
-  Future<List<Stock>> fetchStock(int storeId) async {
+  Future<List<Stock>> fetchStock(Store store) async {
+    final storeId = store.id;
     final url = '$baseUrl/store/$storeId/stocks';
     final res = await this.httpClient.get(url);
 
@@ -44,8 +45,8 @@ class StoreAPIClient {
 
     return data.map((rawStock) {
       return Stock(
-        storeId: storeId,
-        productId: rawStock['productId'],
+        store: store,
+        product: rawStock['product'],
         price: rawStock['price'],
         amount: rawStock['number'],
       );
