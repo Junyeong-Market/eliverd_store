@@ -4,6 +4,7 @@ import 'package:Eliverd/models/models.dart';
 
 abstract class StockEvent extends Equatable {
   final Store currentStore;
+
   const StockEvent(this.currentStore);
 
   @override
@@ -41,7 +42,6 @@ class StockUpdated extends StockEvent {
     return 'StockUpdated{ stock: $stock }';
   }
 }
-
 
 class StockDeleted extends StockEvent {
   final Stock stock;

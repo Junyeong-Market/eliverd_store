@@ -7,7 +7,8 @@ class User extends Equatable {
   final String nickname;
   final bool isSeller;
 
-  const User({ this.pid, this.userId, this.password, this.nickname, this.isSeller });
+  const User(
+      {this.pid, this.userId, this.password, this.nickname, this.isSeller});
 
   @override
   List<Object> get props => [pid, userId, password, nickname, isSeller];
@@ -17,7 +18,12 @@ class User extends Equatable {
     return 'User{ pid: $pid, userId: $userId, password: $password, nickname: $nickname, isSeller: $isSeller }';
   }
 
-  User copyWith({ int pid, String userId, String password, String nickname, bool isSeller }) {
+  User copyWith(
+      {int pid,
+      String userId,
+      String password,
+      String nickname,
+      bool isSeller}) {
     return User(
       pid: pid,
       userId: userId,
@@ -43,7 +49,7 @@ class Session extends Equatable {
   final int pid;
   final DateTime expireAt;
 
-  const Session({ this.id, this.pid, this.expireAt });
+  const Session({this.id, this.pid, this.expireAt});
 
   @override
   List<Object> get props => [id, pid, expireAt];
@@ -53,7 +59,7 @@ class Session extends Equatable {
     return 'Session{ id: $id, pid: $pid, expireAt: $expireAt }';
   }
 
-  Session copyWith({ int id, int pid, DateTime expireAt }) {
+  Session copyWith({int id, int pid, DateTime expireAt}) {
     return Session(
       id: id,
       pid: pid,

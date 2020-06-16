@@ -16,9 +16,10 @@ class StockFetchSuccessState extends StockState {
   final List<Stock> stocks;
   final bool isAllFetched;
 
-  const StockFetchSuccessState({@required this.stocks, this.isAllFetched}) : assert(stocks != null);
+  const StockFetchSuccessState({@required this.stocks, this.isAllFetched})
+      : assert(stocks != null);
 
-  StockFetchSuccessState copyWith({ List<Stock> stocks, bool isAllFetched }) {
+  StockFetchSuccessState copyWith({List<Stock> stocks, bool isAllFetched}) {
     return StockFetchSuccessState(
       stocks: stocks,
       isAllFetched: isAllFetched,

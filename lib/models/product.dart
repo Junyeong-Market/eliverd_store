@@ -6,33 +6,30 @@ class Product extends Equatable {
   final Manufacturer manufacturer;
   final String ian;
 
-  Product({this.id, this.name, this.manufacturer, this.ian });
+  Product({this.id, this.name, this.manufacturer, this.ian});
 
   @override
-  List<Object> get props => [ id, name, manufacturer, ian ];
+  List<Object> get props => [id, name, manufacturer, ian];
 
   @override
-  String toString() {
-    return 'Product { id: $id, name: $name, manufacturer: $manufacturer, ian: $ian}';
-  }
+  String toString() =>
+      'Product { id: $id, name: $name, manufacturer: $manufacturer, ian: $ian}';
 
-  Product copyWith({ int id, String name, Manufacturer manufacturer, String ian }) {
-    return Product(
-      id: id,
-      name: name,
-      manufacturer: manufacturer,
-      ian: ian,
-    );
-  }
+  Product copyWith(
+          {int id, String name, Manufacturer manufacturer, String ian}) =>
+      Product(
+        id: id,
+        name: name,
+        manufacturer: manufacturer,
+        ian: ian,
+      );
 
-  static Product fromJson(dynamic json) {
-    return Product(
-      id: json['id'],
-      name: json['name'],
-      manufacturer: json['manufacturer'],
-      ian: json['ian'],
-    );
-  }
+  static Product fromJson(dynamic json) => Product(
+        id: json['id'],
+        name: json['name'],
+        manufacturer: json['manufacturer'],
+        ian: json['ian'],
+      );
 }
 
 class Manufacturer extends Equatable {
@@ -45,14 +42,10 @@ class Manufacturer extends Equatable {
   List<Object> get props => [id, name];
 
   @override
-  String toString() {
-    return 'Manufacturer { id: $id, name: $name }';
-  }
+  String toString() => 'Manufacturer { id: $id, name: $name }';
 
-  Manufacturer copyWith({ String id, String name }) {
-    return Manufacturer(
-      id: id,
-      name: name,
-    );
-  }
+  Manufacturer copyWith({String id, String name}) => Manufacturer(
+        id: id,
+        name: name,
+      );
 }
