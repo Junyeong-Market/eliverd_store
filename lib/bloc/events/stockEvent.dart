@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:Eliverd/models/store.dart';
+import 'package:Eliverd/models/models.dart';
 
 abstract class StockEvent extends Equatable {
   final Store currentStore;
