@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/common/string.dart';
 
-import 'package:Eliverd/resources/repository.dart';
+import 'package:Eliverd/resources/repositories/repositories.dart';
 
 // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
 // import 'package:camera/camera.dart';

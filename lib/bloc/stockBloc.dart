@@ -6,9 +6,9 @@ import 'package:bloc/bloc.dart';
 import 'package:Eliverd/bloc/events/stockEvent.dart';
 import 'package:Eliverd/bloc/states/stockState.dart';
 
-import 'package:Eliverd/resources/repository.dart';
+import 'package:Eliverd/resources/repositories/repositories.dart';
 
-import 'package:Eliverd/models/store.dart';
+import 'package:Eliverd/models/models.dart';
 
 class StockBloc extends Bloc<StockEvent, StockState> {
   final StoreRepository storeRepository;

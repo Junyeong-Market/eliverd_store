@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:Eliverd/models/user.dart';
-import 'package:Eliverd/models/product.dart';
+import 'package:Eliverd/models/models.dart';
 
 class Point {
   final double x;
