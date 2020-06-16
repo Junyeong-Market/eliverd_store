@@ -9,9 +9,9 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/camera-0.5.8+2/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/camera-0.5.8+2/android" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
