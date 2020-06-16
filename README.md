@@ -41,7 +41,7 @@ Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하�
 
 #### 2. Branch 생성하기
 
-자신이 구현할 기능에 대한 이름을 지어서 **`develop` Branch를 기반으로** `feature/기능` 형식을 지켜 만듭니다.
+**`develop` Branch를 기반으로** `feature/기능` 형식을 지켜 만듭니다.
 **(단, 별도의 CI 테스트가 필요 없는 경우는 뒤에 `:no-test` 키워드를 붙여서 만들도록 합니다.)**
 
 *예시: 인증 절차 관련 기능을 구현할 때에 `feature/auth` Branch를 만든다. 그런데, CI 테스트가 필요하지 않다고 판단되어 `feature/auth:no-test`라고 할 수 있다.*
