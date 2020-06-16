@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import 'package:Eliverd/models/store.dart';
+import 'package:Eliverd/models/models.dart';
 
 abstract class StockState extends Equatable {
   const StockState();
