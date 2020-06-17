@@ -49,22 +49,26 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapSignInAuthenticationToState(
       SignInAuthentication event) async* {
-    final session =
-        await accountRepository.createSession(event.userId, event.password);
+    try {
+      final session =
+      await accountRepository.createSession(event.userId, event.password);
 
-    if (session == null) {
-      yield NotAuthenticated();
+      if (session == null) {
+        yield NotAuthenticated();
+      }
+
+      final data = await accountRepository.validateSession(session.id);
+
+      // TO-DO: Authenticated state 재정의 후 수정
+      final authenticatedUser =
+      User(userId: data['user_id'], nickname: data['nickname']);
+
+      final stores = Store();
+
+      yield Authenticated(authenticatedUser, stores);
+    } catch (_) {
+      yield AuthenticationError();
     }
-
-    final data = await accountRepository.validateSession(session.id);
-
-    // TO-DO: Authenticated state 재정의 후 수정
-    final authenticatedUser =
-        User(userId: data['user_id'], nickname: data['nickname']);
-
-    final stores = Store();
-
-    yield Authenticated(authenticatedUser, stores);
   }
 
   Stream<AuthenticationState> _mapSignOutAuthenticationToState(

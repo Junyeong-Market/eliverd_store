@@ -27,6 +27,8 @@ class _LoginPageState extends State<LoginPage> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool errorOccurred = false;
+
   AuthenticationBloc _authenticationBloc;
   AccountBloc _accountBloc;
 
@@ -64,7 +66,22 @@ class _LoginPageState extends State<LoginPage> {
               value: _accountBloc,
             ),
           ],
-          child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+            listener: (context, state) {
+              if (state is Authenticated) {
+                errorOccurred = false;
+                // TO-DO: Authenticated state 재정의 후 로그인된 사용자(사업자) 및 그가 관리하는 사업장 정보 불러오기
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(
+                          currentStore: state.store
+                      ),
+                    ));
+              } else if (state is NotAuthenticated || state is AuthenticationError) {
+                errorOccurred = true;
+              }
+            },
             builder: (context, state) {
               return ListView(
                 padding: EdgeInsets.all(50.0),
@@ -77,6 +94,25 @@ class _LoginPageState extends State<LoginPage> {
                         'assets/images/logo/eliverd_logo_original.png'),
                   ),
                   SizedBox(height: height / 32.0),
+                  Visibility(
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          loginErrorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: height / 120.0),
+                      ],
+                    ),
+                    maintainSize: false,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    visible: errorOccurred,
+                  ),
                   TextField(
                     key: Key('IdField'),
                     obscureText: false,
@@ -117,19 +153,6 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       _authenticationBloc.add(SignInAuthentication(
                           _idController.text, _passwordController.text));
-
-                      if (state is Authenticated) {
-                        // TO-DO: Authenticated state 재정의 후 로그인된 사용자(사업자) 및 그가 관리하는 사업장 정보 불러오기
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(
-                                  currentStore: state.store
-                              ),
-                            ));
-                      } else if (state is NotAuthenticated) {
-                        // TO-DO: 로그인 실패 Toast 메시지
-                      }
                     },
                   ),
                   FlatButton(

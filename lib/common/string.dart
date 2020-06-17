@@ -6,6 +6,8 @@ const passwordText = '비밀번호';
 const login = '로그인';
 const notSignUp = '아직 회원이 아니십니까?';
 
+const loginErrorMessage = '입력하신 계정은 존재하지 않는 계정입니다. 아이디와 비밀번호를 다시 입력해주세요.';
+
 const addProductTitle = '재고 등록';
 const updateProductTitle = '재고 수정';
 
