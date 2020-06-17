@@ -274,36 +274,47 @@ class _SignUpPageState extends State<SignUpPage> {
                   visible: _passwordController.text.length != 0,
                 ),
                 SizedBox(height: height / 64.0),
-                CupertinoButton(
-                  key: Key('SignUpButton'),
-                  child: Text(
-                    signUpButtonDesc,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  color: eliverdColor,
-                  borderRadius: BorderRadius.circular(15.0),
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  onPressed: _passwordController.text.length != 0
-                      ? () {
-                          Map<String, dynamic> jsonifiedUser = {
-                            'name': _nameController.text,
-                            'nickname': _nicknameController.text,
-                            'user_id': _userIdController.text,
-                            'password': _passwordController.text,
-                            'is_seller': _isSeller.toString(),
-                          };
-
-                          _accountBloc.add(AccountCreated(jsonifiedUser));
-                        }
-                      : null,
-                ),
               ],
             );
           },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0.0,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 24.0,
+            right: 24.0,
+            bottom: 24.0,
+          ),
+          child: CupertinoButton(
+            key: Key('SignUpButton'),
+            child: Text(
+              signUpButtonDesc,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+            color: eliverdColor,
+            borderRadius: BorderRadius.circular(15.0),
+            padding: EdgeInsets.symmetric(vertical: 15.0),
+            onPressed: _passwordController.text.length != 0
+                ? () {
+                    Map<String, dynamic> jsonifiedUser = {
+                      'name': _nameController.text,
+                      'nickname': _nicknameController.text,
+                      'user_id': _userIdController.text,
+                      'password': _passwordController.text,
+                      'is_seller': _isSeller.toString(),
+                    };
+
+                    _accountBloc.add(AccountCreated(jsonifiedUser));
+                  }
+                : null,
+          ),
         ),
       ),
     );
