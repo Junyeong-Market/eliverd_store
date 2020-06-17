@@ -56,6 +56,11 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
         key: Key('LoginPage'),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          brightness: Brightness.light,
+          elevation: 0.0,
+        ),
         body: MultiBlocProvider(
           providers: [
             BlocProvider<AuthenticationBloc>.value(

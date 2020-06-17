@@ -47,6 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
       key: Key('SignUpPage'),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        brightness: Brightness.light,
         elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
