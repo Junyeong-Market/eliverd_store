@@ -14,7 +14,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       : assert(accountRepository != null);
 
   @override
-  AccountState get initialState => AccountExist();
+  AccountState get initialState => AccountInitial();
 
   @override
   Stream<AccountState> mapEventToState(AccountEvent event) async* {
@@ -22,23 +22,21 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       yield* _mapAccountCreatedToState(event);
     } else if (event is NewAccountRequested) {
       yield* _mapNewAccountRequestedToState(event);
-    } else if (event is AccountError) {
-      yield* _mapAccountErrorToState(event);
     }
   }
 
   Stream<AccountState> _mapAccountCreatedToState(AccountCreated event) async* {
-    await accountRepository.signUpUser(event.jsonifiedUser);
+    try {
+      await accountRepository.signUpUser(event.jsonifiedUser);
 
-    yield AccountExist();
+      yield AccountDoneCreate();
+    } catch (_) {
+      yield AccountError();
+    }
   }
 
   Stream<AccountState> _mapNewAccountRequestedToState(
       NewAccountRequested event) async* {
-    yield AccountNotExist();
-  }
-
-  Stream<AccountState> _mapAccountErrorToState(AccountError event) async* {
-    yield AccountNotExist();
+    yield AccountOnCreate();
   }
 }

@@ -7,8 +7,6 @@ abstract class AccountEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AccountInitial extends AccountEvent {}
-
 class NewAccountRequested extends AccountEvent {}
 
 class AccountCreated extends AccountEvent {
@@ -24,5 +22,3 @@ class AccountCreated extends AccountEvent {
     return 'AccountCreated{ jsonifiedUser: $jsonifiedUser }';
   }
 }
-
-class AccountError extends AccountEvent {}

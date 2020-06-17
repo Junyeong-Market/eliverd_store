@@ -7,6 +7,10 @@ abstract class AccountState extends Equatable {
   List<Object> get props => [];
 }
 
-class AccountNotExist extends AccountState {}
+class AccountInitial extends AccountState {}
 
-class AccountExist extends AccountState {}
+class AccountOnCreate extends AccountState {}
+
+class AccountDoneCreate extends AccountState {}
+
+class AccountError extends AccountState {}

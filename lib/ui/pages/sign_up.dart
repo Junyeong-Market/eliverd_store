@@ -56,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
         value: _accountBloc,
         child: BlocConsumer<AccountBloc, AccountState>(
           listener: (context, state) {
-            if (state is AccountExist) {
+            if (state is AccountDoneCreate) {
               Navigator.pop(context);
             }
           },
