@@ -29,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void initState() {
     super.initState();
-    
+
     _accountBloc = AccountBloc(
       accountRepository: AccountRepository(
         accountAPIClient: AccountAPIClient(
@@ -48,9 +48,7 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        iconTheme: IconThemeData(
-            color: Colors.black
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: BlocProvider<AccountBloc>.value(
         value: _accountBloc,
@@ -86,7 +84,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _nameController.text.length != 0 ? usernameDesc : usernameDescWhenImcompleted,
+                          _nameController.text.length != 0
+                              ? usernameDesc
+                              : usernameDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 26.0,
@@ -124,7 +124,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _nicknameController.text.length != 0 ? nicknameDesc : nicknameDescWhenImcompleted,
+                          _nicknameController.text.length != 0
+                              ? nicknameDesc
+                              : nicknameDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 26.0,
@@ -162,7 +164,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _userIdController.text.length != 0 ? idDesc : idDescWhenImcompleted,
+                          _userIdController.text.length != 0
+                              ? idDesc
+                              : idDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 26.0,
@@ -200,7 +204,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _passwordController.text.length != 0 ? passwordDesc : passwordDescWhenImcompleted,
+                          _passwordController.text.length != 0
+                              ? passwordDesc
+                              : passwordDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 26.0,
@@ -250,7 +256,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             CupertinoSwitch(
                               value: _isSeller,
-                              onChanged: (value) { setState(() { _isSeller = value; }); },
+                              onChanged: (value) {
+                                setState(() {
+                                  _isSeller = value;
+                                });
+                              },
                             ),
                           ],
                         ),
@@ -277,17 +287,19 @@ class _SignUpPageState extends State<SignUpPage> {
                   color: eliverdColor,
                   borderRadius: BorderRadius.circular(15.0),
                   padding: EdgeInsets.symmetric(vertical: 15.0),
-                  onPressed: _passwordController.text.length != 0 ? () {
-                    Map<String, dynamic> jsonifiedUser = {
-                      'name': _nameController.text,
-                      'nickname': _nicknameController.text,
-                      'user_id': _userIdController.text,
-                      'password': _passwordController.text,
-                      'is_seller': _isSeller.toString(),
-                    };
+                  onPressed: _passwordController.text.length != 0
+                      ? () {
+                          Map<String, dynamic> jsonifiedUser = {
+                            'name': _nameController.text,
+                            'nickname': _nicknameController.text,
+                            'user_id': _userIdController.text,
+                            'password': _passwordController.text,
+                            'is_seller': _isSeller.toString(),
+                          };
 
-                    _accountBloc.add(AccountCreated(jsonifiedUser));
-                  } : null,
+                          _accountBloc.add(AccountCreated(jsonifiedUser));
+                        }
+                      : null,
                 ),
               ],
             );
