@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> {
             httpClient: http.Client(),
         ),
       ),
+      currentStore: widget.currentStore,
     );
   }
 

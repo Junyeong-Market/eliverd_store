@@ -123,7 +123,9 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => HomePage(),
+                              builder: (context) => HomePage(
+                                  currentStore: state.store
+                              ),
                             ));
                       } else if (state is NotAuthenticated) {
                         // TO-DO: 로그인 실패 Toast 메시지
