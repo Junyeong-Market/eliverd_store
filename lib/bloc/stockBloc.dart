@@ -12,9 +12,11 @@ import 'package:Eliverd/models/models.dart';
 
 class StockBloc extends Bloc<StockEvent, StockState> {
   final StoreRepository storeRepository;
+  final Store currentStore;
 
-  StockBloc({@required this.storeRepository})
-      : assert(storeRepository != null);
+  StockBloc({@required this.storeRepository, @required this.currentStore})
+      : assert(storeRepository != null),
+        assert(currentStore != null);
 
   @override
   StockState get initialState => StockNotFetchedState();
@@ -47,12 +49,12 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     if (!_isStockAllFetched(currentState)) {
       try {
         if (currentState is StockNotFetchedState) {
-          final stocks = await storeRepository.fetchStock(event.currentStore);
+          final stocks = await storeRepository.fetchStock(currentStore);
           yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
           return;
         }
         if (currentState is StockFetchSuccessState) {
-          final stocks = await storeRepository.fetchStock(event.currentStore);
+          final stocks = await storeRepository.fetchStock(currentStore);
           yield stocks.isEmpty
               ? currentState.copyWith(isAllFetched: true)
               : StockFetchSuccessState(
@@ -69,7 +71,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
   Stream<StockState> _mapStockAddedToState(StockAdded event) async* {
     if (state is StockFetchSuccessState) {
       await storeRepository.addStock(
-          event.currentStore.id, event.stock.toJson());
+          event.stock.store.id, event.stock.toJson());
 
       final List<Stock> updatedStocks = (state as StockFetchSuccessState).stocks
           .toList()
@@ -81,7 +83,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
   Stream<StockState> _mapStockUpdatedToState(StockUpdated event) async* {
     if (state is StockFetchSuccessState) {
       await storeRepository.updateStock(
-          event.currentStore.id, event.stock.toJson());
+          event.stock.store.id, event.stock.toJson());
 
       final List<Stock> updatedStocks = (state as StockFetchSuccessState)
           .stocks
@@ -95,7 +97,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
   Stream<StockState> _mapStockDeletedToState(StockDeleted event) async* {
     if (state is StockFetchSuccessState) {
       await storeRepository.removeStock(
-          event.currentStore.id, event.stock.toJson());
+          event.stock.store.id, event.stock.toJson());
 
       final List<Stock> updatedStocks = (state as StockFetchSuccessState).stocks
           .toList()

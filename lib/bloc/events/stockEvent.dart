@@ -3,56 +3,37 @@ import 'package:equatable/equatable.dart';
 import 'package:Eliverd/models/models.dart';
 
 abstract class StockEvent extends Equatable {
-  final Store currentStore;
-
-  const StockEvent(this.currentStore);
+  const StockEvent();
 
   @override
-  List<Object> get props => [currentStore];
+  List<Object> get props => [];
 }
 
-class StockLoaded extends StockEvent {
-  StockLoaded(Store currentStore) : super(currentStore);
-}
+class StockLoaded extends StockEvent {}
 
 class StockAdded extends StockEvent {
   final Stock stock;
 
-  StockAdded(currentStore, this.stock) : super(currentStore);
+  const StockAdded(this.stock);
 
   @override
-  List<Object> get props => [stock, currentStore];
-
-  @override
-  String toString() {
-    return 'StockAdded{ stock: $stock }';
-  }
+  List<Object> get props => [stock];
 }
 
 class StockUpdated extends StockEvent {
   final Stock stock;
 
-  StockUpdated(currentStore, this.stock) : super(currentStore);
+  const StockUpdated(this.stock);
 
   @override
-  List<Object> get props => [stock, currentStore];
-
-  @override
-  String toString() {
-    return 'StockUpdated{ stock: $stock }';
-  }
+  List<Object> get props => [stock];
 }
 
 class StockDeleted extends StockEvent {
   final Stock stock;
 
-  StockDeleted(currentStore, this.stock) : super(currentStore);
+  const StockDeleted(this.stock);
 
   @override
-  List<Object> get props => [stock, currentStore];
-
-  @override
-  String toString() {
-    return 'StockDeleted{ stock: $stock }';
-  }
+  List<Object> get props => [stock];
 }
