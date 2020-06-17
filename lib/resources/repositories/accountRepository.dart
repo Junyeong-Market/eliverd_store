@@ -23,13 +23,13 @@ class AccountRepository {
     return session;
   }
 
-  Future<Map<String, dynamic>> validateSession(String session) async {
+  Future<Map<String, dynamic>> validateSession(int session) async {
     final userInfo = await accountAPIClient.validateSession(session);
 
     return userInfo;
   }
 
-  Future<void> deleteSession(String session) async {
+  Future<void> deleteSession(int session) async {
     await accountAPIClient.deleteSession(session);
   }
 }

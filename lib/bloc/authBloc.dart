@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:Eliverd/bloc/events/authEvent.dart';
 import 'package:Eliverd/bloc/states/authState.dart';
 
+import 'package:Eliverd/models/models.dart';
 import 'package:Eliverd/resources/repositories/repositories.dart';
 
 class AuthenticationBloc
@@ -30,13 +31,20 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapValidateAuthenticationToState(
       ValidateAuthentication event) async* {
-    final foundUser = await accountRepository.validateSession(event.token);
+    final session = int.parse(event.token);
+    final data = await accountRepository.validateSession(session);
 
-    if (foundUser.isEmpty) {
+    if (data.isEmpty) {
       yield NotAuthenticated();
-    } else {
-      yield Authenticated();
     }
+
+    // TO-DO: Authenticated state 재정의 후 수정
+    final authenticatedUser =
+        User(userId: data['user_id'], nickname: data['nickname']);
+
+    final stores = Store();
+
+    yield Authenticated(authenticatedUser, stores);
   }
 
   Stream<AuthenticationState> _mapSignInAuthenticationToState(
@@ -44,16 +52,25 @@ class AuthenticationBloc
     final session =
         await accountRepository.createSession(event.userId, event.password);
 
-    if (session != null) {
-      yield Authenticated();
-    } else {
+    if (session == null) {
       yield NotAuthenticated();
     }
+
+    final data = await accountRepository.validateSession(session.id);
+
+    // TO-DO: Authenticated state 재정의 후 수정
+    final authenticatedUser =
+        User(userId: data['user_id'], nickname: data['nickname']);
+
+    final stores = Store();
+
+    yield Authenticated(authenticatedUser, stores);
   }
 
   Stream<AuthenticationState> _mapSignOutAuthenticationToState(
       SignOutAuthentication event) async* {
-    await accountRepository.deleteSession(event.token);
+    final session = int.parse(event.token);
+    await accountRepository.deleteSession(session);
 
     yield NotAuthenticated();
   }

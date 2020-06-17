@@ -20,6 +20,10 @@ import 'package:http/http.dart' as http;
 import 'add_product.dart';
 
 class HomePage extends StatefulWidget {
+  final Store currentStore;
+
+  const HomePage({Key key, @required this.currentStore}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -27,18 +31,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
+  StockBloc _stockBloc;
 
   Completer<void> _refreshCompleter;
-  Store _currentStore;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-
     _refreshCompleter = Completer<void>();
-    _currentStore = Store(
-      id: 1
+    _stockBloc = StockBloc(
+      storeRepository: StoreRepository(
+        storeAPIClient: StoreAPIClient(
+            httpClient: http.Client(),
+        ),
+      ),
     );
   }
 
@@ -91,19 +98,12 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: BlocProvider(
-        create: (context) => StockBloc(
-          storeRepository: StoreRepository(
-            storeAPIClient: StoreAPIClient(
-              httpClient: http.Client(),
-            ),
-          ),
-        ),
+      body: BlocProvider<StockBloc>.value(
+        value: _stockBloc,
         child: BlocConsumer<StockBloc, StockState>(
           listener: (context, state) {
             if (state is StockNotFetchedState) {
-              BlocProvider.of<StockBloc>(context)
-                  .add(StockLoaded(_currentStore));
+              _stockBloc.add(StockLoaded());
 
               _refreshCompleter?.complete();
               _refreshCompleter = Completer();
@@ -117,8 +117,7 @@ class _HomePageState extends State<HomePage> {
             } else if (state is StockFetchSuccessState) {
               return RefreshIndicator(
                 onRefresh: () {
-                  BlocProvider.of<StockBloc>(context)
-                      .add(StockLoaded(_currentStore));
+                  _stockBloc.add(StockLoaded());
 
                   return _refreshCompleter.future;
                 },
@@ -154,7 +153,7 @@ class _HomePageState extends State<HomePage> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
-      BlocProvider.of<StockBloc>(context).add(StockLoaded(_currentStore));
+      _stockBloc.add(StockLoaded());
     }
   }
 }
