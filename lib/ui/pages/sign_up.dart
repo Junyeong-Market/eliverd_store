@@ -63,8 +63,8 @@ class _SignUpPageState extends State<SignUpPage> {
           builder: (context, state) {
             return ListView(
               padding: EdgeInsets.only(
-                left: height / 24.0,
-                right: height / 24.0,
+                left: height / 32.0,
+                right: height / 32.0,
                 bottom: height / 15.0,
               ),
               children: <Widget>[
@@ -209,6 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(height: height / 120.0),
                         TextField(
                           textInputAction: TextInputAction.done,
+                          obscureText: true,
                           controller: _passwordController,
                           enabled: _passwordController.text.length == 0,
                           decoration: InputDecoration(
@@ -241,7 +242,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
-                              '사업자이신가요?',
+                              isSellerDesc,
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 26.0,

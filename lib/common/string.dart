@@ -20,6 +20,7 @@ const usernameDesc = '이름';
 const nicknameDesc = '닉네임';
 const idDesc = '아이디';
 const passwordDesc = '비밀번호';
+const isSellerDesc = '사업자이신가요?';
 
 const addProductTitle = '재고 등록';
 const updateProductTitle = '재고 수정';
