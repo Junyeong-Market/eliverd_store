@@ -84,13 +84,14 @@ class _LoginPageState extends State<LoginPage> {
               return ListView(
                 padding: EdgeInsets.all(50.0),
                 children: <Widget>[
-                  SizedBox(height: height / 16.0),
+                  SizedBox(height: height / 24.0),
                   Image(
                     width: width / 1.5,
                     height: width / 1.5,
                     image: AssetImage(
                         'assets/images/logo/eliverd_logo_original.png'),
                   ),
+                  SizedBox(height: height / 24.0),
                   Visibility(
                     child: Column(
                       children: <Widget>[
