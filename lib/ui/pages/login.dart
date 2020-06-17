@@ -1,4 +1,3 @@
-
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:flutter/cupertino.dart';
@@ -74,11 +73,10 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomePage(
-                          currentStore: state.store
-                      ),
+                      builder: (context) => HomePage(currentStore: state.store),
                     ));
-              } else if (state is NotAuthenticated || state is AuthenticationError) {
+              } else if (state is NotAuthenticated ||
+                  state is AuthenticationError) {
                 errorOccurred = true;
               }
             },

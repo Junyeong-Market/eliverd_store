@@ -147,7 +147,7 @@ class _AddProductPageState extends State<AddProductPage> {
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
-                barcodeDescWhenIncompleted,
+                barcodeDescWhenImcompleted,
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 28.0,
@@ -188,7 +188,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _nameController.text.length != 0 ? nameDesc : nameDescWhenIncompleted,
+                          _nameController.text.length != 0 ? nameDesc : nameDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
@@ -224,7 +224,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          _priceController.text.length != 0 ? priceDesc : priceDescWhenIncompleted,
+                          _priceController.text.length != 0 ? priceDesc : priceDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
@@ -265,7 +265,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenIncompleted,
+                          _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
