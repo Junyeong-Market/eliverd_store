@@ -93,7 +93,6 @@ class _LoginPageState extends State<LoginPage> {
                     image: AssetImage(
                         'assets/images/logo/eliverd_logo_original.png'),
                   ),
-                  SizedBox(height: height / 32.0),
                   Visibility(
                     child: Column(
                       children: <Widget>[
@@ -108,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(height: height / 120.0),
                       ],
                     ),
-                    maintainSize: false,
+                    maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
                     visible: errorOccurred,
