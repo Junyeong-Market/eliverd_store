@@ -23,28 +23,32 @@ class AuthenticationBloc
     if (event is ValidateAuthentication) {
       yield* _mapValidateAuthenticationToState(event);
     } else if (event is SignInAuthentication) {
-      yield* _mapSignInAuthenticationToState(event);
+    yield* _mapSignInAuthenticationToState(event);
     } else if (event is SignOutAuthentication) {
-      yield* _mapSignOutAuthenticationToState(event);
+    yield* _mapSignOutAuthenticationToState(event);
     }
   }
 
   Stream<AuthenticationState> _mapValidateAuthenticationToState(
       ValidateAuthentication event) async* {
-    final session = int.parse(event.token);
-    final data = await accountRepository.validateSession(session);
+    try {
+      final session = int.parse(event.token);
+      final data = await accountRepository.validateSession(session);
 
-    if (data.isEmpty) {
-      yield NotAuthenticated();
+      if (data.isEmpty) {
+        yield NotAuthenticated();
+      }
+
+      // TO-DO: Authenticated state 재정의 후 수정
+      final authenticatedUser =
+      User(userId: data['user_id'], nickname: data['nickname']);
+
+      final stores = Store();
+
+      yield Authenticated(authenticatedUser, stores);
+    } catch (_) {
+      yield AuthenticationError();
     }
-
-    // TO-DO: Authenticated state 재정의 후 수정
-    final authenticatedUser =
-        User(userId: data['user_id'], nickname: data['nickname']);
-
-    final stores = Store();
-
-    yield Authenticated(authenticatedUser, stores);
   }
 
   Stream<AuthenticationState> _mapSignInAuthenticationToState(
@@ -73,9 +77,13 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapSignOutAuthenticationToState(
       SignOutAuthentication event) async* {
-    final session = int.parse(event.token);
-    await accountRepository.deleteSession(session);
+    try {
+      final session = int.parse(event.token);
+      await accountRepository.deleteSession(session);
 
-    yield NotAuthenticated();
+      yield NotAuthenticated();
+    } catch (_) {
+      yield AuthenticationError();
+    }
   }
 }
