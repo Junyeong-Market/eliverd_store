@@ -1,5 +1,7 @@
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
+import 'package:Eliverd/resources/providers/providers.dart';
+import 'package:Eliverd/resources/repositories/repositories.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -41,9 +43,15 @@ class _LoginPageState extends State<LoginPage> {
         httpClient: http.Client(),
       ),
     );
+    final _storeRepostiory = StoreRepository(
+      storeAPIClient: StoreAPIClient(
+        httpClient: http.Client(),
+      ),
+    );
 
     _authenticationBloc = AuthenticationBloc(
       accountRepository: _accountRepository,
+      storeRepository: _storeRepostiory,
     );
     _accountBloc = AccountBloc(
       accountRepository: _accountRepository,
@@ -75,11 +83,12 @@ class _LoginPageState extends State<LoginPage> {
             listener: (context, state) {
               if (state is Authenticated) {
                 errorOccurred = false;
-                // TO-DO: Authenticated state 재정의 후 로그인된 사용자(사업자) 및 그가 관리하는 사업장 정보 불러오기
+
+                // TO-DO: 상점 고르기 페이지 구현 후 Navigate 구현
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomePage(currentStore: state.store),
+                      builder: (context) => HomePage(currentStore: state.stores[0]),
                     ));
               } else if (state is NotAuthenticated ||
                   state is AuthenticationError) {

@@ -70,7 +70,7 @@ class StoreAPIClient {
     return data;
   }
 
-  Future<Product> getProduct(String productId) async {
+  Future<Product> getProduct(int productId) async {
     final url = '$baseUrl/product/$productId';
     final res = await this.httpClient.get(url);
 
@@ -83,7 +83,7 @@ class StoreAPIClient {
     return data;
   }
 
-  Future<Store> getStore(String storeId) async {
+  Future<Store> getStore(int storeId) async {
     final url = '$baseUrl/store/$storeId';
     final res = await this.httpClient.get(url);
 

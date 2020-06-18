@@ -13,12 +13,12 @@ class NotAuthenticated extends AuthenticationState {}
 
 class Authenticated extends AuthenticationState {
   final User user;
-  final Store store;
+  final List<Store> stores;
 
-  const Authenticated(this.user, this.store);
+  const Authenticated(this.user, this.stores);
 
   @override
-  List<Object> get props => [user, store];
+  List<Object> get props => [user, stores];
 }
 
 class AuthenticationError extends AuthenticationState {}

@@ -17,6 +17,12 @@ class StoreRepository {
     return store;
   }
 
+  Future<Store> getStore(int storeId) async {
+    final store = await storeAPIClient.getStore(storeId);
+
+    return store;
+  }
+
   Future<List<Stock>> fetchStock(Store store) async {
     final stocks = await storeAPIClient.fetchStock(store);
 

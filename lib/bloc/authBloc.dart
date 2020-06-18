@@ -10,9 +10,12 @@ import 'package:Eliverd/resources/repositories/repositories.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AccountRepository accountRepository;
+  final StoreRepository storeRepository;
 
-  AuthenticationBloc({@required this.accountRepository})
-      : assert(accountRepository != null);
+  AuthenticationBloc(
+      {@required this.accountRepository, @required this.storeRepository})
+      : assert(accountRepository != null),
+        assert(storeRepository != null);
 
   @override
   AuthenticationState get initialState => NotAuthenticated();
@@ -23,9 +26,9 @@ class AuthenticationBloc
     if (event is ValidateAuthentication) {
       yield* _mapValidateAuthenticationToState(event);
     } else if (event is SignInAuthentication) {
-    yield* _mapSignInAuthenticationToState(event);
+      yield* _mapSignInAuthenticationToState(event);
     } else if (event is SignOutAuthentication) {
-    yield* _mapSignOutAuthenticationToState(event);
+      yield* _mapSignOutAuthenticationToState(event);
     }
   }
 
@@ -39,11 +42,16 @@ class AuthenticationBloc
         yield NotAuthenticated();
       }
 
-      // TO-DO: Authenticated state 재정의 후 수정
-      final authenticatedUser =
-      User(userId: data['user_id'], nickname: data['nickname']);
+      final authenticatedUser = User(
+        userId: data['user_id'],
+        nickname: data['nickname'],
+        realname: data['realname'],
+        isSeller: data['is_seller'],
+      );
 
-      final stores = Store();
+      final stores = await Future.wait((data['stores'] as List)
+          .map((storeId) async => await storeRepository.getStore(storeId))
+          .toList());
 
       yield Authenticated(authenticatedUser, stores);
     } catch (_) {
@@ -55,7 +63,7 @@ class AuthenticationBloc
       SignInAuthentication event) async* {
     try {
       final session =
-      await accountRepository.createSession(event.userId, event.password);
+          await accountRepository.createSession(event.userId, event.password);
 
       if (session == null) {
         yield NotAuthenticated();
@@ -63,11 +71,16 @@ class AuthenticationBloc
 
       final data = await accountRepository.validateSession(session.id);
 
-      // TO-DO: Authenticated state 재정의 후 수정
-      final authenticatedUser =
-      User(userId: data['user_id'], nickname: data['nickname']);
+      final authenticatedUser = User(
+        userId: data['user_id'],
+        nickname: data['nickname'],
+        realname: data['realname'],
+        isSeller: data['is_seller'],
+      );
 
-      final stores = Store();
+      final stores = await Future.wait((data['stores'] as List)
+          .map((storeId) async => await storeRepository.getStore(storeId))
+          .toList());
 
       yield Authenticated(authenticatedUser, stores);
     } catch (_) {
