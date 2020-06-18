@@ -11,8 +11,10 @@ class ErrorMessages {
   static final nicknameDuplicatedMessage = '이미 존재하는 닉네임입니다. 다른 닉네임을 입력하세요.';
   static final userIdInvalidMessage = '아이디는 영어, 숫자를 조합하여 50자 이내만 가능합니다.';
   static final userIdDuplicatedMessage = '이미 존재하는 아이디입니다. 다른 아이디를 입력하세요.';
-  static final passwordInvalidMessage = '비밀번호는 영어, 숫자, 특수문자를 조합하여 256자 이내만 가능합니다.';
-  static final loginErrorMessage = '입력하신 계정은 존재하지 않는 계정입니다. 아이디와 비밀번호를 다시 입력해주세요.';
+  static final passwordInvalidMessage =
+      '비밀번호는 영어, 숫자, 특수문자를 조합하여 256자 이내만 가능합니다.';
+  static final loginErrorMessage =
+      '입력하신 계정은 존재하지 않는 계정입니다. 아이디와 비밀번호를 다시 입력해주세요.';
 
   static final signUpErrorMessage = '회원가입 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요.';
   static final signInErrorMessage = '로그인 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요.';
@@ -71,5 +73,4 @@ class ProductStrings {
   static final next = '다음';
   static final submit = '완료';
   static final delete = '삭제';
-
 }
