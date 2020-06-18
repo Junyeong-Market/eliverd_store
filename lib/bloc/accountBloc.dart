@@ -22,14 +22,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       yield* _mapAccountCreatedToState(event);
     } else if (event is NewAccountRequested) {
       yield* _mapNewAccountRequestedToState(event);
+    } else if (event is AccountValidated) {
+      yield* _mapAccountValidatedToState(event);
     }
   }
 
   Stream<AccountState> _mapAccountCreatedToState(AccountCreated event) async* {
     try {
-      await accountRepository.signUpUser(event.jsonifiedUser);
+      if (state is! AccountValidateFailed) {
+        await accountRepository.signUpUser(event.jsonifiedUser);
 
-      yield AccountDoneCreate();
+        yield AccountDoneCreate();
+      }
     } catch (_) {
       yield AccountError();
     }
@@ -38,5 +42,17 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   Stream<AccountState> _mapNewAccountRequestedToState(
       NewAccountRequested event) async* {
     yield AccountOnCreate();
+  }
+
+  Stream<AccountState> _mapAccountValidatedToState(AccountValidated event) async* {
+    try {
+      final validation = await accountRepository.validateUser(event.jsonifiedUser);
+
+      if (!validation.values.every((element) => element == 0)) {
+        yield AccountValidateFailed(validation);
+      }
+    } catch (_) {
+      yield AccountError();
+    }
   }
 }

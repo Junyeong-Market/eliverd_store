@@ -9,6 +9,20 @@ abstract class AccountEvent extends Equatable {
 
 class NewAccountRequested extends AccountEvent {}
 
+class AccountValidated extends AccountEvent {
+  final Map<String, dynamic> jsonifiedUser;
+
+  const AccountValidated(this.jsonifiedUser);
+
+  @override
+  List<Object> get props => [jsonifiedUser];
+
+  @override
+  String toString() {
+    return 'AccountValidated{ jsonifiedUser: $jsonifiedUser }';
+  }
+}
+
 class AccountCreated extends AccountEvent {
   final Map<String, dynamic> jsonifiedUser;
 

@@ -83,4 +83,21 @@ class AccountAPIClient {
       throw Exception('Error occurred while deleting session');
     }
   }
+
+  Future<Map<String, dynamic>> validateUser(Map<String, dynamic> jsonifiedUser) async {
+    final url = '$baseUrl/account/user/validate';
+    final res = await this.httpClient.post(
+      url,
+      body: jsonifiedUser,
+      encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+    );
+
+    if (res.statusCode != 201) {
+      throw Exception('Error occurred while validating user');
+    }
+
+    final data = json.decode(res.body);
+
+    return data;
+  }
 }

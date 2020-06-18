@@ -17,6 +17,12 @@ class AccountRepository {
     return user;
   }
 
+  Future<Map<String, dynamic>> validateUser(Map<String, dynamic> jsonifiedUser) async {
+    final validation = await accountAPIClient.validateUser(jsonifiedUser);
+
+    return validation;
+  }
+
   Future<Session> createSession(String userId, String password) async {
     final session = await accountAPIClient.createSession(userId, password);
 
