@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
@@ -96,6 +97,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(height: height / 120.0),
                         TextField(
                           textInputAction: TextInputAction.done,
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter(RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣^\s]")),
+                          ],
+                          maxLength: 128,
+                          maxLengthEnforced: true,
                           controller: _nameController,
                           enabled: _nameController.text.length == 0,
                           decoration: InputDecoration(
@@ -155,6 +161,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(height: height / 120.0),
                         TextField(
                           textInputAction: TextInputAction.done,
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣^\s]")),
+                          ],
+                          maxLength: 50,
+                          maxLengthEnforced: true,
                           controller: _nicknameController,
                           enabled: _nicknameController.text.length == 0,
                           decoration: InputDecoration(
@@ -218,6 +229,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(height: height / 120.0),
                         TextField(
                           textInputAction: TextInputAction.done,
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9^\s]")),
+                          ],
+                          maxLength: 50,
+                          maxLengthEnforced: true,
                           controller: _userIdController,
                           enabled: _userIdController.text.length == 0,
                           decoration: InputDecoration(
@@ -281,6 +297,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(height: height / 120.0),
                         TextField(
                           textInputAction: TextInputAction.done,
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9\x00-\x7F^\s]")),
+                          ],
+                          maxLength: 256,
+                          maxLengthEnforced: true,
                           obscureText: true,
                           controller: _passwordController,
                           enabled: _passwordController.text.length == 0,
