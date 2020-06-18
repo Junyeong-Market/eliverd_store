@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          loginErrorMessage,
+                          ErrorMessages.loginErrorMessage,
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(
                         borderRadius: new BorderRadius.circular(15.0),
                       ),
-                      labelText: idText,
+                      labelText: SignInStrings.idText,
                     ),
                   ),
                   SizedBox(height: height / 80.0),
@@ -136,14 +136,14 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(
                         borderRadius: new BorderRadius.circular(15.0),
                       ),
-                      labelText: passwordText,
+                      labelText: SignInStrings.passwordText,
                     ),
                   ),
                   SizedBox(height: height / 80.0),
                   CupertinoButton(
                     key: Key('SignInButton'),
                     child: Text(
-                      login,
+                      SignInStrings.login,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                   FlatButton(
                     key: Key('SignUpButton'),
                     child: Text(
-                      notSignUp,
+                      SignInStrings.notSignUp,
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         color: Colors.black,

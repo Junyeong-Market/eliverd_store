@@ -4,6 +4,7 @@ import 'package:Eliverd/bloc/events/stockEvent.dart';
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/resources/providers/storeProvider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Eliverd/ui/widgets/header.dart';
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
               actions: <Widget>[
                 IconButton(
                   icon: const Icon(Icons.search),
-                  tooltip: searchProductDesc,
+                  tooltip: HomePageStrings.searchProductDesc,
                   onPressed: () {
                     // TO-DO: 상품 조건적 검색 BLOC 구현
                     // TO-DO: 상품 검색 페이지로 Navigate
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.add),
-                  tooltip: addProductDesc,
+                  tooltip: HomePageStrings.addProductDesc,
                   onPressed: () {
                     Navigator.push(
                         context,
@@ -125,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
                     return index >= state.stocks.length
-                        ? CircularProgressIndicator()
+                        ? CupertinoActivityIndicator()
                         : ProductCard(
                             name: state.stocks[index].product.name,
                             manufacturer:
@@ -142,7 +143,7 @@ class _HomePageState extends State<HomePage> {
             }
 
             return Center(
-              child: CircularProgressIndicator(),
+              child: CupertinoActivityIndicator(),
             );
           },
         ),

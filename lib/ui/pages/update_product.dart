@@ -112,7 +112,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
             Align(
               alignment: FractionalOffset(0.1, 0.0),
               child: Text(
-                updateProductTitle,
+                TitleStrings.updateProductTitle,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 36.0,
@@ -129,7 +129,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
-                barcodeDescWhenUpdate,
+                ProductStrings.barcodeDescWhenUpdate,
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 28.0,
@@ -151,7 +151,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
                   child: Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Text(
-                      isBarcodeAdded ? noBarcodeDesc : barcodeDesc,
+                      isBarcodeAdded ? ProductStrings.noBarcodeDesc : ProductStrings.barcodeDesc,
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 28.0,
@@ -170,7 +170,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _nameController.text.length != 0 ? nameDesc : nameDescWhenUpdate,
+                          _nameController.text.length != 0 ? ProductStrings.nameDesc : ProductStrings.nameDescWhenUpdate,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
@@ -206,7 +206,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          _priceController.text.length != 0 ? priceDesc : priceDescWhenUpdate,
+                          _priceController.text.length != 0 ? ProductStrings.priceDesc : ProductStrings.priceDescWhenUpdate,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
@@ -247,7 +247,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _manufacturerController.text.length != 0 ? manufacturerDesc : manufacturerDescWhenUpdate,
+                          _manufacturerController.text.length != 0 ? ProductStrings.manufacturerDesc : ProductStrings.manufacturerDescWhenUpdate,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 28.0,
@@ -294,7 +294,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
             color: eliverdColor,
             disabledColor: Colors.black12,
             child: Text(
-              isBarcodeAdded ? submit : next,
+              isBarcodeAdded ? ProductStrings.submit : ProductStrings.next,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

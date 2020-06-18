@@ -68,7 +68,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               children: <Widget>[
                 Text(
-                  signUp,
+                  SignUpStrings.signUp,
                   style: const TextStyle(
                       color: Colors.black,
                       fontSize: 36.0,
@@ -86,8 +86,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       children: <Widget>[
                         Text(
                           _nameController.text.length != 0
-                              ? usernameDesc
-                              : usernameDescWhenImcompleted,
+                              ? SignUpStrings.realnameDesc
+                              : SignUpStrings.realnameDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 26.0,
@@ -116,6 +116,25 @@ class _SignUpPageState extends State<SignUpPage> {
                   visible: true,
                 ),
                 Visibility(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        isWrongTypeField(state, 'realname') ? ErrorMessages.realnameInvalidMessage : '',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: height / 120.0),
+                    ],
+                  ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: isInvalidField(state, 'realname'),
+                ),
+                Visibility(
                   child: Padding(
                     padding: EdgeInsets.only(
                       top: 10.0,
@@ -126,8 +145,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       children: <Widget>[
                         Text(
                           _nicknameController.text.length != 0
-                              ? nicknameDesc
-                              : nicknameDescWhenImcompleted,
+                              ? SignUpStrings.nicknameDesc
+                              : SignUpStrings.nicknameDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 26.0,
@@ -156,6 +175,29 @@ class _SignUpPageState extends State<SignUpPage> {
                   visible: _nameController.text.length != 0,
                 ),
                 Visibility(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        isWrongTypeField(state, 'nickname')
+                            ? ErrorMessages.nicknameInvalidMessage
+                            : (isDuplicatedField(state, 'nickname')
+                                ? ErrorMessages.nicknameDuplicatedMessage
+                                : ''),
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: height / 120.0),
+                    ],
+                  ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: isInvalidField(state, 'nickname'),
+                ),
+                Visibility(
                   child: Padding(
                     padding: EdgeInsets.only(
                       top: 10.0,
@@ -166,8 +208,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       children: <Widget>[
                         Text(
                           _userIdController.text.length != 0
-                              ? idDesc
-                              : idDescWhenImcompleted,
+                              ? SignUpStrings.idDesc
+                              : SignUpStrings.idDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 26.0,
@@ -196,6 +238,29 @@ class _SignUpPageState extends State<SignUpPage> {
                   visible: _nicknameController.text.length != 0,
                 ),
                 Visibility(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        isWrongTypeField(state, 'id')
+                            ? ErrorMessages.userIdInvalidMessage
+                            : (isDuplicatedField(state, 'id')
+                                ? ErrorMessages.userIdDuplicatedMessage
+                                : ''),
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: height / 120.0),
+                    ],
+                  ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: isInvalidField(state, 'id'),
+                ),
+                Visibility(
                   child: Padding(
                     padding: EdgeInsets.only(
                       top: 10.0,
@@ -206,8 +271,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       children: <Widget>[
                         Text(
                           _passwordController.text.length != 0
-                              ? passwordDesc
-                              : passwordDescWhenImcompleted,
+                              ? SignUpStrings.passwordDesc
+                              : SignUpStrings.passwordDescWhenImcompleted,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 26.0,
@@ -237,6 +302,27 @@ class _SignUpPageState extends State<SignUpPage> {
                   visible: _userIdController.text.length != 0,
                 ),
                 Visibility(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        isWrongTypeField(state, 'password')
+                            ? ErrorMessages.passwordInvalidMessage
+                            : '',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: height / 120.0),
+                    ],
+                  ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: isInvalidField(state, 'password'),
+                ),
+                Visibility(
                   child: Padding(
                     padding: EdgeInsets.only(
                       top: 10.0,
@@ -249,7 +335,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
-                              isSellerDesc,
+                              SignUpStrings.isSellerDesc,
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 26.0,
@@ -274,7 +360,25 @@ class _SignUpPageState extends State<SignUpPage> {
                   maintainState: true,
                   visible: _passwordController.text.length != 0,
                 ),
-                SizedBox(height: height / 64.0),
+                Visibility(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        ErrorMessages.signUpErrorMessage,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: height / 120.0),
+                    ],
+                  ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: state is AccountError,
+                ),
               ],
             );
           },
@@ -292,7 +396,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: CupertinoButton(
             key: Key('SignUpButton'),
             child: Text(
-              signUpButtonDesc,
+              SignUpStrings.signUpButtonDesc,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -312,6 +416,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       'is_seller': _isSeller.toString(),
                     };
 
+                    _accountBloc.add(AccountValidated(jsonifiedUser));
                     _accountBloc.add(AccountCreated(jsonifiedUser));
                   }
                 : null,
@@ -319,5 +424,17 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  bool isInvalidField(dynamic state, String fieldName) {
+    return state is AccountValidateFailed && state.jsonifiedValidation[fieldName] != 0;
+  }
+
+  bool isWrongTypeField(dynamic state, String fieldName) {
+    return state is AccountValidateFailed && state.jsonifiedValidation[fieldName] == 1;
+  }
+
+  bool isDuplicatedField(dynamic state, String fieldName) {
+    return state is AccountValidateFailed && state.jsonifiedValidation[fieldName] == 2;
   }
 }

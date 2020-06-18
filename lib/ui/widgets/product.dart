@@ -165,10 +165,6 @@ class _ProductCardState extends State<ProductCard> {
   }
 
   String formattedPrice(int price) {
-    if (price == null) {
-      return priceUndefined;
-    }
-
     return NumberFormat.currency(
       locale: 'ko',
       symbol: '₩',
@@ -180,7 +176,7 @@ class _ProductCardState extends State<ProductCard> {
 showDeleteProductAlertDialog(BuildContext context, String productTitle) {
   Widget cancelButton = FlatButton(
     child: Text(
-      cancel,
+      ProductStrings.cancel,
       style: TextStyle(
         color: eliverdColor,
         fontWeight: FontWeight.w400,
@@ -193,7 +189,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
 
   Widget deleteButton = FlatButton(
     child: Text(
-      delete,
+      ProductStrings.delete,
       style: TextStyle(
         color: eliverdColor,
         fontWeight: FontWeight.w700,
@@ -207,7 +203,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
 
   Widget cupertinoCancelButton = CupertinoButton(
     child: Text(
-      cancel,
+      ProductStrings.cancel,
       style: TextStyle(
         color: eliverdColor,
         fontWeight: FontWeight.w400,
@@ -220,7 +216,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
 
   Widget cupertinoDeleteButton = CupertinoButton(
     child: Text(
-      delete,
+      ProductStrings.delete,
       style: TextStyle(
         color: eliverdColor,
         fontWeight: FontWeight.w700,
@@ -241,7 +237,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
       ),
     ),
     content: Text(
-      deleteWarningContent,
+      ProductStrings.deleteWarningContent,
       style: TextStyle(
         fontWeight: FontWeight.w400,
         fontSize: 14.0,
@@ -262,7 +258,7 @@ showDeleteProductAlertDialog(BuildContext context, String productTitle) {
       ),
     ),
     content: Text(
-      deleteWarningContent,
+      ProductStrings.deleteWarningContent,
       style: TextStyle(
         fontWeight: FontWeight.w400,
         fontSize: 14.0,
