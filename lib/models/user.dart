@@ -5,17 +5,24 @@ class User extends Equatable {
   final String userId;
   final String password;
   final String nickname;
+  final String realname;
   final bool isSeller;
 
   const User(
-      {this.pid, this.userId, this.password, this.nickname, this.isSeller});
+      {this.pid,
+      this.userId,
+      this.password,
+      this.nickname,
+      this.realname,
+      this.isSeller});
 
   @override
-  List<Object> get props => [pid, userId, password, nickname, isSeller];
+  List<Object> get props =>
+      [pid, userId, password, nickname, realname, isSeller];
 
   @override
   String toString() {
-    return 'User{ pid: $pid, userId: $userId, password: $password, nickname: $nickname, isSeller: $isSeller }';
+    return 'User{ pid: $pid, userId: $userId, password: $password, nickname: $nickname, realname: $realname, isSeller: $isSeller }';
   }
 
   User copyWith(
@@ -23,12 +30,14 @@ class User extends Equatable {
       String userId,
       String password,
       String nickname,
+      String realname,
       bool isSeller}) {
     return User(
       pid: pid,
       userId: userId,
       password: password,
       nickname: nickname,
+      realname: realname,
       isSeller: isSeller,
     );
   }
