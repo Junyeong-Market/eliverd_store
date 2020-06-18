@@ -10,6 +10,7 @@ import 'package:Eliverd/bloc/states/authState.dart';
 import 'package:Eliverd/bloc/accountBloc.dart';
 import 'package:Eliverd/bloc/events/accountEvent.dart';
 import 'package:Eliverd/bloc/events/authEvent.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:http/http.dart' as http;
@@ -86,98 +87,105 @@ class _LoginPageState extends State<LoginPage> {
               }
             },
             builder: (context, state) {
-              return ListView(
-                padding: EdgeInsets.all(50.0),
-                children: <Widget>[
-                  SizedBox(height: height / 24.0),
-                  Image(
-                    width: width / 1.5,
-                    height: width / 1.5,
-                    image: AssetImage(
-                        'assets/images/logo/eliverd_logo_original.png'),
-                  ),
-                  SizedBox(height: height / 24.0),
-                  Visibility(
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          ErrorMessages.loginErrorMessage,
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: 50.0,
+                  right: 50.0,
+                ),
+                child: ListView(
+                  children: <Widget>[
+                    Image(
+                      width: width / 1.5,
+                      height: width / 1.5,
+                      image: AssetImage(
+                          'assets/images/logo/eliverd_logo_original.png'),
+                    ),
+                    SizedBox(height: height / 24.0),
+                    Visibility(
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            ErrorMessages.loginErrorMessage,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
+                          SizedBox(height: height / 120.0),
+                        ],
+                      ),
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: errorOccurred,
+                    ),
+                    TextField(
+                      key: Key('IdField'),
+                      obscureText: false,
+                      controller: _idController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(15.0),
                         ),
-                        SizedBox(height: height / 120.0),
-                      ],
-                    ),
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: errorOccurred,
-                  ),
-                  TextField(
-                    key: Key('IdField'),
-                    obscureText: false,
-                    controller: _idController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(15.0),
-                      ),
-                      labelText: SignInStrings.idText,
-                    ),
-                  ),
-                  SizedBox(height: height / 80.0),
-                  TextField(
-                    key: Key('PasswordField'),
-                    obscureText: true,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(15.0),
-                      ),
-                      labelText: SignInStrings.passwordText,
-                    ),
-                  ),
-                  SizedBox(height: height / 80.0),
-                  CupertinoButton(
-                    key: Key('SignInButton'),
-                    child: Text(
-                      SignInStrings.login,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
+                        labelText: SignInStrings.idText,
                       ),
                     ),
-                    color: eliverdColor,
-                    borderRadius: BorderRadius.circular(15.0),
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    onPressed: () {
-                      _authenticationBloc.add(SignInAuthentication(
-                          _idController.text, _passwordController.text));
-                    },
-                  ),
-                  FlatButton(
-                    key: Key('SignUpButton'),
-                    child: Text(
-                      SignInStrings.notSignUp,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                    SizedBox(height: height / 80.0),
+                    TextField(
+                      key: Key('PasswordField'),
+                      obscureText: true,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(15.0),
+                        ),
+                        labelText: SignInStrings.passwordText,
                       ),
                     ),
-                    onPressed: () {
-                      _accountBloc.add(NewAccountRequested());
+                    SizedBox(height: height / 80.0),
+                    CupertinoButton(
+                      key: Key('SignInButton'),
+                      child: Text(
+                        SignInStrings.login,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      color: eliverdColor,
+                      borderRadius: BorderRadius.circular(15.0),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 115.0,
+                        vertical: 15.0,
+                      ),
+                      onPressed: () {
+                        _authenticationBloc.add(SignInAuthentication(
+                            _idController.text, _passwordController.text));
+                      },
+                    ),
+                    FlatButton(
+                      key: Key('SignUpButton'),
+                      child: Text(
+                        SignInStrings.notSignUp,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                      onPressed: () {
+                        _accountBloc.add(NewAccountRequested());
 
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUpPage(),
-                          ));
-                    },
-                  )
-                ],
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignUpPage(),
+                            ));
+                      },
+                    ),
+                  ],
+                ),
               );
             },
           ),

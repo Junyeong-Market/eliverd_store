@@ -61,27 +61,22 @@ class _SignUpPageState extends State<SignUpPage> {
             }
           },
           builder: (context, state) {
-            return ListView(
+            return Padding(
               padding: EdgeInsets.only(
                 left: height / 32.0,
                 right: height / 32.0,
-                bottom: height / 15.0,
               ),
-              children: <Widget>[
-                Text(
-                  SignUpStrings.signUp,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 36.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: height / 64.0),
-                Visibility(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 10.0,
-                      bottom: 10.0,
-                    ),
+              child: ListView(
+                children: <Widget>[
+                  Text(
+                    SignUpStrings.signUp,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 36.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: height / 48.0),
+                  Visibility(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -98,54 +93,37 @@ class _SignUpPageState extends State<SignUpPage> {
                         TextField(
                           textInputAction: TextInputAction.done,
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣^\s]")),
+                            WhitelistingTextInputFormatter(
+                                RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣^\s]")),
                           ],
                           maxLength: 128,
                           maxLengthEnforced: true,
                           controller: _nameController,
-                          enabled: _nameController.text.length == 0,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
+                            errorText: isWrongTypeField(state, 'realname')
+                                ? ErrorMessages.realnameInvalidMessage
+                                : null,
+                            errorStyle: const TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           style: TextStyle(
                             fontSize: 22.0,
                             color: Colors.black54,
                           ),
                         ),
+                        SizedBox(height: height / 120.0),
                       ],
                     ),
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    visible: true,
                   ),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: true,
-                ),
-                Visibility(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        isWrongTypeField(state, 'realname') ? ErrorMessages.realnameInvalidMessage : '',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: height / 120.0),
-                    ],
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: isInvalidField(state, 'realname'),
-                ),
-                Visibility(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 10.0,
-                      bottom: 10.0,
-                    ),
+                  Visibility(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -162,58 +140,39 @@ class _SignUpPageState extends State<SignUpPage> {
                         TextField(
                           textInputAction: TextInputAction.done,
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣^\s]")),
+                            WhitelistingTextInputFormatter(
+                                RegExp("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣^\s]")),
                           ],
                           maxLength: 50,
                           maxLengthEnforced: true,
                           controller: _nicknameController,
-                          enabled: _nicknameController.text.length == 0,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
+                            errorText: isWrongTypeField(state, 'nickname')
+                                ? ErrorMessages.nicknameInvalidMessage
+                                : (isDuplicatedField(state, 'nickname')
+                                    ? ErrorMessages.nicknameDuplicatedMessage
+                                    : null),
+                            errorStyle: const TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           style: TextStyle(
                             fontSize: 22.0,
                             color: Colors.black54,
                           ),
                         ),
+                        SizedBox(height: height / 120.0),
                       ],
                     ),
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    visible: _nameController.text.length != 0,
                   ),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _nameController.text.length != 0,
-                ),
-                Visibility(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        isWrongTypeField(state, 'nickname')
-                            ? ErrorMessages.nicknameInvalidMessage
-                            : (isDuplicatedField(state, 'nickname')
-                                ? ErrorMessages.nicknameDuplicatedMessage
-                                : ''),
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: height / 120.0),
-                    ],
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: isInvalidField(state, 'nickname'),
-                ),
-                Visibility(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 10.0,
-                      bottom: 10.0,
-                    ),
+                  Visibility(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -230,58 +189,39 @@ class _SignUpPageState extends State<SignUpPage> {
                         TextField(
                           textInputAction: TextInputAction.done,
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9^\s]")),
+                            WhitelistingTextInputFormatter(
+                                RegExp("[a-zA-Z0-9^\s]")),
                           ],
                           maxLength: 50,
                           maxLengthEnforced: true,
                           controller: _userIdController,
-                          enabled: _userIdController.text.length == 0,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
+                            errorText: isWrongTypeField(state, 'id')
+                                ? ErrorMessages.userIdInvalidMessage
+                                : (isDuplicatedField(state, 'id')
+                                    ? ErrorMessages.userIdDuplicatedMessage
+                                    : null),
+                            errorStyle: const TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           style: TextStyle(
                             fontSize: 22.0,
                             color: Colors.black54,
                           ),
                         ),
+                        SizedBox(height: height / 120.0),
                       ],
                     ),
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    visible: _nicknameController.text.length != 0,
                   ),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _nicknameController.text.length != 0,
-                ),
-                Visibility(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        isWrongTypeField(state, 'id')
-                            ? ErrorMessages.userIdInvalidMessage
-                            : (isDuplicatedField(state, 'id')
-                                ? ErrorMessages.userIdDuplicatedMessage
-                                : ''),
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: height / 120.0),
-                    ],
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: isInvalidField(state, 'id'),
-                ),
-                Visibility(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 10.0,
-                      bottom: 10.0,
-                    ),
+                  Visibility(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -298,57 +238,38 @@ class _SignUpPageState extends State<SignUpPage> {
                         TextField(
                           textInputAction: TextInputAction.done,
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9\x00-\x7F^\s]")),
+                            WhitelistingTextInputFormatter(
+                                RegExp("[a-zA-Z0-9\x01-\x19\x21-\x7F]")),
                           ],
                           maxLength: 256,
                           maxLengthEnforced: true,
                           obscureText: true,
                           controller: _passwordController,
-                          enabled: _passwordController.text.length == 0,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
+                            errorText: isWrongTypeField(state, 'password')
+                                ? ErrorMessages.passwordInvalidMessage
+                                : null,
+                            errorStyle: const TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           style: TextStyle(
                             fontSize: 22.0,
                             color: Colors.black54,
                           ),
                         ),
+                        SizedBox(height: height / 120.0),
                       ],
                     ),
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    visible: _userIdController.text.length != 0,
                   ),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _userIdController.text.length != 0,
-                ),
-                Visibility(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        isWrongTypeField(state, 'password')
-                            ? ErrorMessages.passwordInvalidMessage
-                            : '',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: height / 120.0),
-                    ],
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: isInvalidField(state, 'password'),
-                ),
-                Visibility(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 10.0,
-                      bottom: 10.0,
-                    ),
+                  Visibility(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -373,34 +294,28 @@ class _SignUpPageState extends State<SignUpPage> {
                           ],
                         ),
                         SizedBox(height: height / 120.0),
+                        Visibility(
+                          child: Text(
+                            ErrorMessages.signUpErrorMessage,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          maintainSize: false,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: state is AccountError,
+                        ),
                       ],
                     ),
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    visible: _passwordController.text.length != 0,
                   ),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _passwordController.text.length != 0,
-                ),
-                Visibility(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        ErrorMessages.signUpErrorMessage,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: height / 120.0),
-                    ],
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: state is AccountError,
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),
@@ -448,14 +363,17 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   bool isInvalidField(dynamic state, String fieldName) {
-    return state is AccountValidateFailed && state.jsonifiedValidation[fieldName] != 0;
+    return state is AccountValidateFailed &&
+        state.jsonifiedValidation[fieldName] != 0;
   }
 
   bool isWrongTypeField(dynamic state, String fieldName) {
-    return state is AccountValidateFailed && state.jsonifiedValidation[fieldName] == 1;
+    return state is AccountValidateFailed &&
+        state.jsonifiedValidation[fieldName] == 1;
   }
 
   bool isDuplicatedField(dynamic state, String fieldName) {
-    return state is AccountValidateFailed && state.jsonifiedValidation[fieldName] == 2;
+    return state is AccountValidateFailed &&
+        state.jsonifiedValidation[fieldName] == 2;
   }
 }
