@@ -82,6 +82,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           maxLengthEnforced: true,
                           controller: _nameController,
                           decoration: InputDecoration(
+                            helperText: SignUpStrings.realnameHelperText,
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
                             errorText: isWrongTypeField(state, 'realname')
@@ -129,6 +130,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           maxLengthEnforced: true,
                           controller: _nicknameController,
                           decoration: InputDecoration(
+                            helperText: SignUpStrings.nicknameHelperText,
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
                             errorText: isWrongTypeField(state, 'nickname')
@@ -178,6 +180,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           maxLengthEnforced: true,
                           controller: _userIdController,
                           decoration: InputDecoration(
+                            helperText: SignUpStrings.userIdHelperText,
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
                             errorText: isWrongTypeField(state, 'id')
@@ -228,6 +231,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           obscureText: true,
                           controller: _passwordController,
                           decoration: InputDecoration(
+                            helperText: SignUpStrings.passwordHelperText,
                             contentPadding: EdgeInsets.all(2.0),
                             isDense: true,
                             errorText: isWrongTypeField(state, 'password')

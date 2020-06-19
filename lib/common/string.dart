@@ -36,6 +36,11 @@ class SignInStrings {
 class SignUpStrings {
   static final signUpButtonDesc = '가입하기';
 
+  static final realnameHelperText = '영어나 한글로 128자 이내만 가능합니다.';
+  static final nicknameHelperText = '영어, 한글, 숫자를 조합하여 50자 이내만 가능합니다.';
+  static final userIdHelperText = '영어, 숫자를 조합하여 50자 이내만 가능합니다.';
+  static final passwordHelperText = '영어, 숫자, 특수문자를 조합하여 256자 이내만 가능합니다.';
+
   static final realnameDescWhenImcompleted = '이름을 입력하세요.';
   static final nicknameDescWhenImcompleted = '닉네임을 입력하세요.';
   static final idDescWhenImcompleted = '아이디를 입력하세요.';
