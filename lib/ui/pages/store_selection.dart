@@ -14,6 +14,8 @@ import 'package:Eliverd/ui/pages/register_store.dart';
 class StoreSelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return BlocProvider<AuthenticationBloc>.value(
       value: context.bloc<AuthenticationBloc>(),
       child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
@@ -108,8 +110,7 @@ class StoreSelectionPage extends StatelessWidget {
                 horizontal: 20.0,
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     state is Authenticated
@@ -120,6 +121,7 @@ class StoreSelectionPage extends StatelessWidget {
                         fontSize: 36.0,
                         fontWeight: FontWeight.bold),
                   ),
+                  SizedBox(height: height / 32.0),
                   CupertinoPicker(
                     itemExtent: 25.0,
                     looping: true,
