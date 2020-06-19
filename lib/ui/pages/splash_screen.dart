@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:Eliverd/common/color.dart';
+
 import './login.dart';
 
 class SplashScreenPage extends StatefulWidget {
@@ -14,10 +15,15 @@ class _SplashScreenState extends State<SplashScreenPage> {
   @override
   void initState() {
     super.initState();
+
     Timer(
       Duration(seconds: 1),
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (BuildContext context) => LoginPage())));
+      () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -26,13 +32,12 @@ class _SplashScreenState extends State<SplashScreenPage> {
 
     return Scaffold(
       key: Key('SplashScreenPage'),
-
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [eliverdLightColor, eliverdDarkColor],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter),
+              colors: [eliverdLightColor, eliverdDarkColor],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter),
         ),
         child: Center(
           child: Image(
