@@ -1,6 +1,9 @@
 class TitleStrings {
   static final title = '엘리버드';
   static final homeTitle = '상점용 엘리버드';
+  static final signUpTitle = '회원가입';
+  static final storeSelectionTitle = '님의 사업장을 선택해주세요.';
+  static final registerStoreTitle = '사업장 등록';
   static final addProductTitle = '재고 등록';
   static final updateProductTitle = '재고 수정';
 }
@@ -17,7 +20,10 @@ class ErrorMessages {
       '입력하신 계정은 존재하지 않는 계정입니다. 아이디와 비밀번호를 다시 입력해주세요.';
 
   static final signUpErrorMessage = '회원가입 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요.';
+  static final disallowedToManageStoreMessage = '이 계정은 사업장을 관리할 수 없는 계정입니다. 다른 계정으로 시도해주세요.';
   static final signInErrorMessage = '로그인 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요.';
+
+  static final noRegisteredBusinessMessage = '먼저 사업장을 등록하세요!';
 }
 
 class SignInStrings {
@@ -28,7 +34,6 @@ class SignInStrings {
 }
 
 class SignUpStrings {
-  static final signUp = '회원가입';
   static final signUpButtonDesc = '가입하기';
 
   static final realnameDescWhenImcompleted = '이름을 입력하세요.';
@@ -41,6 +46,14 @@ class SignUpStrings {
   static final idDesc = '아이디';
   static final passwordDesc = '비밀번호';
   static final isSellerDesc = '사업자이신가요?';
+}
+
+class StoreSelectionStrings {
+  static final registerBtnDesc = '등록하러 가기';
+}
+
+class RegisterStoreStrings {
+  static final registerBtnDesc = '등록하기';
 }
 
 class HomePageStrings {
