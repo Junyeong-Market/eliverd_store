@@ -21,4 +21,11 @@ class Authenticated extends AuthenticationState {
   List<Object> get props => [user, stores];
 }
 
-class AuthenticationError extends AuthenticationState {}
+class AuthenticationError extends AuthenticationState {
+  final String errorMessage;
+
+  const AuthenticationError(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}

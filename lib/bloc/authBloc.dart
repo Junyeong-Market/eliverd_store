@@ -1,3 +1,4 @@
+import 'package:Eliverd/common/string.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
@@ -55,7 +56,7 @@ class AuthenticationBloc
 
       yield Authenticated(authenticatedUser, stores);
     } catch (_) {
-      yield AuthenticationError();
+      yield AuthenticationError(ErrorMessages.loginErrorMessage);
     }
   }
 
@@ -71,6 +72,10 @@ class AuthenticationBloc
 
       final data = await accountRepository.validateSession(session.id);
 
+      if (data['is_seller'] == false) {
+        yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
+      }
+
       final authenticatedUser = User(
         userId: data['user_id'],
         nickname: data['nickname'],
@@ -84,7 +89,7 @@ class AuthenticationBloc
 
       yield Authenticated(authenticatedUser, stores);
     } catch (_) {
-      yield AuthenticationError();
+      yield AuthenticationError(ErrorMessages.loginErrorMessage);
     }
   }
 
@@ -96,7 +101,7 @@ class AuthenticationBloc
 
       yield NotAuthenticated();
     } catch (_) {
-      yield AuthenticationError();
+      yield AuthenticationError(ErrorMessages.loginErrorMessage);
     }
   }
 }
