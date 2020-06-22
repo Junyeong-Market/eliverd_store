@@ -39,7 +39,7 @@ class StoreAPIClient {
       throw Exception('Error occurred while fetching all stocks on your store');
     }
 
-    final data = json.decode(res.body) as List;
+    final data = json.decode(res.body)['results'] as List;
 
     return data.map((rawStock) {
       return Stock(
