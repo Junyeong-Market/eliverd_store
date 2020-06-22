@@ -98,8 +98,7 @@ class _HomePageState extends State<HomePage> {
                   Align(
                     alignment: FractionalOffset(0.1, 0.0),
                     child: Text(
-                      // TO-DO: User BLOC에서 사업장 이름 불러오기
-                      "사업장 이름",
+                      widget?.currentStore?.name,
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 36.0,
@@ -111,7 +110,7 @@ class _HomePageState extends State<HomePage> {
             ),
             body: state is StockFetchErrorState
                 ? Center(
-                    child: Text('Error'),
+                    child: Text(ErrorMessages.stocksCannotbeFetched),
                   )
                 : ((state is StockFetchSuccessState)
                     ? RefreshIndicator(

@@ -24,6 +24,8 @@ class ErrorMessages {
   static final signInErrorMessage = '로그인 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요.';
 
   static final noRegisteredBusinessMessage = '먼저 사업장을 등록하세요!';
+
+  static final stocksCannotbeFetched = '네트워크 오류로 재고를 불러올 수 없습니다. 나중에 다시 시도해주세요.';
 }
 
 class SignInStrings {
