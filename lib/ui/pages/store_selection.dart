@@ -36,7 +36,6 @@ class StoreSelectionPage extends StatelessWidget {
         builder: (context, state) {
           if ((state as Authenticated)?.stores?.length == 0) {
             return Scaffold(
-              extendBodyBehindAppBar: true,
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 brightness: Brightness.light,
@@ -97,7 +96,6 @@ class StoreSelectionPage extends StatelessWidget {
           }
 
           return Scaffold(
-            extendBodyBehindAppBar: true,
             key: Key('StoreSelectionPage'),
             appBar: AppBar(
               backgroundColor: Colors.transparent,
