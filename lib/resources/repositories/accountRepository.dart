@@ -23,6 +23,12 @@ class AccountRepository {
     return validation;
   }
 
+  Future<List<User>> searchUser(String keyword) async {
+    final users = await accountAPIClient.searchUser(keyword);
+
+    return users;
+  }
+
   Future<Session> createSession(String userId, String password) async {
     final session = await accountAPIClient.createSession(userId, password);
 

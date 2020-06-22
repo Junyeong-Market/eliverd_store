@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:Eliverd/models/user.dart';
+import 'package:Eliverd/models/models.dart';
 
 class AccountAPIClient {
   // TO-DO: 백엔드 API 공식 배포 후 수정
@@ -99,5 +99,25 @@ class AccountAPIClient {
     final data = json.decode(res.body);
 
     return data;
+  }
+
+  Future<List<User>> searchUser(String keyword) async {
+    final url = '$baseUrl/account/user/search/$keyword?is_seller=true';
+    final res = await this.httpClient.post(url);
+
+    if (res.statusCode != 201) {
+      throw Exception('Error occurred while searching user');
+    }
+
+    final data = json.decode(res.body)['results'] as List;
+
+    return data.map((rawUser) {
+      return User(
+        userId: rawUser['user_id'],
+        nickname: rawUser['nickname'],
+        realname: rawUser['realname'],
+        isSeller: rawUser['is_seller'],
+      );
+    }).toList();
   }
 }
