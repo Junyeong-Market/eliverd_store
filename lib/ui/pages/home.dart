@@ -124,10 +124,7 @@ class _HomePageState extends State<HomePage> {
                             return index >= state.stocks.length
                                 ? CupertinoActivityIndicator()
                                 : ProductCard(
-                                    name: state.stocks[index].product.name,
-                                    manufacturer: state.stocks[index].product
-                                        .manufacturer.name,
-                                    price: state.stocks[index].price,
+                                    stock: state.stocks[index],
                                   );
                           },
                           itemCount: state.isAllFetched
