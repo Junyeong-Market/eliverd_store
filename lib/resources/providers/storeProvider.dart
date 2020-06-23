@@ -19,7 +19,8 @@ class StoreAPIClient {
     final url = '$baseUrl/store';
     final res = await this.httpClient.post(url,
         body: jsonifiedStore,
-        encoding: Encoding.getByName('application/json; charset=\'utf-8\''));
+        encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+    );
 
     if (res.statusCode != 201) {
       throw Exception('Error occurred while creating your store');

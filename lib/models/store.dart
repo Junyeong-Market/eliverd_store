@@ -13,7 +13,7 @@ class Store extends Equatable {
   final int id;
   final String name;
   final String description;
-  final User registerer;
+  final List<User> registerers;
   final String registeredNumber;
   final Point location;
 
@@ -21,31 +21,31 @@ class Store extends Equatable {
       {this.id,
       this.name,
       this.description,
-      this.registerer,
+      this.registerers,
       this.registeredNumber,
       this.location});
 
   @override
   List<Object> get props =>
-      [id, name, description, registerer, registeredNumber, location];
+      [id, name, description, registerers, registeredNumber, location];
 
   @override
   String toString() {
-    return 'Store { id: $id, name: $name, description: $description, registerer: $registerer, registeredNumber: $registeredNumber, location: $location}';
+    return 'Store { id: $id, name: $name, description: $description, registerers: $registerers, registeredNumber: $registeredNumber, location: $location}';
   }
 
   Store copyWith(
           {int id,
           String name,
           String description,
-          User registerer,
+          List<User> registerers,
           String registeredNumber,
           Point location}) =>
       Store(
           id: id,
           name: name,
           description: description,
-          registerer: registerer,
+          registerers: registerers,
           registeredNumber: registeredNumber,
           location: location);
 
@@ -53,7 +53,7 @@ class Store extends Equatable {
       id: json['number'],
       name: json['name'],
       description: json['description'],
-      registerer: json['registerer'],
+      registerers: json['registerer'],
       registeredNumber: json['registerer_number'],
       location: json['point']);
 }
