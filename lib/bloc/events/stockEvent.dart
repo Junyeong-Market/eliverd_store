@@ -9,7 +9,14 @@ abstract class StockEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class StockLoaded extends StockEvent {}
+class StockLoaded extends StockEvent {
+  final Store store;
+
+  const StockLoaded(this.store);
+
+  @override
+  List<Object> get props => [store];
+}
 
 class StockAdded extends StockEvent {
   final Stock stock;
