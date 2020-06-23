@@ -60,6 +60,9 @@ class StoreSelectionStrings {
 }
 
 class RegisterStoreStrings {
+  static final reigsterersDesc = '사업자를 등록하세요.';
+  static final registererSearchDesc = '사업자를 이름으로 검색하세요.';
+
   static final registerBtnDesc = '등록하기';
 }
 

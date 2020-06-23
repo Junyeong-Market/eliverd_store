@@ -107,10 +107,11 @@ class _ProductCardState extends State<ProductCard> {
                         buttonPadding: EdgeInsets.all(0.0),
                         children: <Widget>[
                           ButtonTheme(
-                            minWidth: 25.0,
-                            height: 25.0,
+                            padding: EdgeInsets.all(3.0),
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            minWidth: 0,
+                            height: 0,
                             child: FlatButton(
-                              padding: EdgeInsets.all(0.0),
                               textColor: eliverdColor,
                               child: Text(
                                 '􀈎',
@@ -129,10 +130,11 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                           ButtonTheme(
-                            minWidth: 25.0,
-                            height: 25.0,
+                            padding: EdgeInsets.all(3.0),
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            minWidth: 0,
+                            height: 0,
                             child: FlatButton(
-                              padding: EdgeInsets.all(0.0),
                               textColor: eliverdColor,
                               child: Text(
                                 '􀈕',
