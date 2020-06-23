@@ -46,7 +46,8 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 36.0,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),

@@ -76,17 +76,20 @@ class ProductStrings {
   static final nameDescWhenImcompleted = '상품 이름을 입력하세요.';
   static final priceDescWhenImcompleted = '상품 가격을 입력하세요.';
   static final manufacturerDescWhenImcompleted = '제조사를 입력하세요.';
+  static final amountDescWhenImcompleted = '현재 재고 수를 입력하세요.';
 
   static final barcodeDescWhenUpdate = '바코드 수정 시 클릭하세요.';
   static final nameDescWhenUpdate = '상품 이름을 수정하세요.';
   static final priceDescWhenUpdate = '상품 가격을 수정하세요.';
   static final manufacturerDescWhenUpdate = '제조사를 수정하세요.';
+  static final amountDescWhenUpdate = '재고 수를 수정하세요.';
 
   static final noBarcodeDesc = '바코드 없음';
   static final barcodeDesc = '바코드';
   static final nameDesc = '상품 이름';
   static final priceDesc = '상품 가격';
   static final manufacturerDesc = '제조사';
+  static final amountDesc = '재고 수';
 
   static final deleteWarningContent = '한 번 삭제하면 영원히 복구할 수 없습니다.';
   static final cancel = '취소';
