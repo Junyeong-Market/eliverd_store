@@ -2,15 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-import 'package:Eliverd/models/models.dart';
-import 'package:Eliverd/resources/providers/providers.dart';
-import 'package:Eliverd/resources/repositories/repositories.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Eliverd/bloc/states/stockState.dart';
 import 'package:Eliverd/bloc/events/stockEvent.dart';
 import 'package:Eliverd/bloc/stockBloc.dart';
+
+import 'package:Eliverd/models/models.dart';
 
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
@@ -45,19 +43,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 
-    return BlocProvider<StockBloc>(
-      create: (_) => StockBloc(
-        storeRepository: StoreRepository(
-          storeAPIClient: StoreAPIClient(
-            httpClient: http.Client(),
-          ),
-        ),
-        currentStore: widget.currentStore,
-      ),
+    return BlocProvider<StockBloc>.value(
+      value: context.bloc<StockBloc>(),
       child: BlocConsumer<StockBloc, StockState>(
         listener: (context, state) {
           if (state is StockNotFetchedState) {
-            context.bloc<StockBloc>().add(StockLoaded());
+            context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
 
             _refreshCompleter?.complete();
             _refreshCompleter = Completer();
@@ -86,12 +77,13 @@ class _HomePageState extends State<HomePage> {
                         tooltip: HomePageStrings.addProductDesc,
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddProductPage(
-                                  currentStore: widget.currentStore,
-                                ),
-                              ));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddProductPage(
+                                currentStore: widget.currentStore,
+                              ),
+                            ),
+                          );
                         },
                       ),
                     ],
@@ -100,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                   Align(
                     alignment: FractionalOffset(0.1, 0.0),
                     child: Text(
-                      widget?.currentStore?.name,
+                      widget.currentStore.name,
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 36.0,
@@ -117,14 +109,18 @@ class _HomePageState extends State<HomePage> {
                 : ((state is StockFetchSuccessState)
                     ? RefreshIndicator(
                         onRefresh: () {
-                          context.bloc<StockBloc>().add(StockLoaded());
+                          context
+                              .bloc<StockBloc>()
+                              .add(StockLoaded(widget.currentStore));
 
                           return _refreshCompleter.future;
                         },
                         child: ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
                             return index >= state.stocks.length
-                                ? CupertinoActivityIndicator()
+                                ? Center(
+                                    child: CupertinoActivityIndicator(),
+                                  )
                                 : ProductCard(
                                     stock: state.stocks[index],
                                   );
@@ -135,7 +131,9 @@ class _HomePageState extends State<HomePage> {
                           controller: _scrollController,
                         ),
                       )
-                    : CupertinoActivityIndicator()),
+                    : Center(
+                        child: CupertinoActivityIndicator(),
+                      )),
           );
         },
       ),
@@ -146,7 +144,7 @@ class _HomePageState extends State<HomePage> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
-      context.bloc<StockBloc>().add(StockLoaded());
+      context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
     }
   }
 }

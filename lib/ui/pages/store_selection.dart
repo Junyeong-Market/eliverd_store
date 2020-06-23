@@ -8,10 +8,14 @@ import 'package:Eliverd/bloc/states/authState.dart';
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 
-import 'package:Eliverd/ui/pages/home.dart';
 import 'package:Eliverd/ui/pages/register_store.dart';
 
-class StoreSelectionPage extends StatelessWidget {
+class StoreSelectionPage extends StatefulWidget {
+  @override
+  _StoreSelectionPageState createState() => _StoreSelectionPageState();
+}
+
+class _StoreSelectionPageState extends State<StoreSelectionPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -23,18 +27,9 @@ class StoreSelectionPage extends StatelessWidget {
           if (state is! Authenticated) {
             Navigator.pop(context);
           }
-
-          if ((state as Authenticated)?.stores?.length == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(currentStore: (state as Authenticated).stores[0]),
-              ),
-            );
-          }
         },
         builder: (context, state) {
-          if ((state as Authenticated)?.stores?.length == 0) {
+          if ((state as Authenticated).stores.length == 0) {
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
@@ -53,8 +48,7 @@ class StoreSelectionPage extends StatelessWidget {
                       style: const TextStyle(
                           color: Colors.black,
                           fontSize: 32.0,
-                          fontWeight: FontWeight.bold
-                      ),
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -69,27 +63,26 @@ class StoreSelectionPage extends StatelessWidget {
                   color: Colors.transparent,
                   elevation: 0.0,
                   child: CupertinoButton(
-                    key: Key('RegisterStoreButton'),
-                    child: Text(
-                      StoreSelectionStrings.registerBtnDesc,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    color: eliverdColor,
-                    borderRadius: BorderRadius.circular(15.0),
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterStorePage(),
+                      key: Key('RegisterStoreButton'),
+                      child: Text(
+                        StoreSelectionStrings.registerBtnDesc,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
                         ),
-                      );
-                    }
-                  ),
+                      ),
+                      color: eliverdColor,
+                      borderRadius: BorderRadius.circular(15.0),
+                      padding: EdgeInsets.symmetric(vertical: 15.0),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterStorePage(),
+                          ),
+                        );
+                      }),
                 ),
               ),
             );

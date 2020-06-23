@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:Eliverd/bloc/stockBloc.dart';
+import 'package:Eliverd/bloc/states/stockState.dart';
 import 'package:Eliverd/bloc/events/stockEvent.dart';
 
 import 'package:Eliverd/models/models.dart';
@@ -129,7 +130,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
     return BlocProvider<StockBloc>.value(
       value: context.bloc<StockBloc>(),
-      child: BlocBuilder(
+      child: BlocBuilder<StockBloc, StockState>(
         builder: (context, state) {
           return Scaffold(
             key: Key('AddProductPage'),

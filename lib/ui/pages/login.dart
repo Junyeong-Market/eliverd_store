@@ -11,8 +11,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 
-import './store_selection.dart';
-import './sign_up.dart';
+import 'package:Eliverd/ui/pages/home.dart';
+import 'package:Eliverd/ui/pages/store_selection.dart';
+import 'package:Eliverd/ui/pages/sign_up.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -58,7 +59,9 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => StoreSelectionPage(),
+                builder: (context) => state.stores.length == 1
+                    ? HomePage(currentStore: state.stores[0])
+                    : StoreSelectionPage(),
               ),
             );
           }
