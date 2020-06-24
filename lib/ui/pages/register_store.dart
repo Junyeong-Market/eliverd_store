@@ -2,9 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
-import 'package:Eliverd/bloc/accountBloc.dart';
-import 'package:Eliverd/bloc/states/accountState.dart';
+import 'package:Eliverd/resources/providers/storeProvider.dart';
+import 'package:Eliverd/resources/repositories/storeRepository.dart';
+
+import 'package:Eliverd/bloc/storeBloc.dart';
+import 'package:Eliverd/bloc/states/storeState.dart';
+import 'package:Eliverd/bloc/events/storeEvent.dart';
 
 import 'package:Eliverd/models/models.dart';
 
@@ -19,20 +24,38 @@ class RegisterStorePage extends StatefulWidget {
 class _RegisterStorePageState extends State<RegisterStorePage> {
   final _storeNameController = TextEditingController();
   final _storeDescController = TextEditingController();
-  final _registerNumberController = TextEditingController();
+  final _registeredNumberController = TextEditingController();
 
   List<User> _registerers = [];
   Coordinate _storeLocation;
+
+  void _registerStore() {
+    final store = Store(
+      name: _storeDescController.text,
+      description: _storeDescController.text,
+      registeredNumber: _registeredNumberController.text,
+      registerers: _registerers,
+      location: _storeLocation,
+    );
+
+    context.bloc<StoreBloc>().add(CreateStore(store));
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 
-    return BlocProvider<AccountBloc>.value(
-      value: context.bloc<AccountBloc>(),
-      child: BlocConsumer<AccountBloc, AccountState>(
+    return BlocProvider<StoreBloc>(
+      create: (_) => StoreBloc(
+        storeRepository: StoreRepository(
+          storeAPIClient: StoreAPIClient(
+            httpClient: http.Client(),
+          ),
+        ),
+      ),
+      child: BlocConsumer<StoreBloc, StoreState>(
         listener: (context, state) {
-          if (state is AccountDoneCreate) {
+          if (state is StoreCreated) {
             Navigator.pop(context);
           }
         },
@@ -152,7 +175,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _registerNumberController.text.length == 0
+                          _registeredNumberController.text.length == 0
                               ? RegisterStoreStrings
                                   .registerNumberTitleWhenImcompleted
                               : RegisterStoreStrings.registerNumberTitle,
@@ -170,8 +193,8 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                           ],
                           maxLength: 12,
                           maxLengthEnforced: true,
-                          controller: _registerNumberController,
-                          enabled: _registerNumberController.text.length == 0,
+                          controller: _registeredNumberController,
+                          enabled: _registeredNumberController.text.length == 0,
                           decoration: InputDecoration(
                             helperText:
                                 RegisterStoreStrings.registerNumberHelperText,
@@ -248,7 +271,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
-                    visible: _registerNumberController.text.length != 0,
+                    visible: _registeredNumberController.text.length != 0,
                   ),
                   SizedBox(height: height / 48.0),
                   Visibility(
@@ -301,7 +324,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                         SizedBox(height: height / 120.0),
                         Visibility(
                           child: Text(
-                            ErrorMessages.signUpErrorMessage,
+                            ErrorMessages.registerStoreNotProceed,
                             style: TextStyle(
                               color: Colors.red,
                               fontWeight: FontWeight.bold,
@@ -310,7 +333,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                           maintainSize: false,
                           maintainAnimation: true,
                           maintainState: true,
-                          visible: state is AccountError,
+                          visible: state is StoreError,
                         ),
                       ],
                     ),
@@ -344,7 +367,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                   color: eliverdColor,
                   borderRadius: BorderRadius.circular(15.0),
                   padding: EdgeInsets.symmetric(vertical: 15.0),
-                  onPressed: _storeLocation == null ? null : () {},
+                  onPressed: _storeLocation == null ? null : _registerStore,
                 ),
               ),
             ),
@@ -367,14 +390,12 @@ class RegisterNumberTextInputFormatter extends TextInputFormatter {
 
     if (newTextLength >= 4) {
       newText.write(newValue.text.substring(0, usedSubstringIndex = 3) + '-');
-      if (newValue.selection.end >= 3)
-        selectionIndex++;
+      if (newValue.selection.end >= 3) selectionIndex++;
     }
 
     if (newTextLength >= 6) {
       newText.write(newValue.text.substring(3, usedSubstringIndex = 5) + '-');
-      if (newValue.selection.end >= 5)
-        selectionIndex++;
+      if (newValue.selection.end >= 5) selectionIndex++;
     }
 
     if (newTextLength >= usedSubstringIndex)

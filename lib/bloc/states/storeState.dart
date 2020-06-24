@@ -10,3 +10,5 @@ abstract class StoreState extends Equatable {
 class StoreNotCreated extends StoreState {}
 
 class StoreCreated extends StoreState {}
+
+class StoreError extends StoreState {}
