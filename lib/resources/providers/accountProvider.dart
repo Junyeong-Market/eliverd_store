@@ -103,7 +103,7 @@ class AccountAPIClient {
 
   Future<List<User>> searchUser(String keyword) async {
     final url = '$baseUrl/account/user/search/$keyword?is_seller=true';
-    final res = await this.httpClient.post(url);
+    final res = await this.httpClient.get(url);
 
     if (res.statusCode != 201) {
       throw Exception('Error occurred while searching user');
