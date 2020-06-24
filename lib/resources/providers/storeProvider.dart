@@ -17,10 +17,9 @@ class StoreAPIClient {
 
   Future<Store> createStore(Map<String, dynamic> jsonifiedStore) async {
     final url = '$baseUrl/store';
-    final res = await this.httpClient.post(
-      url,
-      body: jsonifiedStore,
-      encoding: Encoding.getByName('application/json; charset=\'utf-8\'')
+    final res = await this.httpClient.post(url,
+        body: jsonifiedStore,
+        encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
     );
 
     if (res.statusCode != 201) {
@@ -41,7 +40,7 @@ class StoreAPIClient {
       throw Exception('Error occurred while fetching all stocks on your store');
     }
 
-    final data = json.decode(res.body) as List;
+    final data = json.decode(res.body)['results'] as List;
 
     return data.map((rawStock) {
       return Stock(
@@ -53,16 +52,18 @@ class StoreAPIClient {
     }).toList();
   }
 
-  Future<Product> addStock(String storeId, Map<String, dynamic> jsonifiedStock) async {
+  Future<Product> upsertStock(
+      int storeId, Map<String, dynamic> jsonifiedStock) async {
     final url = '$baseUrl/store/$storeId/stock';
     final res = await this.httpClient.post(
-      url,
-      body: jsonifiedStock,
-      encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
-    );
+          url,
+          body: jsonifiedStock,
+          encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+        );
 
     if (res.statusCode != 201) {
-      throw Exception('Error occurred while adding stock on your store');
+      throw Exception(
+          'Error occurred while adding/updating/deleting stock on your store');
     }
 
     final data = json.decode(res.body) as Product;
@@ -70,11 +71,7 @@ class StoreAPIClient {
     return data;
   }
 
-  Future<Product> removeStock(String stockId, String productId) async {
-    throw new UnimplementedError();
-  }
-
-  Future<Product> getProduct(String productId) async {
+  Future<Product> getProduct(int productId) async {
     final url = '$baseUrl/product/$productId';
     final res = await this.httpClient.get(url);
 
@@ -87,7 +84,7 @@ class StoreAPIClient {
     return data;
   }
 
-  Future<Store> getStore(String storeId) async {
+  Future<Store> getStore(int storeId) async {
     final url = '$baseUrl/store/$storeId';
     final res = await this.httpClient.get(url);
 
