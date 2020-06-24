@@ -3,7 +3,7 @@ class TitleStrings {
   static final homeTitle = '상점용 엘리버드';
   static final signUpTitle = '회원가입';
   static final storeSelectionTitle = '님의 사업장을 선택해주세요.';
-  static final registerStoreTitle = '사업장 등록';
+  static final registerStoreTitle = '먼저 사업장을 등록하세요.';
   static final addProductTitle = '재고 등록';
   static final updateProductTitle = '재고 수정';
 }
@@ -60,8 +60,23 @@ class StoreSelectionStrings {
 }
 
 class RegisterStoreStrings {
-  static final reigsterersDesc = '사업자를 등록하세요.';
   static final registererSearchDesc = '사업자를 이름으로 검색하세요.';
+
+  static final storeNameTitleWhenImcompleted = '사업장 이름을 입력하세요.';
+  static final storeDescTitleWhenImcompleted = '사업장을 간략히 설명하세요.';
+  static final registerNumberTitleWhenImcompleted = '사업자등록번호를 입력하세요.';
+  static final reigsterersTitleWhenImcompleted = '사업자를 등록하세요.';
+  static final storeLocationTitleWhenImcompleted = '사업장 위치를 등록하세요.';
+
+  static final storeNameHelperText = '영어나 한글로 50자 이내로 적으세요.';
+  static final storeDescHelperText = '사업장에 대한 설명을 자유롭게 적으세요.';
+  static final registerNumberHelperText = '숫자 10자리만 입력하세요.';
+
+  static final storeNameTitle = '사업장 이름';
+  static final storeDescTitle = '사업장 설명';
+  static final registerNumberTitle = '사업장 번호';
+  static final reigsterersTitle = '사업자';
+  static final storeLocationTitle = '사업장 위치';
 
   static final registerBtnDesc = '등록하기';
 }
