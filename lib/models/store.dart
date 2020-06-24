@@ -63,8 +63,16 @@ class Store extends Equatable {
       name: json['name'],
       description: json['description'],
       registerers: json['registerer'],
-      registeredNumber: json['registerer_number'],
+      registeredNumber: json['registered_number'],
       location: json['point']);
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'description': description,
+    'registered_number': registeredNumber,
+    'lat': location.lat,
+    'lng': location.lng,
+  };
 }
 
 class Stock extends Equatable {
