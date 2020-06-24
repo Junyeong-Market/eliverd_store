@@ -5,10 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Eliverd/bloc/authBloc.dart';
 import 'package:Eliverd/bloc/states/authState.dart';
 
-import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
-
-import 'package:Eliverd/ui/pages/register_store.dart';
 
 class StoreSelectionPage extends StatefulWidget {
   @override
@@ -29,65 +26,6 @@ class _StoreSelectionPageState extends State<StoreSelectionPage> {
           }
         },
         builder: (context, state) {
-          if ((state as Authenticated).stores.length == 0) {
-            return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                brightness: Brightness.light,
-                elevation: 0.0,
-                automaticallyImplyLeading: false,
-              ),
-              body: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                ),
-                child: ListView(
-                  children: <Widget>[
-                    Text(
-                      ErrorMessages.noRegisteredBusinessMessage,
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 32.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              bottomNavigationBar: Padding(
-                padding: EdgeInsets.only(
-                  left: 20.0,
-                  right: 20.0,
-                  bottom: 20.0,
-                ),
-                child: BottomAppBar(
-                  color: Colors.transparent,
-                  elevation: 0.0,
-                  child: CupertinoButton(
-                      key: Key('RegisterStoreButton'),
-                      child: Text(
-                        StoreSelectionStrings.registerBtnDesc,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      color: eliverdColor,
-                      borderRadius: BorderRadius.circular(15.0),
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterStorePage(),
-                          ),
-                        );
-                      }),
-                ),
-              ),
-            );
-          }
-
           return Scaffold(
             key: Key('StoreSelectionPage'),
             appBar: AppBar(
