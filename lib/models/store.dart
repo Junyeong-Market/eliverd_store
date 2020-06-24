@@ -1,12 +1,21 @@
+import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:Eliverd/models/models.dart';
 
-class Point {
-  final double x;
-  final double y;
+class Coordinate extends Equatable {
+  final double lat;
+  final double lng;
 
-  const Point(this.x, this.y);
+  @override
+  List<Object> get props => [lat, lng];
+
+  const Coordinate({@required this.lat, @required this.lng});
+
+  @override
+  String toString() {
+    return 'Coordinate{ lat: $lat, lng: $lng }';
+  }
 }
 
 class Store extends Equatable {
@@ -15,7 +24,7 @@ class Store extends Equatable {
   final String description;
   final List<User> registerers;
   final String registeredNumber;
-  final Point location;
+  final Coordinate location;
 
   const Store(
       {this.id,
@@ -40,7 +49,7 @@ class Store extends Equatable {
           String description,
           List<User> registerers,
           String registeredNumber,
-          Point location}) =>
+          Coordinate location}) =>
       Store(
           id: id,
           name: name,
