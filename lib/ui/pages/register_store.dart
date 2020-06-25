@@ -13,6 +13,8 @@ import 'package:Eliverd/bloc/events/storeEvent.dart';
 
 import 'package:Eliverd/models/models.dart';
 
+import 'package:Eliverd/ui/widgets/search_user.dart';
+
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/color.dart';
 
@@ -28,6 +30,19 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
 
   List<User> _registerers = [];
   Coordinate _storeLocation;
+
+  void _openSearchUserDialog() {
+    context.bloc<StoreBloc>().add(SearchRegisterers());
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return SearchUserDialog();
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
 
   void _registerStore() {
     final store = Store(
@@ -57,6 +72,12 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
         listener: (context, state) {
           if (state is StoreCreated) {
             Navigator.pop(context);
+          }
+
+          if (state is RegisterersSelected) {
+            setState(() {
+              _registerers = state.registerers;
+            });
           }
         },
         builder: (context, state) {
@@ -251,11 +272,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                                       fontSize: 22.0,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      // TO-DO: 사업자 검색 후 선택한 모든 사업자 List를 _registerers에 할당
-                                    });
-                                  },
+                                  onPressed: _openSearchUserDialog,
                                 ),
                               ),
                               maintainSize: true,
