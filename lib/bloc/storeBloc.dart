@@ -10,19 +10,25 @@ import 'package:Eliverd/bloc/states/storeState.dart';
 class StoreBloc extends Bloc<StoreEvent, StoreState> {
   final StoreRepository storeRepository;
 
-  StoreBloc({@required this.storeRepository})
-      : assert(storeRepository != null);
+  StoreBloc({@required this.storeRepository}) : assert(storeRepository != null);
 
   @override
   StoreState get initialState => StoreNotCreated();
 
   @override
   Stream<StoreState> mapEventToState(StoreEvent event) async* {
-    if (event is CreateStore) {
-      await storeRepository.createStore(event.store.toJson());
+    try {
+      if (event is CreateStore) {
+        await storeRepository.createStore(event.store.toJson());
 
-      yield StoreCreated();
+        yield StoreCreated();
+      } else if (event is SearchRegisterers) {
+        yield RegisterersSearching();
+      } else if (event is SelectRegisterers) {
+        yield RegisterersSelected(event.registerers);
+      }
+    } catch (_) {
+      yield StoreError();
     }
   }
-
 }

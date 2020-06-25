@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:Eliverd/bloc/authBloc.dart';
 import 'package:Eliverd/bloc/accountBloc.dart';
 import 'package:Eliverd/bloc/stockBloc.dart';
+import 'package:Eliverd/bloc/searchUserBloc.dart';
 
 import 'package:Eliverd/resources/providers/providers.dart';
 import 'package:Eliverd/resources/repositories/repositories.dart';
@@ -54,6 +55,15 @@ class EliverdStore extends StatelessWidget {
           create: (_) => StockBloc(
             storeRepository: StoreRepository(
               storeAPIClient: StoreAPIClient(
+                httpClient: http.Client(),
+              ),
+            ),
+          ),
+        ),
+        BlocProvider<SearchUserBloc>(
+          create: (_) => SearchUserBloc(
+            accountRepository: AccountRepository(
+              accountAPIClient: AccountAPIClient(
                 httpClient: http.Client(),
               ),
             ),

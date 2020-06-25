@@ -9,6 +9,17 @@ abstract class StoreEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class SearchRegisterers extends StoreEvent {}
+
+class SelectRegisterers extends StoreEvent {
+  final List<User> registerers;
+
+  const SelectRegisterers(this.registerers);
+
+  @override
+  List<Object> get props => [registerers];
+}
+
 class CreateStore extends StoreEvent {
   final Store store;
 
