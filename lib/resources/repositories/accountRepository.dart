@@ -12,18 +12,36 @@ class AccountRepository {
       : assert(accountAPIClient != null);
 
   Future<User> signUpUser(Map<String, dynamic> jsonifiedUser) async {
-    final user = accountAPIClient.signUpUser(jsonifiedUser);
+    final user = await accountAPIClient.signUpUser(jsonifiedUser);
 
     return user;
   }
 
+  Future<Map<String, dynamic>> validateUser(Map<String, dynamic> jsonifiedUser) async {
+    final validation = await accountAPIClient.validateUser(jsonifiedUser);
+
+    return validation;
+  }
+
+  Future<List<User>> searchUser(String keyword) async {
+    final users = await accountAPIClient.searchUser(keyword);
+
+    return users;
+  }
+
   Future<Session> createSession(String userId, String password) async {
-    final session = accountAPIClient.createSession(userId, password);
+    final session = await accountAPIClient.createSession(userId, password);
 
     return session;
   }
 
-  Future<void> deleteSession(String session) async {
+  Future<Map<String, dynamic>> validateSession(int session) async {
+    final userInfo = await accountAPIClient.validateSession(session);
+
+    return userInfo;
+  }
+
+  Future<void> deleteSession(int session) async {
     await accountAPIClient.deleteSession(session);
   }
 }

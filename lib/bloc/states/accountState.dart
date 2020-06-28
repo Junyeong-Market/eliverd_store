@@ -7,6 +7,20 @@ abstract class AccountState extends Equatable {
   List<Object> get props => [];
 }
 
-class AccountNotExist extends AccountState {}
+class AccountInitial extends AccountState {}
 
-class AccountExist extends AccountState {}
+class AccountOnCreate extends AccountState {}
+
+class AccountValidateFailed extends AccountState {
+  final Map<String, dynamic> jsonifiedValidation;
+
+  const AccountValidateFailed(this.jsonifiedValidation);
+
+  @override
+  List<Object> get props => [jsonifiedValidation];
+}
+
+class AccountDoneCreate extends AccountState {}
+
+class AccountError extends AccountState {}
+
