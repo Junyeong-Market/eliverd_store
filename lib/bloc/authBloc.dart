@@ -1,21 +1,29 @@
+import 'package:Eliverd/common/string.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:Eliverd/bloc/events/authEvent.dart';
 import 'package:Eliverd/bloc/states/authState.dart';
 
+import 'package:Eliverd/models/models.dart';
 import 'package:Eliverd/resources/repositories/repositories.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc
+    extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AccountRepository accountRepository;
+  final StoreRepository storeRepository;
 
-  AuthenticationBloc({ @required this.accountRepository }) : assert(accountRepository != null);
+  AuthenticationBloc(
+      {@required this.accountRepository, @required this.storeRepository})
+      : assert(accountRepository != null),
+        assert(storeRepository != null);
 
   @override
   AuthenticationState get initialState => NotAuthenticated();
 
   @override
-  Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
+  Stream<AuthenticationState> mapEventToState(
+      AuthenticationEvent event) async* {
     if (event is ValidateAuthentication) {
       yield* _mapValidateAuthenticationToState(event);
     } else if (event is SignInAuthentication) {
@@ -25,31 +33,75 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
   }
 
-  Stream<AuthenticationState> _mapValidateAuthenticationToState(ValidateAuthentication event) async* {
-    // TO-DO: 현재 세션 토큰 불러오기
-    final currentToken = 1;
+  Stream<AuthenticationState> _mapValidateAuthenticationToState(
+      ValidateAuthentication event) async* {
+    try {
+      final session = int.parse(event.token);
+      final data = await accountRepository.validateSession(session);
 
-    if (currentToken.isNaN) {
-      yield NotAuthenticated();
-    } else {
-      yield Authenticated();
+      if (data.isEmpty) {
+        yield NotAuthenticated();
+      }
+
+      final authenticatedUser = User(
+        userId: data['user_id'],
+        nickname: data['nickname'],
+        realname: data['realname'],
+        isSeller: data['is_seller'],
+      );
+
+      final stores = await Future.wait((data['stores'] as List)
+          .map((storeId) async => await storeRepository.getStore(storeId))
+          .toList());
+
+      yield Authenticated(authenticatedUser, stores);
+    } catch (_) {
+      yield AuthenticationError(ErrorMessages.loginErrorMessage);
     }
   }
 
-  Stream<AuthenticationState> _mapSignInAuthenticationToState(SignInAuthentication event) async* {
-    final session = await accountRepository.createSession(event.userId, event.password);
+  Stream<AuthenticationState> _mapSignInAuthenticationToState(
+      SignInAuthentication event) async* {
+    try {
+      final session =
+          await accountRepository.createSession(event.userId, event.password);
 
-    if (session != null) {
-      yield Authenticated();
-    } else {
-      yield NotAuthenticated();
+      if (session == null) {
+        yield NotAuthenticated();
+      }
+
+      final data = await accountRepository.validateSession(session.id);
+
+      if (data['is_seller'] == false) {
+        yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
+      }
+
+      final authenticatedUser = User(
+        userId: data['user_id'],
+        nickname: data['nickname'],
+        realname: data['realname'],
+        isSeller: data['is_seller'],
+      );
+
+      final stores = await Future.wait((data['stores'] as List)
+          .map((storeId) async => await storeRepository.getStore(storeId))
+          .toList());
+
+      yield Authenticated(authenticatedUser, stores);
+    } catch (_) {
+      yield AuthenticationError(ErrorMessages.loginErrorMessage);
     }
   }
 
-  Stream<AuthenticationState> _mapSignOutAuthenticationToState(SignOutAuthentication event) async* {
-    await accountRepository.deleteSession(event.token);
+  Stream<AuthenticationState> _mapSignOutAuthenticationToState(
+      SignOutAuthentication event) async* {
+    try {
+      final session = int.parse(event.token);
+      await accountRepository.deleteSession(session);
 
-    yield NotAuthenticated();
+      yield NotAuthenticated();
+    } catch (_) {
+      yield AuthenticationError(ErrorMessages.loginErrorMessage);
+    }
   }
-
 }
