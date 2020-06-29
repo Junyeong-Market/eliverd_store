@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Eliverd/common/key.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Eliverd/common/color.dart';
@@ -30,23 +31,27 @@ class _SplashScreenState extends State<SplashScreenPage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      key: Key('SplashScreenPage'),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [eliverdLightColor, eliverdDarkColor],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter),
-        ),
-        child: Center(
-          child: Image(
-            width: width / 1.5,
-            height: width / 1.5,
-            image: AssetImage('assets/images/logo/eliverd_logo_white.png'),
+    return _buildSplashScreen(width);
+  }
+
+  Widget _buildSplashScreen(double width) => Scaffold(
+        key: SplashScreenKeys.splashScreenPage,
+        body: Container(
+          key: SplashScreenKeys.splashScreenBackground,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [eliverdLightColor, eliverdDarkColor],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter),
+          ),
+          child: Center(
+            child: Image(
+              key: SplashScreenKeys.splashScreenLogo,
+              width: width / 1.5,
+              height: width / 1.5,
+              image: AssetImage('assets/images/logo/eliverd_logo_white.png'),
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }
