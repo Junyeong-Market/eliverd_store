@@ -3,12 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:http/http.dart' as http;
+
+import 'package:Eliverd/resources/providers/providers.dart';
+import 'package:Eliverd/resources/repositories/repositories.dart';
+
 import 'package:Eliverd/bloc/accountBloc.dart';
 import 'package:Eliverd/bloc/events/accountEvent.dart';
 import 'package:Eliverd/bloc/states/accountState.dart';
 
+import 'package:Eliverd/common/key.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/color.dart';
+
+import 'package:Eliverd/ui/widgets/sign_up_field.dart';
+import 'package:Eliverd/ui/widgets/sign_up_text.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -22,12 +31,32 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   bool _isSeller = false;
 
+  AccountBloc _accountBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _accountBloc = AccountBloc(
+      accountRepository: AccountRepository(
+        accountAPIClient: AccountAPIClient(
+          httpClient: http.Client(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _accountBloc.close();
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 
     return BlocProvider<AccountBloc>.value(
-      value: context.bloc<AccountBloc>(),
+      value: _accountBloc,
       child: BlocConsumer<AccountBloc, AccountState>(
         listener: (context, state) {
           if (state is AccountDoneCreate) {
@@ -36,315 +65,29 @@ class _SignUpPageState extends State<SignUpPage> {
         },
         builder: (context, state) {
           return Scaffold(
-            extendBodyBehindAppBar: true,
-            key: Key('SignUpPage'),
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              brightness: Brightness.light,
-              elevation: 0.0,
-              iconTheme: IconThemeData(color: Colors.black),
-            ),
-            body: Padding(
+            key: SignUpPageKeys.signUpPage,
+            appBar: _brightAppBar,
+            body: ListView(
               padding: EdgeInsets.symmetric(
                 horizontal: 20.0,
               ),
-              child: ListView(
-                children: <Widget>[
-                  Text(
-                    TitleStrings.signUpTitle,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 36.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: height / 48.0),
-                  Visibility(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          _nameController.text.length != 0
-                              ? SignUpStrings.realnameDesc
-                              : SignUpStrings.realnameDescWhenImcompleted,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 26.0,
-                          ),
-                        ),
-                        SizedBox(height: height / 120.0),
-                        TextField(
-                          textInputAction: TextInputAction.done,
-                          inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣^\s]")),
-                          ],
-                          maxLength: 128,
-                          maxLengthEnforced: true,
-                          controller: _nameController,
-                          decoration: InputDecoration(
-                            helperText: SignUpStrings.realnameHelperText,
-                            contentPadding: EdgeInsets.all(2.0),
-                            isDense: true,
-                            errorText: isWrongTypeField(state, 'realname')
-                                ? ErrorMessages.realnameInvalidMessage
-                                : null,
-                            errorStyle: const TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        SizedBox(height: height / 120.0),
-                      ],
-                    ),
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: true,
-                  ),
-                  Visibility(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          _nicknameController.text.length != 0
-                              ? SignUpStrings.nicknameDesc
-                              : SignUpStrings.nicknameDescWhenImcompleted,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 26.0,
-                          ),
-                        ),
-                        SizedBox(height: height / 120.0),
-                        TextField(
-                          textInputAction: TextInputAction.done,
-                          inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣^\s]")),
-                          ],
-                          maxLength: 50,
-                          maxLengthEnforced: true,
-                          controller: _nicknameController,
-                          decoration: InputDecoration(
-                            helperText: SignUpStrings.nicknameHelperText,
-                            contentPadding: EdgeInsets.all(2.0),
-                            isDense: true,
-                            errorText: isWrongTypeField(state, 'nickname')
-                                ? ErrorMessages.nicknameInvalidMessage
-                                : (isDuplicatedField(state, 'nickname')
-                                    ? ErrorMessages.nicknameDuplicatedMessage
-                                    : null),
-                            errorStyle: const TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        SizedBox(height: height / 120.0),
-                      ],
-                    ),
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: _nameController.text.length != 0,
-                  ),
-                  Visibility(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          _userIdController.text.length != 0
-                              ? SignUpStrings.idDesc
-                              : SignUpStrings.idDescWhenImcompleted,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 26.0,
-                          ),
-                        ),
-                        SizedBox(height: height / 120.0),
-                        TextField(
-                          textInputAction: TextInputAction.done,
-                          inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp("[a-zA-Z0-9^\s]")),
-                          ],
-                          maxLength: 50,
-                          maxLengthEnforced: true,
-                          controller: _userIdController,
-                          decoration: InputDecoration(
-                            helperText: SignUpStrings.userIdHelperText,
-                            contentPadding: EdgeInsets.all(2.0),
-                            isDense: true,
-                            errorText: isWrongTypeField(state, 'id')
-                                ? ErrorMessages.userIdInvalidMessage
-                                : (isDuplicatedField(state, 'id')
-                                    ? ErrorMessages.userIdDuplicatedMessage
-                                    : null),
-                            errorStyle: const TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        SizedBox(height: height / 120.0),
-                      ],
-                    ),
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: _nicknameController.text.length != 0,
-                  ),
-                  Visibility(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          _passwordController.text.length != 0
-                              ? SignUpStrings.passwordDesc
-                              : SignUpStrings.passwordDescWhenImcompleted,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 26.0,
-                          ),
-                        ),
-                        SizedBox(height: height / 120.0),
-                        TextField(
-                          textInputAction: TextInputAction.done,
-                          inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp("[a-zA-Z0-9\x01-\x19\x21-\x7F]")),
-                          ],
-                          maxLength: 256,
-                          maxLengthEnforced: true,
-                          obscureText: true,
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            helperText: SignUpStrings.passwordHelperText,
-                            contentPadding: EdgeInsets.all(2.0),
-                            isDense: true,
-                            errorText: isWrongTypeField(state, 'password')
-                                ? ErrorMessages.passwordInvalidMessage
-                                : null,
-                            errorStyle: const TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        SizedBox(height: height / 120.0),
-                      ],
-                    ),
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: _userIdController.text.length != 0,
-                  ),
-                  Visibility(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              SignUpStrings.isSellerDesc,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 26.0,
-                              ),
-                            ),
-                            CupertinoSwitch(
-                              value: _isSeller,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isSeller = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: height / 120.0),
-                        Visibility(
-                          child: Text(
-                            ErrorMessages.signUpErrorMessage,
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          maintainSize: false,
-                          maintainAnimation: true,
-                          maintainState: true,
-                          visible: state is AccountError,
-                        ),
-                      ],
-                    ),
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: _passwordController.text.length != 0,
-                  ),
-                ],
-              ),
+              children: <Widget>[
+                _signUpTitle,
+                SizedBox(height: height / 48.0),
+                _buildRealnameSection(state, height),
+                _buildNicknameSection(state, height),
+                _buildUserIdSection(state, height),
+                _buildPasswordSection(state, height),
+                _buildIsSellerSection(state, height),
+              ],
             ),
             bottomNavigationBar: Padding(
               padding: EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-                bottom: 20.0,
+                left: 15.0,
+                right: 15.0,
+                bottom: 15.0,
               ),
-              child: BottomAppBar(
-                color: Colors.transparent,
-                elevation: 0.0,
-                child: CupertinoButton(
-                  key: Key('SignUpButton'),
-                  child: Text(
-                    SignUpStrings.signUpButtonDesc,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  color: eliverdColor,
-                  borderRadius: BorderRadius.circular(15.0),
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  onPressed: _passwordController.text.length != 0
-                      ? () {
-                          Map<String, dynamic> jsonifiedUser = {
-                            'name': _nameController.text,
-                            'nickname': _nicknameController.text,
-                            'user_id': _userIdController.text,
-                            'password': _passwordController.text,
-                            'is_seller': _isSeller.toString(),
-                          };
-
-                          context
-                              .bloc<AccountBloc>()
-                              .add(AccountValidated(jsonifiedUser));
-                          context
-                              .bloc<AccountBloc>()
-                              .add(AccountCreated(jsonifiedUser));
-                        }
-                      : null,
-                ),
-              ),
+              child: _buildSignUpBtn(),
             ),
           );
         },
@@ -352,17 +95,258 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  bool isInvalidField(dynamic state, String fieldName) {
+  final _brightAppBar = AppBar(
+    backgroundColor: Colors.transparent,
+    brightness: Brightness.light,
+    elevation: 0.0,
+    iconTheme: IconThemeData(color: Colors.black),
+  );
+
+  final _nameRegex =
+      WhitelistingTextInputFormatter(RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣^\s]"));
+  final _nicknameRegex =
+      WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣^\s]"));
+  final _idRegex = WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9^\s]"));
+  final _passwordRegex =
+      WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9\x01-\x19\x21-\x7F]"));
+
+  Widget _signUpTitle = Text(
+    TitleStrings.signUpTitle,
+    style: const TextStyle(
+      color: Colors.black,
+      fontSize: 36.0,
+      fontWeight: FontWeight.bold,
+    ),
+  );
+
+  Widget _buildRealnameSection(AccountState state, double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SignUpText(
+              controller: _nameController,
+              textWhenCompleted: SignUpStrings.realnameDesc,
+              textWhenNotCompleted: SignUpStrings.realnameDescWhenImcompleted,
+            ),
+            SizedBox(height: height / 120.0),
+            SignUpTextField(
+              key: SignUpPageKeys.realnameTextField,
+              regex: _nameRegex,
+              maxLength: 128,
+              isObscured: false,
+              controller: _nameController,
+              helperText: SignUpStrings.realnameHelperText,
+              errorMessage: getErrorMessage(
+                  state, 'realname', ErrorMessages.realnameInvalidMessage),
+            ),
+            SizedBox(height: height / 120.0),
+          ],
+        ),
+        maintainSize: true,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: true,
+      );
+
+  Widget _buildNicknameSection(AccountState state, double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SignUpText(
+              controller: _nicknameController,
+              textWhenCompleted: SignUpStrings.nicknameDesc,
+              textWhenNotCompleted: SignUpStrings.nicknameDescWhenImcompleted,
+            ),
+            SizedBox(height: height / 120.0),
+            SignUpTextField(
+              key: SignUpPageKeys.nicknameTextField,
+              regex: _nicknameRegex,
+              maxLength: 50,
+              isObscured: false,
+              controller: _nicknameController,
+              helperText: SignUpStrings.nicknameHelperText,
+              errorMessage: getErrorMessage(
+                  state,
+                  'nickname',
+                  ErrorMessages.nicknameInvalidMessage,
+                  ErrorMessages.nicknameDuplicatedMessage),
+            ),
+            SizedBox(height: height / 120.0),
+          ],
+        ),
+        maintainSize: true,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: _nameController.text.length != 0,
+      );
+
+  Widget _buildUserIdSection(AccountState state, double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SignUpText(
+              controller: _userIdController,
+              textWhenCompleted: SignUpStrings.idDesc,
+              textWhenNotCompleted: SignUpStrings.idDescWhenImcompleted,
+            ),
+            SizedBox(height: height / 120.0),
+            SignUpTextField(
+              key: SignUpPageKeys.idTextField,
+              regex: _idRegex,
+              maxLength: 50,
+              isObscured: false,
+              controller: _userIdController,
+              helperText: SignUpStrings.userIdHelperText,
+              errorMessage: getErrorMessage(
+                  state,
+                  'userId',
+                  ErrorMessages.userIdInvalidMessage,
+                  ErrorMessages.userIdDuplicatedMessage),
+            ),
+            SizedBox(height: height / 120.0),
+          ],
+        ),
+        maintainSize: true,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: _nicknameController.text.length != 0,
+      );
+
+  Widget _buildPasswordSection(AccountState state, double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SignUpText(
+              controller: _passwordController,
+              textWhenCompleted: SignUpStrings.passwordDesc,
+              textWhenNotCompleted: SignUpStrings.passwordDescWhenImcompleted,
+            ),
+            SizedBox(height: height / 120.0),
+            SignUpTextField(
+              key: SignUpPageKeys.passwordTextField,
+              maxLength: 256,
+              isObscured: true,
+              helperText: SignUpStrings.passwordHelperText,
+              controller: _passwordController,
+              regex: _passwordRegex,
+              errorMessage: getErrorMessage(
+                  state, 'password', ErrorMessages.passwordInvalidMessage),
+            ),
+            SizedBox(height: height / 120.0),
+          ],
+        ),
+        maintainSize: true,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: _userIdController.text.length != 0,
+      );
+
+  Widget _buildIsSellerSection(AccountState state, double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  SignUpStrings.isSellerDesc,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 26.0,
+                  ),
+                ),
+                CupertinoSwitch(
+                  key: SignUpPageKeys.isSellerSwitch,
+                  value: _isSeller,
+                  onChanged: (value) {
+                    setState(() {
+                      _isSeller = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: height / 120.0),
+            Visibility(
+              key: SignUpPageKeys.signUpErrorMsg,
+              child: Text(
+                ErrorMessages.signUpErrorMessage,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              maintainSize: false,
+              maintainAnimation: true,
+              maintainState: true,
+              visible: state is AccountError,
+            ),
+          ],
+        ),
+        maintainSize: true,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: _passwordController.text.length != 0,
+      );
+
+  Widget _buildSignUpBtn() => BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0.0,
+        child: CupertinoButton(
+          key: SignUpPageKeys.signUpBtn,
+          child: Text(
+            SignUpStrings.signUpButtonDesc,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
+          color: eliverdColor,
+          borderRadius: BorderRadius.circular(15.0),
+          padding: EdgeInsets.symmetric(vertical: 15.0),
+          onPressed: _passwordController.text.length != 0
+              ? validateAndSignUpUser
+              : null,
+        ),
+      );
+
+  String getErrorMessage(
+      AccountState state, String fieldName, String invalidMsg,
+      [String duplicateMsg]) {
+    if (isWrongTypeField(state, fieldName)) {
+      return invalidMsg;
+    } else if (isDuplicatedField(state, fieldName)) {
+      return duplicateMsg ?? null;
+    } else {
+      return null;
+    }
+  }
+
+  void validateAndSignUpUser() {
+    Map<String, dynamic> jsonifiedUser = {
+      'name': _nameController.text,
+      'nickname': _nicknameController.text,
+      'user_id': _userIdController.text,
+      'password': _passwordController.text,
+      'is_seller': _isSeller.toString(),
+    };
+
+    _accountBloc.add(AccountValidated(jsonifiedUser));
+    _accountBloc.add(AccountCreated(jsonifiedUser));
+  }
+
+  bool isInvalidField(AccountState state, String fieldName) {
     return state is AccountValidateFailed &&
         state.jsonifiedValidation[fieldName] != 0;
   }
 
-  bool isWrongTypeField(dynamic state, String fieldName) {
+  bool isWrongTypeField(AccountState state, String fieldName) {
     return state is AccountValidateFailed &&
         state.jsonifiedValidation[fieldName] == 1;
   }
 
-  bool isDuplicatedField(dynamic state, String fieldName) {
+  bool isDuplicatedField(AccountState state, String fieldName) {
     return state is AccountValidateFailed &&
         state.jsonifiedValidation[fieldName] == 2;
   }
