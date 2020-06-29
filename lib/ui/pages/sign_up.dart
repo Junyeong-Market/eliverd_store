@@ -47,8 +47,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void dispose() {
-    super.dispose();
     _accountBloc.close();
+    super.dispose();
   }
 
   @override
