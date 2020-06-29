@@ -27,3 +27,12 @@ class SignUpPageKeys {
   static final signUpErrorMsg = Key('__SignUpErrorMessage__');
   static final signUpBtn = Key('__SignUpButtonFromSignUpPage__');
 }
+
+class HomePageKeys {
+  static final homePage = Key('__HomePage__');
+  static final stockList = Key('__HomeStockList__');
+  static final signOutBtn = Key('__HomeSignOutButton__');
+  static final searchProductBtn = Key('__HomeSearchProductButton__');
+  static final addProductBtn = Key('__HomeAddProductButton__');
+  static final currentStoreName = Key('__HomeCurrentStoreName__');
+}

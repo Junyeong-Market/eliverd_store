@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Eliverd/common/key.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -41,103 +42,116 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final height = MediaQuery
+        .of(context)
+        .size
+        .height;
 
-    return BlocProvider<StockBloc>.value(
-      value: context.bloc<StockBloc>(),
-      child: BlocConsumer<StockBloc, StockState>(
-        listener: (context, state) {
-          if (state is StockNotFetchedState) {
-            context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
+    return BlocConsumer<StockBloc, StockState>(
+      listener: (context, state) {
+        if (state is StockNotFetchedState) {
+          context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
 
-            _refreshCompleter?.complete();
-            _refreshCompleter = Completer();
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            key: Key('HomePage'),
-            appBar: Header(
-              height: height / 4.8,
-              child: Column(
-                children: <Widget>[
-                  AppBar(
-                    backgroundColor: eliverdColor,
-                    actions: <Widget>[
-                      IconButton(
-                        icon: const Icon(Icons.search),
-                        tooltip: HomePageStrings.searchProductDesc,
-                        onPressed: () {
-                          // TO-DO: 상품 조건적 검색 BLOC 구현
-                          // TO-DO: 상품 검색 페이지로 Navigate
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.add),
-                        tooltip: HomePageStrings.addProductDesc,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddProductPage(
-                                currentStore: widget.currentStore,
-                              ),
+          _refreshCompleter?.complete();
+          _refreshCompleter = Completer();
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          key: HomePageKeys.homePage,
+          appBar: _buildMainHeader(height),
+          body: _buildMainBody(state, height),
+        );
+      },
+    );
+  }
+
+  Widget _buildMainHeader(double height) =>
+      Header(
+        height: height / 4.8,
+        child: Column(
+          children: <Widget>[
+            AppBar(
+              backgroundColor: eliverdColor,
+              actions: <Widget>[
+                IconButton(
+                  key: HomePageKeys.searchProductBtn,
+                  icon: const Icon(Icons.search),
+                  tooltip: HomePageStrings.searchProductDesc,
+                  onPressed: () {
+                    // TO-DO: 상품 조건적 검색 BLOC 구현
+                    // TO-DO: 상품 검색 페이지로 Navigate
+                  },
+                ),
+                IconButton(
+                  key: HomePageKeys.addProductBtn,
+                  icon: const Icon(Icons.add),
+                  tooltip: HomePageStrings.addProductDesc,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AddProductPage(
+                              currentStore: widget.currentStore,
                             ),
-                          );
-                        },
                       ),
-                    ],
-                    elevation: 0.0,
-                  ),
-                  Align(
-                    alignment: FractionalOffset(0.1, 0.0),
-                    child: Text(
-                      widget.currentStore.name,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 36.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+                    );
+                  },
+                ),
+              ],
+              elevation: 0.0,
+            ),
+            Align(
+              alignment: FractionalOffset(0.1, 0.0),
+              child: Text(
+                widget.currentStore.name,
+                key: HomePageKeys.currentStoreName,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            body: state is StockFetchErrorState
-                ? Center(
-                    child: Text(ErrorMessages.stocksCannotbeFetched),
-                  )
-                : ((state is StockFetchSuccessState)
-                    ? RefreshIndicator(
-                        onRefresh: () {
-                          context
-                              .bloc<StockBloc>()
-                              .add(StockLoaded(widget.currentStore));
+          ],
+        ),
+      );
 
-                          return _refreshCompleter.future;
-                        },
-                        child: ListView.builder(
-                          itemBuilder: (BuildContext context, int index) {
-                            return index >= state.stocks.length
-                                ? Center(
-                                    child: CupertinoActivityIndicator(),
-                                  )
-                                : ProductCard(
-                                    stock: state.stocks[index],
-                                  );
-                          },
-                          itemCount: state.isAllFetched
-                              ? state.stocks.length
-                              : state.stocks.length + 1,
-                          controller: _scrollController,
-                        ),
-                      )
-                    : Center(
-                        child: CupertinoActivityIndicator(),
-                      )),
-          );
+  Widget _buildMainBody(StockState state, double height) {
+    if (state is StockFetchErrorState) {
+      return Center(
+        child: Text(ErrorMessages.stocksCannotbeFetched),
+      );
+    } else if (state is StockFetchSuccessState) {
+      return RefreshIndicator(
+        onRefresh: () {
+          context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
+
+          return _refreshCompleter.future;
         },
-      ),
-    );
+        child: ListView.builder(
+          key: HomePageKeys.stockList,
+          itemBuilder: (BuildContext context, int index) {
+            return index >= state.stocks.length
+                ? Center(
+                    child: CupertinoActivityIndicator(),
+                  )
+                : ProductCard(
+                    stock: state.stocks[index],
+                  );
+          },
+          itemCount: state.isAllFetched
+              ? state.stocks.length
+              : state.stocks.length + 1,
+          controller: _scrollController,
+        ),
+      );
+    } else {
+      return Center(
+        child: CupertinoActivityIndicator(),
+      );
+    }
   }
 
   void _onScroll() {
