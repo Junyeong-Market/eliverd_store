@@ -128,274 +128,271 @@ class _AddProductPageState extends State<AddProductPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 
-    return BlocProvider<StockBloc>.value(
-      value: context.bloc<StockBloc>(),
-      child: BlocBuilder<StockBloc, StockState>(
-        builder: (context, state) {
-          return Scaffold(
-            key: Key('AddProductPage'),
-            appBar: Header(
-              height: height / 4.8,
-              child: Column(
-                children: <Widget>[
-                  AppBar(
-                    backgroundColor: eliverdColor,
-                    elevation: 0.0,
-                  ),
-                  Align(
-                    alignment: FractionalOffset(0.1, 0.0),
-                    child: Text(
-                      TitleStrings.addProductTitle,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 36.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            body: ListView(
+    return BlocBuilder<StockBloc, StockState>(
+      builder: (context, state) {
+        return Scaffold(
+          key: Key('AddProductPage'),
+          appBar: Header(
+            height: height / 4.8,
+            child: Column(
               children: <Widget>[
-                SizedBox(height: height / 30.0),
-                Visibility(
-                  child: Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Text(
-                      ProductStrings.barcodeDescWhenImcompleted,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 28.0,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: !isBarcodeAdded,
+                AppBar(
+                  backgroundColor: eliverdColor,
+                  elevation: 0.0,
                 ),
-                // TO-DO: CameraPreview 위젯을 추가하여 바코드 인식이 되도록 하기
-                Visibility(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Text(
-                            isBarcodeAdded
-                                ? ProductStrings.noBarcodeDesc
-                                : ProductStrings.barcodeDesc,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 28.0,
-                            ),
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: true,
-                      ),
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                _nameController.text.length != 0
-                                    ? ProductStrings.nameDesc
-                                    : ProductStrings.nameDescWhenImcompleted,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                              SizedBox(height: height / 120.0),
-                              TextField(
-                                textInputAction: TextInputAction.done,
-                                controller: _nameController,
-                                enabled: _nameController.text.length == 0,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(2.0),
-                                  isDense: true,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: isBarcodeAdded,
-                      ),
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                _priceController.text.length != 0
-                                    ? ProductStrings.priceDesc
-                                    : ProductStrings.priceDescWhenImcompleted,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                              SizedBox(height: height / 120.0),
-                              TextField(
-                                textInputAction: TextInputAction.done,
-                                controller: _priceController,
-                                enabled: _priceController.text.length == 0,
-                                keyboardType: TextInputType.numberWithOptions(),
-                                inputFormatters: [
-                                  WhitelistingTextInputFormatter.digitsOnly,
-                                  CurrencyInputFormatter(),
-                                ],
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(2.0),
-                                  isDense: true,
-                                  prefixText: currency,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: _nameController.text.length != 0,
-                      ),
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                _manufacturerController.text.length != 0
-                                    ? ProductStrings.manufacturerDesc
-                                    : ProductStrings
-                                        .manufacturerDescWhenImcompleted,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                              SizedBox(height: height / 120.0),
-                              TextField(
-                                textInputAction: TextInputAction.done,
-                                controller: _manufacturerController,
-                                enabled:
-                                    _manufacturerController.text.length == 0,
-                                onSubmitted: _stateToLastPage,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(2.0),
-                                  isDense: true,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: _priceController.text.length != 0,
-                      ),
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                _amountController.text.length != 0
-                                    ? ProductStrings.amountDesc
-                                    : ProductStrings
-                                    .amountDescWhenImcompleted,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                              SizedBox(height: height / 120.0),
-                              TextField(
-                                textInputAction: TextInputAction.done,
-                                controller: _amountController,
-                                enabled:
-                                _amountController.text.length == 0,
-                                onSubmitted: _stateToLastPage,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(2.0),
-                                  isDense: true,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: _manufacturerController.text.length != 0,
-                      ),
-                    ],
+                Align(
+                  alignment: FractionalOffset(0.1, 0.0),
+                  child: Text(
+                    TitleStrings.addProductTitle,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 36.0,
+                        fontWeight: FontWeight.bold),
                   ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: isBarcodeAdded,
                 ),
               ],
             ),
-            bottomNavigationBar: BottomAppBar(
-              color: Colors.transparent,
-              elevation: 0.0,
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
-                child: CupertinoButton(
-                  color: eliverdColor,
-                  disabledColor: Colors.black12,
+          ),
+          body: ListView(
+            children: <Widget>[
+              SizedBox(height: height / 30.0),
+              Visibility(
+                child: Padding(
+                  padding: EdgeInsets.all(15.0),
                   child: Text(
-                    isBarcodeAdded
-                        ? ProductStrings.submit
-                        : ProductStrings.next,
+                    ProductStrings.barcodeDescWhenImcompleted,
                     style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 28.0,
                     ),
+                    textAlign: TextAlign.left,
                   ),
-                  onPressed: isBarcodeAdded
-                      ? (isLastPage ? _submitProduct : null)
-                      : _stateToBarcodeAdded,
-                  borderRadius: BorderRadius.circular(25.0),
                 ),
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: !isBarcodeAdded,
+              ),
+              // TO-DO: CameraPreview 위젯을 추가하여 바코드 인식이 되도록 하기
+              Visibility(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Visibility(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text(
+                          isBarcodeAdded
+                              ? ProductStrings.noBarcodeDesc
+                              : ProductStrings.barcodeDesc,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 28.0,
+                          ),
+                        ),
+                      ),
+                      maintainSize: false,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: true,
+                    ),
+                    Visibility(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              _nameController.text.length != 0
+                                  ? ProductStrings.nameDesc
+                                  : ProductStrings.nameDescWhenImcompleted,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 28.0,
+                              ),
+                            ),
+                            SizedBox(height: height / 120.0),
+                            TextField(
+                              textInputAction: TextInputAction.done,
+                              controller: _nameController,
+                              enabled: _nameController.text.length == 0,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(2.0),
+                                isDense: true,
+                              ),
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      maintainSize: false,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: isBarcodeAdded,
+                    ),
+                    Visibility(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              _priceController.text.length != 0
+                                  ? ProductStrings.priceDesc
+                                  : ProductStrings.priceDescWhenImcompleted,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 28.0,
+                              ),
+                            ),
+                            SizedBox(height: height / 120.0),
+                            TextField(
+                              textInputAction: TextInputAction.done,
+                              controller: _priceController,
+                              enabled: _priceController.text.length == 0,
+                              keyboardType: TextInputType.numberWithOptions(),
+                              inputFormatters: [
+                                WhitelistingTextInputFormatter.digitsOnly,
+                                CurrencyInputFormatter(),
+                              ],
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(2.0),
+                                isDense: true,
+                                prefixText: currency,
+                              ),
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      maintainSize: false,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: _nameController.text.length != 0,
+                    ),
+                    Visibility(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              _manufacturerController.text.length != 0
+                                  ? ProductStrings.manufacturerDesc
+                                  : ProductStrings
+                                  .manufacturerDescWhenImcompleted,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 28.0,
+                              ),
+                            ),
+                            SizedBox(height: height / 120.0),
+                            TextField(
+                              textInputAction: TextInputAction.done,
+                              controller: _manufacturerController,
+                              enabled:
+                              _manufacturerController.text.length == 0,
+                              onSubmitted: _stateToLastPage,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(2.0),
+                                isDense: true,
+                              ),
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      maintainSize: false,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: _priceController.text.length != 0,
+                    ),
+                    Visibility(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              _amountController.text.length != 0
+                                  ? ProductStrings.amountDesc
+                                  : ProductStrings
+                                  .amountDescWhenImcompleted,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 28.0,
+                              ),
+                            ),
+                            SizedBox(height: height / 120.0),
+                            TextField(
+                              textInputAction: TextInputAction.done,
+                              controller: _amountController,
+                              enabled:
+                              _amountController.text.length == 0,
+                              onSubmitted: _stateToLastPage,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(2.0),
+                                isDense: true,
+                              ),
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      maintainSize: false,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: _manufacturerController.text.length != 0,
+                    ),
+                  ],
+                ),
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: isBarcodeAdded,
+              ),
+            ],
+          ),
+          bottomNavigationBar: BottomAppBar(
+            color: Colors.transparent,
+            elevation: 0.0,
+            child: Padding(
+              padding: EdgeInsets.all(15.0),
+              child: CupertinoButton(
+                color: eliverdColor,
+                disabledColor: Colors.black12,
+                child: Text(
+                  isBarcodeAdded
+                      ? ProductStrings.submit
+                      : ProductStrings.next,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                ),
+                onPressed: isBarcodeAdded
+                    ? (isLastPage ? _submitProduct : null)
+                    : _stateToBarcodeAdded,
+                borderRadius: BorderRadius.circular(25.0),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
