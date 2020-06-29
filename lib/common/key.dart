@@ -36,3 +36,7 @@ class HomePageKeys {
   static final addProductBtn = Key('__HomeAddProductButton__');
   static final currentStoreName = Key('__HomeCurrentStoreName__');
 }
+
+class StoreSelectionPageKeys {
+  static final storeSelectionPage = Key('__StoreSelectionPage__');
+}
