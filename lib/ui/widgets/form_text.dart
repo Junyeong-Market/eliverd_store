@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
-class SignUpText extends StatefulWidget {
+class FormText extends StatefulWidget {
   final TextEditingController controller;
   final String textWhenCompleted;
   final String textWhenNotCompleted;
 
-  const SignUpText(
+  const FormText(
       {Key key,
       @required this.controller,
       @required this.textWhenCompleted,
@@ -13,10 +13,10 @@ class SignUpText extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SignUpTextState();
+  State<StatefulWidget> createState() => _FormTextState();
 }
 
-class _SignUpTextState extends State<SignUpText> {
+class _FormTextState extends State<FormText> {
   @override
   Widget build(BuildContext context) {
     return Text(

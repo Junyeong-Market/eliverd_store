@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SignUpTextField extends StatefulWidget {
+class FormTextField extends StatefulWidget {
   final regex;
   final maxLength;
   final isObscured;
@@ -9,29 +9,29 @@ class SignUpTextField extends StatefulWidget {
   final helperText;
   final errorMessage;
 
-  const SignUpTextField(
-      {Key key,
-      @required this.regex,
-      @required this.maxLength,
-      @required this.isObscured,
-      @required this.controller,
-      @required this.helperText,
-      @required this.errorMessage})
-      : super(key: key);
+  const FormTextField({
+    Key key,
+    @required this.controller,
+    this.errorMessage,
+    this.helperText,
+    this.regex,
+    this.isObscured,
+    this.maxLength,
+  }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SignUpTextFieldState();
+  State<StatefulWidget> createState() => _FormTextFieldState();
 }
 
-class _SignUpTextFieldState extends State<SignUpTextField> {
+class _FormTextFieldState extends State<FormTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
       textInputAction: TextInputAction.done,
-      inputFormatters: [widget.regex],
+      inputFormatters: widget.regex is List ? widget.regex : [widget.regex],
       maxLength: widget.maxLength,
       maxLengthEnforced: widget.maxLength == null ? false : true,
-      obscureText: widget.isObscured,
+      obscureText: widget.isObscured == null ? false : widget.isObscured,
       controller: widget.controller,
       decoration: InputDecoration(
         helperText: widget.helperText,
