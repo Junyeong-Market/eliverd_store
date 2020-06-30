@@ -1,8 +1,5 @@
 import 'dart:ui';
 
-import 'package:Eliverd/common/key.dart';
-import 'package:Eliverd/ui/widgets/form_text.dart';
-import 'package:Eliverd/ui/widgets/form_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,19 +14,11 @@ import 'package:Eliverd/models/models.dart';
 
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/color.dart';
+import 'package:Eliverd/common/key.dart';
 
 import 'package:Eliverd/ui/widgets/header.dart';
-
-// TO-DO: BLOC 구현 후 import
-/*
-import 'package:Eliverd/bloc/events/stockEvent.dart';
-import 'package:Eliverd/bloc/stockBloc.dart';
-import 'package:Eliverd/models/models.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-*/
-
-// TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
-// import 'package:camera/camera.dart';
+import 'package:Eliverd/ui/widgets/form_text.dart';
+import 'package:Eliverd/ui/widgets/form_text_field.dart';
 
 class AddProductPage extends StatefulWidget {
   final Store currentStore;
@@ -41,89 +30,23 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
-  // TO-DO: Camera 인터페이스 구현 후 선언하도록 하기
-  // CameraController _controller;
-  // Future<void> _initializeControllerFuture;
-
-  // TO-DO: Product BLOC 구현 후 Controller 자동 채우기 옵션
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
   final _manufacturerController = TextEditingController();
   final _amountController = TextEditingController();
 
-  // TO-DO: Camera 인터페이스 구현 후 선언하도록 하기
-  // bool isCameraReady = false;
-  // bool showCapturedPhoto = false;
-  // TO-DO: Camera 인터페이스 구현 후 false로 변경
   bool isBarcodeAdded = false;
   bool isLastPage = false;
 
-  String get currency =>
-      NumberFormat.compactSimpleCurrency(locale: 'ko').currencySymbol;
-
-  // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
-  /*
-  Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    final selectedCamera = cameras.first;
-
-    _controller = CameraController(selectedCamera, ResolutionPreset.medium);
-    _initializeControllerFuture = _controller.initialize();
-
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      isCameraReady = true;
-    });
-  }
-  */
-
-  void _stateToBarcodeAdded() {
-    setState(() {
-      isBarcodeAdded = true;
-    });
-  }
-
-  void _stateToLastPage(text) {
-    if (text.length != 0) {
-      setState(() {
-        isLastPage = true;
-      });
-    }
-  }
-
-  void _submitProduct() {
-    final stock = Stock(
-      store: widget.currentStore,
-      product: Product(
-        name: _nameController.text,
-        manufacturer: Manufacturer(
-          name: _manufacturerController.text,
-        ),
-        ian: '', // TO-DO: 바코드 기능 구현 후 value 넣기
-      ),
-      price: int.parse(_priceController.text),
-      amount: int.parse(_amountController.text),
-    );
-
-    context.bloc<StockBloc>().add(StockAdded(stock));
-
-    Navigator.pop(context);
-  }
+  String barcodeValue;
 
   @override
   void initState() {
     super.initState();
-    // TO-DO: Camera 인터페이스 구현 후 호출하도록 하기
-    // initializeCamera();
   }
 
   @override
   void dispose() {
-    // TO-DO: Camera 인터페이스 구현 후 호출하도록 하기
-    // controller.dispose();
     super.dispose();
   }
 
@@ -345,6 +268,44 @@ class _AddProductPageState extends State<AddProductPage> {
       },
     );
   }
+
+  String get currency =>
+      NumberFormat.compactSimpleCurrency(locale: 'ko').currencySymbol;
+
+
+  void _stateToBarcodeAdded() {
+    setState(() {
+      isBarcodeAdded = true;
+    });
+  }
+
+  void _stateToLastPage(text) {
+    if (text.length != 0) {
+      setState(() {
+        isLastPage = true;
+      });
+    }
+  }
+
+  void _submitProduct() {
+    final stock = Stock(
+      store: widget.currentStore,
+      product: Product(
+        name: _nameController.text,
+        manufacturer: Manufacturer(
+          name: _manufacturerController.text,
+        ),
+        ian: '', // TO-DO: 바코드 기능 구현 후 value 넣기
+      ),
+      price: int.parse(_priceController.text),
+      amount: int.parse(_amountController.text),
+    );
+
+    context.bloc<StockBloc>().add(StockAdded(stock));
+
+    Navigator.pop(context);
+  }
+
 
   Widget _buildSubmitBtn() => CupertinoButton(
         key: AddProductPageKeys.productSubmitBtn,
