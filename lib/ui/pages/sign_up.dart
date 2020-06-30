@@ -16,8 +16,8 @@ import 'package:Eliverd/common/key.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/color.dart';
 
-import 'package:Eliverd/ui/widgets/sign_up_field.dart';
-import 'package:Eliverd/ui/widgets/sign_up_text.dart';
+import 'package:Eliverd/ui/widgets/form_text_field.dart';
+import 'package:Eliverd/ui/widgets/form_text.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -123,13 +123,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SignUpText(
+            FormText(
               controller: _nameController,
               textWhenCompleted: SignUpStrings.realnameDesc,
               textWhenNotCompleted: SignUpStrings.realnameDescWhenImcompleted,
             ),
             SizedBox(height: height / 120.0),
-            SignUpTextField(
+            FormTextField(
               key: SignUpPageKeys.realnameTextField,
               regex: _nameRegex,
               maxLength: 128,
@@ -152,13 +152,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SignUpText(
+            FormText(
               controller: _nicknameController,
               textWhenCompleted: SignUpStrings.nicknameDesc,
               textWhenNotCompleted: SignUpStrings.nicknameDescWhenImcompleted,
             ),
             SizedBox(height: height / 120.0),
-            SignUpTextField(
+            FormTextField(
               key: SignUpPageKeys.nicknameTextField,
               regex: _nicknameRegex,
               maxLength: 50,
@@ -184,13 +184,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SignUpText(
+            FormText(
               controller: _userIdController,
               textWhenCompleted: SignUpStrings.idDesc,
               textWhenNotCompleted: SignUpStrings.idDescWhenImcompleted,
             ),
             SizedBox(height: height / 120.0),
-            SignUpTextField(
+            FormTextField(
               key: SignUpPageKeys.idTextField,
               regex: _idRegex,
               maxLength: 50,
@@ -216,13 +216,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SignUpText(
+            FormText(
               controller: _passwordController,
               textWhenCompleted: SignUpStrings.passwordDesc,
               textWhenNotCompleted: SignUpStrings.passwordDescWhenImcompleted,
             ),
             SizedBox(height: height / 120.0),
-            SignUpTextField(
+            FormTextField(
               key: SignUpPageKeys.passwordTextField,
               maxLength: 256,
               isObscured: true,

@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+import 'package:Eliverd/common/key.dart';
+import 'package:Eliverd/ui/widgets/form_text.dart';
+import 'package:Eliverd/ui/widgets/form_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -131,7 +134,7 @@ class _AddProductPageState extends State<AddProductPage> {
     return BlocBuilder<StockBloc, StockState>(
       builder: (context, state) {
         return Scaffold(
-          key: Key('AddProductPage'),
+          key: AddProductPageKeys.addProductPage,
           appBar: Header(
             height: height / 4.8,
             child: Column(
@@ -145,9 +148,10 @@ class _AddProductPageState extends State<AddProductPage> {
                   child: Text(
                     TitleStrings.addProductTitle,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 36.0,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 36.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -213,6 +217,7 @@ class _AddProductPageState extends State<AddProductPage> {
                             ),
                             SizedBox(height: height / 120.0),
                             TextField(
+                              key: AddProductPageKeys.productNameTextField,
                               textInputAction: TextInputAction.done,
                               controller: _nameController,
                               enabled: _nameController.text.length == 0,
@@ -233,83 +238,46 @@ class _AddProductPageState extends State<AddProductPage> {
                       maintainState: true,
                       visible: isBarcodeAdded,
                     ),
-                    Visibility(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              _priceController.text.length != 0
-                                  ? ProductStrings.priceDesc
-                                  : ProductStrings.priceDescWhenImcompleted,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 28.0,
-                              ),
-                            ),
-                            SizedBox(height: height / 120.0),
-                            TextField(
-                              textInputAction: TextInputAction.done,
-                              controller: _priceController,
-                              enabled: _priceController.text.length == 0,
-                              keyboardType: TextInputType.numberWithOptions(),
-                              inputFormatters: [
-                                WhitelistingTextInputFormatter.digitsOnly,
-                                CurrencyInputFormatter(),
-                              ],
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(2.0),
-                                isDense: true,
-                                prefixText: currency,
-                              ),
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      maintainSize: false,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      visible: _nameController.text.length != 0,
+                    FormText(
+                      controller: _priceController,
+                      textWhenCompleted: ProductStrings.priceDesc,
+                      textWhenNotCompleted:
+                          ProductStrings.priceDescWhenImcompleted,
+                    ),
+                    FormTextField(
+                      key: AddProductPageKeys.productPriceTextField,
+                      regex: [
+                        WhitelistingTextInputFormatter.digitsOnly,
+                        CurrencyInputFormatter(),
+                      ],
+                      isObscured: false,
+                      controller: _priceController,
+                      helperText: '',
+                      errorMessage: null,
+                    ),
+                    FormText(
+                      controller: _manufacturerController,
+                      textWhenCompleted: ProductStrings.manufacturerDesc,
+                      textWhenNotCompleted:
+                          ProductStrings.manufacturerDescWhenImcompleted,
                     ),
                     Visibility(
                       child: Padding(
                         padding: EdgeInsets.all(15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              _manufacturerController.text.length != 0
-                                  ? ProductStrings.manufacturerDesc
-                                  : ProductStrings
-                                  .manufacturerDescWhenImcompleted,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 28.0,
-                              ),
-                            ),
-                            SizedBox(height: height / 120.0),
-                            TextField(
-                              textInputAction: TextInputAction.done,
-                              controller: _manufacturerController,
-                              enabled:
-                              _manufacturerController.text.length == 0,
-                              onSubmitted: _stateToLastPage,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(2.0),
-                                isDense: true,
-                              ),
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
+                        child: TextField(
+                          key: AddProductPageKeys.productManufacturerTextField,
+                          textInputAction: TextInputAction.done,
+                          controller: _manufacturerController,
+                          enabled: _manufacturerController.text.length == 0,
+                          onSubmitted: _stateToLastPage,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(2.0),
+                            isDense: true,
+                          ),
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            color: Colors.black54,
+                          ),
                         ),
                       ),
                       maintainSize: false,
@@ -326,8 +294,7 @@ class _AddProductPageState extends State<AddProductPage> {
                             Text(
                               _amountController.text.length != 0
                                   ? ProductStrings.amountDesc
-                                  : ProductStrings
-                                  .amountDescWhenImcompleted,
+                                  : ProductStrings.amountDescWhenImcompleted,
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 28.0,
@@ -335,10 +302,10 @@ class _AddProductPageState extends State<AddProductPage> {
                             ),
                             SizedBox(height: height / 120.0),
                             TextField(
+                              key: AddProductPageKeys.productAmountTextField,
                               textInputAction: TextInputAction.done,
                               controller: _amountController,
-                              enabled:
-                              _amountController.text.length == 0,
+                              enabled: _amountController.text.length == 0,
                               onSubmitted: _stateToLastPage,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(2.0),
@@ -366,35 +333,36 @@ class _AddProductPageState extends State<AddProductPage> {
               ),
             ],
           ),
-          bottomNavigationBar: BottomAppBar(
-            color: Colors.transparent,
-            elevation: 0.0,
-            child: Padding(
-              padding: EdgeInsets.all(15.0),
-              child: CupertinoButton(
-                color: eliverdColor,
-                disabledColor: Colors.black12,
-                child: Text(
-                  isBarcodeAdded
-                      ? ProductStrings.submit
-                      : ProductStrings.next,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                  ),
-                ),
-                onPressed: isBarcodeAdded
-                    ? (isLastPage ? _submitProduct : null)
-                    : _stateToBarcodeAdded,
-                borderRadius: BorderRadius.circular(25.0),
-              ),
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.all(15.0),
+            child: BottomAppBar(
+              color: Colors.transparent,
+              elevation: 0.0,
+              child: _buildSubmitBtn(),
             ),
           ),
         );
       },
     );
   }
+
+  Widget _buildSubmitBtn() => CupertinoButton(
+        key: AddProductPageKeys.productSubmitBtn,
+        color: eliverdColor,
+        disabledColor: Colors.black12,
+        child: Text(
+          isBarcodeAdded ? ProductStrings.submit : ProductStrings.next,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20.0,
+          ),
+        ),
+        onPressed: isBarcodeAdded
+            ? (isLastPage ? _submitProduct : null)
+            : _stateToBarcodeAdded,
+        borderRadius: BorderRadius.circular(25.0),
+      );
 }
 
 class CurrencyInputFormatter extends TextInputFormatter {

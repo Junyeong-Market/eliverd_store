@@ -40,3 +40,18 @@ class HomePageKeys {
 class StoreSelectionPageKeys {
   static final storeSelectionPage = Key('__StoreSelectionPage__');
 }
+
+class AddProductPageKeys {
+  static final addProductPage = Key('__AddProductPage__');
+  static final barcodeImage = Key('__AddProductBarcodeImage__');
+  static final productNameTextField = Key('__AddProductNameTextField__');
+  static final productPriceTextField = Key('__AddProductPriceTextField__');
+  static final productManufacturerTextField = Key('__AddProductManufacturerTextField__');
+  static final productAmountTextField = Key('__AddProductAmountTextField__');
+  static final productSubmitBtn = Key('__AddProductSubmitButton__');
+}
+
+class RegisterStorePageKeys {
+  static final registerStorePage = Key('__RegisterStorePage__');
+  static final registerStoreBtn = Key('__RegisterStoreButton__');
+}
