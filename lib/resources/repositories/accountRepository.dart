@@ -27,13 +27,13 @@ class AccountRepository {
     return users;
   }
 
-  Future<Session> createSession(String userId, String password) async {
+  Future<String> createSession(String userId, String password) async {
     final session = await accountAPIClient.createSession(userId, password);
 
     return session;
   }
 
-  Future<Map<String, dynamic>> validateSession(int session) async {
+  Future<Map<String, dynamic>> validateSession(String session) async {
     final userInfo = await accountAPIClient.validateSession(session);
 
     return userInfo;

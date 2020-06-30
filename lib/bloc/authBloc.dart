@@ -36,7 +36,7 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapValidateAuthenticationToState(
       ValidateAuthentication event) async* {
     try {
-      final session = int.parse(event.token);
+      final session = event.token;
       final data = await accountRepository.validateSession(session);
 
       if (data.isEmpty) {
@@ -70,7 +70,7 @@ class AuthenticationBloc
         yield NotAuthenticated();
       }
 
-      final data = await accountRepository.validateSession(session.id);
+      final data = await accountRepository.validateSession(session);
 
       if (data['is_seller'] == false) {
         yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
@@ -88,7 +88,8 @@ class AuthenticationBloc
           .toList());
 
       yield Authenticated(authenticatedUser, stores);
-    } catch (_) {
+    } catch (e) {
+      print(e.toString());
       yield AuthenticationError(ErrorMessages.loginErrorMessage);
     }
   }

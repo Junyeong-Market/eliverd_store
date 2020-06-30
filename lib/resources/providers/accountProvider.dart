@@ -27,44 +27,33 @@ class AccountAPIClient {
     }
   }
 
-  Future<Session> createSession(String userId, String password) async {
+  Future<String> createSession(String userId, String password) async {
     final Map<String, dynamic> user = {
       'user_id': userId,
       'password': password
     };
 
-    print('Forwarded user: $user');
-
     final url = '$baseUrl/account/session/';
-
-    print('url: $url');
-
     final res = await this.httpClient.post(
       url,
       body: user,
       encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
     );
 
-    print('Response Info');
-    print('status code: ${res.statusCode}');
-    print('body: ${res.body}');
-
-    if (res.statusCode != 200) {
+    if (res.statusCode != 201) {
       throw Exception('Error occurred while creating session');
     }
 
-    final session = json.decode(res.body)['session'];
-
-    print(session);
+    final session = json.decode(res.body)['session'] as String;
 
     return session;
   }
 
-  Future<Map<String, dynamic>> validateSession(int session) async {
+  Future<Map<String, dynamic>> validateSession(String session) async {
     final url = '$baseUrl/account/session/';
     final res = await this.httpClient.get(url,
         headers: {
-          'Authorization': session.toString(),
+          'Authorization': session,
         }
     );
 
