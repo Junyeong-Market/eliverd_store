@@ -314,10 +314,10 @@ class _SignUpPageState extends State<SignUpPage> {
   String getErrorMessage(
       AccountState state, String fieldName, String invalidMsg,
       [String duplicateMsg]) {
-    if (isWrongTypeField(state, fieldName)) {
+    if (isInvalidField(state, fieldName)) {
       return invalidMsg;
-    } else if (isDuplicatedField(state, fieldName)) {
-      return duplicateMsg ?? null;
+    } else if (duplicateMsg.isNotEmpty && isDuplicatedField(state, fieldName)) {
+      return duplicateMsg;
     } else {
       return null;
     }
@@ -325,29 +325,24 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void validateAndSignUpUser() {
     Map<String, dynamic> jsonifiedUser = {
-      'name': _nameController.text,
+      'realname': _nameController.text,
       'nickname': _nicknameController.text,
       'user_id': _userIdController.text,
       'password': _passwordController.text,
       'is_seller': _isSeller.toString(),
     };
 
-    _accountBloc.add(AccountValidated(jsonifiedUser));
-    _accountBloc.add(AccountCreated(jsonifiedUser));
+    _accountBloc.add(ValidateAccount(jsonifiedUser));
+    _accountBloc.add(CreateAccount(jsonifiedUser));
   }
 
   bool isInvalidField(AccountState state, String fieldName) {
     return state is AccountValidateFailed &&
-        state.jsonifiedValidation[fieldName] != 0;
-  }
-
-  bool isWrongTypeField(AccountState state, String fieldName) {
-    return state is AccountValidateFailed &&
-        state.jsonifiedValidation[fieldName] == 1;
+        (state.jsonifiedValidation[fieldName] as String).contains('exists');
   }
 
   bool isDuplicatedField(AccountState state, String fieldName) {
     return state is AccountValidateFailed &&
-        state.jsonifiedValidation[fieldName] == 2;
+        (state.jsonifiedValidation[fieldName] as String).contains('Ensure');
   }
 }
