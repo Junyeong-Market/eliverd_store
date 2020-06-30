@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:barcode_flutter/barcode_flutter.dart';
 
 import 'package:Eliverd/bloc/stockBloc.dart';
 import 'package:Eliverd/bloc/states/stockState.dart';
@@ -30,28 +32,15 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
+  String _barcodeIan = '';
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
   final _manufacturerController = TextEditingController();
   final _amountController = TextEditingController();
 
-  bool isBarcodeAdded = false;
-  bool isLastPage = false;
-
-  String barcodeValue;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
     return BlocBuilder<StockBloc, StockState>(
@@ -81,92 +70,115 @@ class _AddProductPageState extends State<AddProductPage> {
             ),
           ),
           body: ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.0,
+            ),
             children: <Widget>[
-              SizedBox(height: height / 30.0),
-              Visibility(
-                child: Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text(
-                    ProductStrings.barcodeDescWhenImcompleted,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 28.0,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                maintainSize: false,
-                maintainAnimation: true,
-                maintainState: true,
-                visible: !isBarcodeAdded,
-              ),
-              // TO-DO: CameraPreview 위젯을 추가하여 바코드 인식이 되도록 하기
+              SizedBox(height: height / 16.0),
               Visibility(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Visibility(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Text(
-                          isBarcodeAdded
-                              ? ProductStrings.noBarcodeDesc
-                              : ProductStrings.barcodeDesc,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 28.0,
+                    Text(
+                      ProductStrings.barcodeDescWhenImcompleted,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 28.0,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                    SizedBox(height: height / 120.0),
+                    Center(
+                      child: Container(
+                        height: height / 4.0,
+                        width: width / 1.12,
+                        padding: EdgeInsets.all(2.0),
+                        child: CupertinoButton(
+                          child: Text(
+                            '바코드 등록',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
                           ),
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(15.0),
+                          onPressed: _scanBarcode,
                         ),
                       ),
-                      maintainSize: false,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      visible: true,
                     ),
-                    Visibility(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              _nameController.text.length != 0
-                                  ? ProductStrings.nameDesc
-                                  : ProductStrings.nameDescWhenImcompleted,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 28.0,
-                              ),
-                            ),
-                            SizedBox(height: height / 120.0),
-                            TextField(
-                              key: AddProductPageKeys.productNameTextField,
-                              textInputAction: TextInputAction.done,
-                              controller: _nameController,
-                              enabled: _nameController.text.length == 0,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(2.0),
-                                isDense: true,
-                              ),
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
+                  ],
+                ),
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _barcodeIan.length == 0,
+              ),
+              Visibility(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      _barcodeIan.length != 0
+                          ? ProductStrings.barcodeDesc
+                          : ProductStrings.noBarcodeDesc,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 28.0,
+                      ),
+                    ),
+                    SizedBox(height: height / 120.0),
+                    Center(
+                      child: BarCodeImage(
+                        params: EAN13BarCodeParams(
+                          _barcodeIan,
+                          withText: true,
                         ),
                       ),
-                      maintainSize: false,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      visible: isBarcodeAdded,
                     ),
+                  ],
+                ),
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _barcodeIan.length != 0,
+              ),
+              SizedBox(height: height / 48.0),
+              Visibility(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FormText(
+                      controller: _nameController,
+                      textWhenCompleted: ProductStrings.nameDesc,
+                      textWhenNotCompleted:
+                          ProductStrings.nameDescWhenImcompleted,
+                    ),
+                    SizedBox(height: height / 120.0),
+                    FormTextField(
+                      key: AddProductPageKeys.productNameTextField,
+                      controller: _nameController,
+                    ),
+                  ],
+                ),
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _barcodeIan.length != 0,
+              ),
+              SizedBox(height: height / 48.0),
+              Visibility(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
                     FormText(
                       controller: _priceController,
                       textWhenCompleted: ProductStrings.priceDesc,
                       textWhenNotCompleted:
                           ProductStrings.priceDescWhenImcompleted,
                     ),
+                    SizedBox(height: height / 120.0),
                     FormTextField(
                       key: AddProductPageKeys.productPriceTextField,
                       regex: [
@@ -178,91 +190,70 @@ class _AddProductPageState extends State<AddProductPage> {
                       helperText: '',
                       errorMessage: null,
                     ),
+                  ],
+                ),
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _nameController.text.length != 0,
+              ),
+              Visibility(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
                     FormText(
                       controller: _manufacturerController,
                       textWhenCompleted: ProductStrings.manufacturerDesc,
                       textWhenNotCompleted:
                           ProductStrings.manufacturerDescWhenImcompleted,
                     ),
-                    Visibility(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: TextField(
-                          key: AddProductPageKeys.productManufacturerTextField,
-                          textInputAction: TextInputAction.done,
-                          controller: _manufacturerController,
-                          enabled: _manufacturerController.text.length == 0,
-                          onSubmitted: _stateToLastPage,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(2.0),
-                            isDense: true,
-                          ),
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                      maintainSize: false,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      visible: _priceController.text.length != 0,
-                    ),
-                    Visibility(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              _amountController.text.length != 0
-                                  ? ProductStrings.amountDesc
-                                  : ProductStrings.amountDescWhenImcompleted,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 28.0,
-                              ),
-                            ),
-                            SizedBox(height: height / 120.0),
-                            TextField(
-                              key: AddProductPageKeys.productAmountTextField,
-                              textInputAction: TextInputAction.done,
-                              controller: _amountController,
-                              enabled: _amountController.text.length == 0,
-                              onSubmitted: _stateToLastPage,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(2.0),
-                                isDense: true,
-                              ),
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      maintainSize: false,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      visible: _manufacturerController.text.length != 0,
+                    SizedBox(height: height / 120.0),
+                    FormTextField(
+                      key: AddProductPageKeys.productManufacturerTextField,
+                      controller: _manufacturerController,
                     ),
                   ],
                 ),
                 maintainSize: false,
                 maintainAnimation: true,
                 maintainState: true,
-                visible: isBarcodeAdded,
+                visible: _priceController.text.length != 0,
+              ),
+              SizedBox(height: height / 48.0),
+              Visibility(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FormText(
+                      controller: _amountController,
+                      textWhenCompleted: ProductStrings.amountDesc,
+                      textWhenNotCompleted:
+                          ProductStrings.amountDescWhenImcompleted,
+                    ),
+                    SizedBox(height: height / 120.0),
+                    FormTextField(
+                      key: AddProductPageKeys.productAmountTextField,
+                      controller: _amountController,
+                    ),
+                  ],
+                ),
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _manufacturerController.text.length != 0,
               ),
             ],
           ),
-          bottomNavigationBar: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: BottomAppBar(
-              color: Colors.transparent,
-              elevation: 0.0,
-              child: _buildSubmitBtn(),
+          bottomNavigationBar: Visibility(
+            child: Padding(
+              padding: EdgeInsets.all(15.0),
+              child: BottomAppBar(
+                color: Colors.transparent,
+                elevation: 0.0,
+                child: _buildSubmitBtn(),
+              ),
             ),
+            visible: _barcodeIan.length != 0,
           ),
         );
       },
@@ -271,21 +262,6 @@ class _AddProductPageState extends State<AddProductPage> {
 
   String get currency =>
       NumberFormat.compactSimpleCurrency(locale: 'ko').currencySymbol;
-
-
-  void _stateToBarcodeAdded() {
-    setState(() {
-      isBarcodeAdded = true;
-    });
-  }
-
-  void _stateToLastPage(text) {
-    if (text.length != 0) {
-      setState(() {
-        isLastPage = true;
-      });
-    }
-  }
 
   void _submitProduct() {
     final stock = Stock(
@@ -306,22 +282,36 @@ class _AddProductPageState extends State<AddProductPage> {
     Navigator.pop(context);
   }
 
+  Future<void> _scanBarcode() async {
+    String barcodeIan;
+
+    try {
+      barcodeIan = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "Cancel", true, ScanMode.BARCODE);
+    } on PlatformException {
+      barcodeIan = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _barcodeIan = barcodeIan;
+    });
+  }
 
   Widget _buildSubmitBtn() => CupertinoButton(
         key: AddProductPageKeys.productSubmitBtn,
         color: eliverdColor,
         disabledColor: Colors.black12,
         child: Text(
-          isBarcodeAdded ? ProductStrings.submit : ProductStrings.next,
+          ProductStrings.submit,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 20.0,
           ),
         ),
-        onPressed: isBarcodeAdded
-            ? (isLastPage ? _submitProduct : null)
-            : _stateToBarcodeAdded,
+        onPressed: _amountController.text.length != 0 ? _submitProduct : null,
         borderRadius: BorderRadius.circular(25.0),
       );
 }
@@ -335,7 +325,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     String newText = NumberFormat.currency(
       locale: 'ko',
-      symbol: '',
+      symbol: '₩',
     ).format(price);
 
     return newValue.copyWith(

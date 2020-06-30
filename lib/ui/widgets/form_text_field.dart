@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class FormTextField extends StatefulWidget {
   final regex;
@@ -28,7 +29,9 @@ class _FormTextFieldState extends State<FormTextField> {
   Widget build(BuildContext context) {
     return TextField(
       textInputAction: TextInputAction.done,
-      inputFormatters: widget.regex is List ? widget.regex : [widget.regex],
+      inputFormatters: widget.regex == null
+          ? [BlacklistingTextInputFormatter('')]
+          : widget.regex is List ? widget.regex : [widget.regex],
       maxLength: widget.maxLength,
       maxLengthEnforced: widget.maxLength == null ? false : true,
       obscureText: widget.isObscured == null ? false : widget.isObscured,

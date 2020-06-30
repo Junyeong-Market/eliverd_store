@@ -17,7 +17,7 @@ class ErrorMessages {
   static final passwordInvalidMessage =
       '비밀번호는 영어, 숫자, 특수문자를 조합하여 256자 이내만 가능합니다.';
   static final loginErrorMessage =
-      '입력하신 계정은 존재하지 않는 계정입니다. 아이디와 비밀번호를 다시 입력해주세요.';
+      '네트워크 오류로 로그인을 할 수 없습니다. 아이디와 비밀번호를 다시 확인해주세요.';
 
   static final signUpErrorMessage = '회원가입 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요.';
   static final disallowedToManageStoreMessage = '이 계정은 사업장을 관리할 수 없는 계정입니다. 다른 계정으로 시도해주세요.';

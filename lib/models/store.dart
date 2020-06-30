@@ -70,8 +70,7 @@ class Store extends Equatable {
     'name': name,
     'description': description,
     'registered_number': registeredNumber,
-    'lat': location.lat,
-    'lng': location.lng,
+    'location': 'SRID=4326; POINT (${location.lat} ${location.lng})',
   };
 }
 

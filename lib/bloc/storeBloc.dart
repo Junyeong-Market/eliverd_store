@@ -19,9 +19,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   @override
   Stream<StoreState> mapEventToState(StoreEvent event) async* {
     if (event is CreateStore) {
-      await storeRepository.createStore(event.store.toJson());
+      try {
+        await storeRepository.createStore(event.store.toJson());
 
-      yield StoreCreated();
+        yield StoreCreated();
+      } catch (_) {
+        yield StoreError();
+      }
     }
   }
 
