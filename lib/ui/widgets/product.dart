@@ -4,6 +4,7 @@ import 'package:Eliverd/bloc/stockBloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'dart:io' show Platform;
 
 import 'package:intl/intl.dart';
@@ -108,7 +109,8 @@ class _ProductCardState extends State<ProductCard> {
                         children: <Widget>[
                           ButtonTheme(
                             padding: EdgeInsets.all(3.0),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                             minWidth: 0,
                             height: 0,
                             child: FlatButton(
@@ -131,7 +133,8 @@ class _ProductCardState extends State<ProductCard> {
                           ),
                           ButtonTheme(
                             padding: EdgeInsets.all(3.0),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                             minWidth: 0,
                             height: 0,
                             child: FlatButton(
