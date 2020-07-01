@@ -9,6 +9,8 @@ abstract class AuthenticationEvent extends Equatable {
 
 class ValidateAuthentication extends AuthenticationEvent {}
 
+class CheckAuthentication extends AuthenticationEvent {}
+
 class GrantAuthentication extends AuthenticationEvent {
   final String userId;
   final String password;

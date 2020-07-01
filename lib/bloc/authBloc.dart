@@ -26,6 +26,8 @@ class AuthenticationBloc
       AuthenticationEvent event) async* {
     if (event is ValidateAuthentication) {
       yield* _mapValidateAuthenticationToState(event);
+    } else if (event is CheckAuthentication) {
+      yield* _mapCheckAuthenticationToState(event);
     } else if (event is GrantAuthentication) {
       yield* _mapGrantAuthenticationToState(event);
     } else if (event is RevokeAuthentication) {
@@ -59,6 +61,32 @@ class AuthenticationBloc
     }
   }
 
+  Stream<AuthenticationState> _mapCheckAuthenticationToState(
+      CheckAuthentication event) async* {
+    final session = await accountRepository.createSession();
+
+    if (session != null) {
+      final data = await accountRepository.validateSession();
+
+      if (data['is_seller'] == false) {
+        yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
+      }
+
+      final authenticatedUser = User(
+        userId: data['user_id'],
+        nickname: data['nickname'],
+        realname: data['realname'],
+        isSeller: data['is_seller'],
+      );
+
+      final stores = await Future.wait((data['stores'] as List)
+          .map((storeId) async => await storeRepository.getStore(storeId))
+          .toList());
+
+      yield Authenticated(authenticatedUser, stores);
+    }
+  }
+
   Stream<AuthenticationState> _mapGrantAuthenticationToState(
       GrantAuthentication event) async* {
     try {
@@ -85,8 +113,6 @@ class AuthenticationBloc
       final stores = await Future.wait((data['stores'] as List)
           .map((storeId) async => await storeRepository.getStore(storeId))
           .toList());
-
-      print(stores);
 
       yield Authenticated(authenticatedUser, stores);
     } catch (e) {
