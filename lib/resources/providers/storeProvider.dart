@@ -72,7 +72,7 @@ class StoreAPIClient {
   }
 
   Future<Product> getProduct(int productId) async {
-    final url = '$baseUrl/product/$productId';
+    final url = '$baseUrl/product/$productId/';
     final res = await this.httpClient.get(url);
 
     if (res.statusCode != 200) {
