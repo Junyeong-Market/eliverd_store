@@ -26,7 +26,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
   final _storeDescController = TextEditingController();
   final _registeredNumberController = TextEditingController();
 
-  List<User> _registerers = [];
+  List<dynamic> _registerers = [];
   Coordinate _storeLocation;
 
   void _registerStore() {
