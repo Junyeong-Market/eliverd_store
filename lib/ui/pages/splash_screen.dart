@@ -36,6 +36,13 @@ class _SplashScreenState extends State<SplashScreenPage> {
 
   Widget _buildSplashScreen(double width) => Scaffold(
         key: SplashScreenKeys.splashScreenPage,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          brightness: Brightness.light,
+          elevation: 0.0,
+          automaticallyImplyLeading: false,
+        ),
         body: Container(
           key: SplashScreenKeys.splashScreenBackground,
           decoration: BoxDecoration(
