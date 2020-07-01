@@ -28,19 +28,24 @@ class AccountAPIClient {
     }
   }
 
-  Future<String> createSession(String userId, String password) async {
+  Future<String> createSession([String userId, String password]) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final currentSession = prefs.getString('session');
 
     if (currentSession != null) {
       return currentSession;
+    } else if (userId == null || password == null) {
+      return null;
     }
 
     final Map<String, dynamic> user = {
-      'user_id': userId,
-      'password': password
+      'user_id': prefs.getString('userId') ?? userId,
+      'password': prefs.getString('password') ?? password,
     };
+
+    prefs.setString('userId', userId);
+    prefs.setString('password', password);
 
     final url = '$baseUrl/account/session/';
     final res = await this.httpClient.post(
@@ -57,7 +62,7 @@ class AccountAPIClient {
 
     final session = json.decode(jsonData)['session'] as String;
 
-    await prefs.setString('session', session);
+    prefs.setString('session', session);
 
     return session;
   }

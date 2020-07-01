@@ -27,7 +27,7 @@ class AccountRepository {
     return users;
   }
 
-  Future<String> createSession(String userId, String password) async {
+  Future<String> createSession([String userId, String password]) async {
     final session = await accountAPIClient.createSession(userId, password);
 
     return session;
