@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -73,6 +74,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  final _idRegex = WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9^\s]"));
+  final _passwordRegex =
+  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9\x01-\x19\x21-\x7F]"));
+
+  final _passwordNavigationFocus = FocusNode();
+
   final _transparentAppBar = AppBar(
     backgroundColor: Colors.transparent,
     brightness: Brightness.light,
@@ -112,6 +119,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildIdFieldSection() => TextField(
     key: LoginPageKeys.idTextField,
     obscureText: false,
+    autocorrect: false,
+    inputFormatters: [_idRegex],
+    keyboardAppearance: Brightness.light,
     controller: _idController,
     decoration: InputDecoration(
       border: OutlineInputBorder(
@@ -119,11 +129,18 @@ class _LoginPageState extends State<LoginPage> {
       ),
       labelText: SignInStrings.idText,
     ),
+    onSubmitted: (_) {
+      FocusScope.of(context).requestFocus(_passwordNavigationFocus);
+    },
   );
 
   Widget _buildPasswordFieldSection() => TextField(
+    focusNode: _passwordNavigationFocus,
     key: LoginPageKeys.passwordTextField,
+    autocorrect: false,
     obscureText: true,
+    keyboardAppearance: Brightness.light,
+    inputFormatters: [_passwordRegex],
     controller: _passwordController,
     decoration: InputDecoration(
       border: OutlineInputBorder(
