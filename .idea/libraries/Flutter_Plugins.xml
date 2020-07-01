@@ -3,6 +3,8 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-1.0.8" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_barcode_scanner-1.0.1" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-0.1.2+7" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.7+3" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

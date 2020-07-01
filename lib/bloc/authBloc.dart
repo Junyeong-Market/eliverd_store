@@ -26,18 +26,17 @@ class AuthenticationBloc
       AuthenticationEvent event) async* {
     if (event is ValidateAuthentication) {
       yield* _mapValidateAuthenticationToState(event);
-    } else if (event is SignInAuthentication) {
-      yield* _mapSignInAuthenticationToState(event);
-    } else if (event is SignOutAuthentication) {
-      yield* _mapSignOutAuthenticationToState(event);
+    } else if (event is GrantAuthentication) {
+      yield* _mapGrantAuthenticationToState(event);
+    } else if (event is RevokeAuthentication) {
+      yield* _mapRevokeAuthenticationToState(event);
     }
   }
 
   Stream<AuthenticationState> _mapValidateAuthenticationToState(
       ValidateAuthentication event) async* {
     try {
-      final session = event.token;
-      final data = await accountRepository.validateSession(session);
+      final data = await accountRepository.validateSession();
 
       if (data.isEmpty) {
         yield NotAuthenticated();
@@ -60,8 +59,8 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapSignInAuthenticationToState(
-      SignInAuthentication event) async* {
+  Stream<AuthenticationState> _mapGrantAuthenticationToState(
+      GrantAuthentication event) async* {
     try {
       final session =
           await accountRepository.createSession(event.userId, event.password);
@@ -70,7 +69,7 @@ class AuthenticationBloc
         yield NotAuthenticated();
       }
 
-      final data = await accountRepository.validateSession(session);
+      final data = await accountRepository.validateSession();
 
       if (data['is_seller'] == false) {
         yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
@@ -87,6 +86,8 @@ class AuthenticationBloc
           .map((storeId) async => await storeRepository.getStore(storeId))
           .toList());
 
+      print(stores);
+
       yield Authenticated(authenticatedUser, stores);
     } catch (e) {
       print(e.toString());
@@ -94,11 +95,10 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapSignOutAuthenticationToState(
-      SignOutAuthentication event) async* {
+  Stream<AuthenticationState> _mapRevokeAuthenticationToState(
+      RevokeAuthentication event) async* {
     try {
-      final session = int.parse(event.token);
-      await accountRepository.deleteSession(session);
+      await accountRepository.deleteSession();
 
       yield NotAuthenticated();
     } catch (_) {
