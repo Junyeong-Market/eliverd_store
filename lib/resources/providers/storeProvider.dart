@@ -46,14 +46,16 @@ class StoreAPIClient {
 
     final data = json.decode(jsonData)['results'] as List;
 
-    return data.map((rawStock) {
+    final stocks = data.map((rawStock) {
       return Stock(
         store: store,
-        product: rawStock['product'],
+        product: Product.fromJson(rawStock['product']),
         price: rawStock['price'],
         amount: rawStock['number'],
       );
     }).toList();
+
+    return stocks;
   }
 
   Future<Product> upsertStock(
