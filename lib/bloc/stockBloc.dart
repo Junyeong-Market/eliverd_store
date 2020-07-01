@@ -48,6 +48,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
       try {
         if (currentState is! StockFetchSuccessState) {
           final stocks = await storeRepository.fetchStock((event as StockLoaded).store);
+
           yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
           return;
         }
@@ -56,7 +57,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
           yield stocks.isEmpty
               ? currentState.copyWith(isAllFetched: true)
               : StockFetchSuccessState(
-            stocks: currentState.stocks + stocks,
+            stocks: stocks,
             isAllFetched: false,
           );
         }
