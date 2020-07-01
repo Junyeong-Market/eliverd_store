@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:Eliverd/common/key.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:Eliverd/bloc/states/stockState.dart';
 import 'package:Eliverd/bloc/events/stockEvent.dart';
 import 'package:Eliverd/bloc/stockBloc.dart';
@@ -38,14 +38,13 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _scrollController.addListener(_onScroll);
     _refreshCompleter = Completer<void>();
+
+    context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final height = MediaQuery.of(context).size.height;
 
     return BlocConsumer<StockBloc, StockState>(
       listener: (context, state) {
@@ -66,38 +65,90 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildMainHeader(double height) =>
-      Header(
+  Widget _buildMainHeader(double height) => Header(
         height: height / 4.8,
         child: Column(
           children: <Widget>[
             AppBar(
-              backgroundColor: eliverdColor,
-              actions: <Widget>[
-                IconButton(
+              leading: ButtonTheme(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                minWidth: 0,
+                height: 0,
+                child: FlatButton(
+                  padding: EdgeInsets.all(0.0),
                   key: HomePageKeys.searchProductBtn,
-                  icon: const Icon(Icons.search),
-                  tooltip: HomePageStrings.searchProductDesc,
+                  textColor: Colors.white,
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  child: Text(
+                    '􀆉',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 24.0,
+                    ),
+                  ),
                   onPressed: () {
-                    // TO-DO: 상품 조건적 검색 BLOC 구현
-                    // TO-DO: 상품 검색 페이지로 Navigate
+                    Navigator.pop(context);
                   },
                 ),
-                IconButton(
-                  key: HomePageKeys.addProductBtn,
-                  icon: const Icon(Icons.add),
-                  tooltip: HomePageStrings.addProductDesc,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AddProductPage(
-                              currentStore: widget.currentStore,
-                            ),
+              ),
+              backgroundColor: eliverdColor,
+              actions: <Widget>[
+                ButtonTheme(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  minWidth: 0,
+                  height: 0,
+                  child: FlatButton(
+                    padding: EdgeInsets.only(
+                      right: 8.0,
+                    ),
+                    key: HomePageKeys.searchProductBtn,
+                    textColor: Colors.white,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    child: Text(
+                      '􀊫',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w200,
+                        fontSize: 22.0,
                       ),
-                    );
-                  },
+                    ),
+                    onPressed: () {
+                      // TO-DO: 상품 조건적 검색 BLOC 구현
+                      // TO-DO: 상품 검색 페이지로 Navigate
+                    },
+                  ),
+                ),
+                ButtonTheme(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  minWidth: 0,
+                  height: 0,
+                  child: FlatButton(
+                    padding: EdgeInsets.only(
+                      right: 16.0,
+                    ),
+                    key: HomePageKeys.addProductBtn,
+                    textColor: Colors.white,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    child: Text(
+                      '􀅼',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w200,
+                        fontSize: 22.0,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddProductPage(
+                            currentStore: widget.currentStore,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
               elevation: 0.0,
@@ -121,9 +172,28 @@ class _HomePageState extends State<HomePage> {
   Widget _buildMainBody(StockState state, double height) {
     if (state is StockFetchErrorState) {
       return Center(
-        child: Text(ErrorMessages.stocksCannotbeFetched),
+        child: Text(
+          ErrorMessages.stocksCannotbeFetched,
+          style: TextStyle(
+            color: Colors.black26,
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
+        ),
       );
     } else if (state is StockFetchSuccessState) {
+      if (state.stocks.length == 0) {
+        return Center(
+          child: Text(
+            HomePageStrings.stockEmptyMsg,
+            style: TextStyle(
+              color: Colors.black26,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        );
+      }
+
       return RefreshIndicator(
         onRefresh: () {
           context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
@@ -135,7 +205,25 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, int index) {
             return index >= state.stocks.length
                 ? Center(
-                    child: CupertinoActivityIndicator(),
+                    child: Column(
+                      children: <Widget>[
+                        Divider(
+                          height: 16.0,
+                          indent: 160.0,
+                          endIndent: 160.0,
+                          thickness: 2.4,
+
+                          color: Colors.black12,
+                        ),
+                        Text(
+                          '현재 총합 ${state.stocks.length}개의 재고가 있습니다.',
+                          style: TextStyle(
+                            color: Colors.black26,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 : ProductCard(
                     stock: state.stocks[index],
@@ -149,7 +237,20 @@ class _HomePageState extends State<HomePage> {
       );
     } else {
       return Center(
-        child: CupertinoActivityIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CupertinoActivityIndicator(),
+            SizedBox(height: height / 120.0),
+            Text(
+              HomePageStrings.fetchingStockMsg,
+              style: TextStyle(
+                color: Colors.black26,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       );
     }
   }
