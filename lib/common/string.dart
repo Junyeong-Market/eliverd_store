@@ -26,7 +26,7 @@ class ErrorMessages {
 
   static final noRegisteredBusinessMessage = '먼저 사업장을 등록하세요!';
 
-  static final stocksCannotbeFetched = '네트워크 오류로 재고를 불러올 수 없습니다. 나중에 다시 시도해주세요.';
+  static final stocksCannotbeFetched = '네트워크 오류로 재고를 불러올 수 없습니다.\n나중에 다시 시도해주세요.';
 }
 
 class SignInStrings {
