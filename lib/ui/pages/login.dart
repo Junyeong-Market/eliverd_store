@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
       vertical: 15.0,
     ),
     onPressed: () {
-      context.bloc<AuthenticationBloc>().add(SignInAuthentication(
+      context.bloc<AuthenticationBloc>().add(GrantAuthentication(
           _idController.text, _passwordController.text));
     },
   );

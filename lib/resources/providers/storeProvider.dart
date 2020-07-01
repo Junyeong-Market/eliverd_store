@@ -26,7 +26,9 @@ class StoreAPIClient {
       throw Exception('Error occurred while creating your store');
     }
 
-    final data = json.decode(res.body) as Store;
+    final jsonData = utf8.decode(res.bodyBytes);
+
+    final data = json.decode(jsonData) as Store;
 
     return data;
   }
@@ -40,7 +42,9 @@ class StoreAPIClient {
       throw Exception('Error occurred while fetching all stocks on your store');
     }
 
-    final data = json.decode(res.body)['results'] as List;
+    final jsonData = utf8.decode(res.bodyBytes);
+
+    final data = json.decode(jsonData)['results'] as List;
 
     return data.map((rawStock) {
       return Stock(
@@ -66,9 +70,11 @@ class StoreAPIClient {
           'Error occurred while adding/updating/deleting stock on your store');
     }
 
-    final data = json.decode(res.body) as Product;
+    final jsonData = utf8.decode(res.bodyBytes);
 
-    return data;
+    final data = json.decode(jsonData);
+
+    return Product.fromJson(data);
   }
 
   Future<Product> getProduct(int productId) async {
@@ -79,9 +85,11 @@ class StoreAPIClient {
       throw Exception('Error occurred while fetching a product');
     }
 
-    final data = json.decode(res.body) as Product;
+    final jsonData = utf8.decode(res.bodyBytes);
 
-    return data;
+    final data = json.decode(jsonData);
+
+    return Product.fromJson(data);
   }
 
   Future<Store> getStore(int storeId) async {
@@ -89,11 +97,23 @@ class StoreAPIClient {
     final res = await this.httpClient.get(url);
 
     if (res.statusCode != 200) {
-      throw Exception('Error occurred while fetching a product');
+      throw Exception('Error occurred while fetching a store');
     }
 
-    final data = json.decode(res.body) as Store;
+    final jsonData = utf8.decode(res.bodyBytes);
 
-    return data;
+    final data = json.decode(jsonData);
+
+    final store = Store(
+      id: storeId,
+      name: data['name'],
+      description: data['description'],
+      registerers: data['registerer'],
+      registeredNumber: data['registered_number'],
+    );
+
+    // TO-DO: location 필드 추출 로직 구성하기
+
+    return store;
   }
 }

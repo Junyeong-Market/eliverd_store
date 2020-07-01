@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:Eliverd/bloc/authBloc.dart';
+import 'package:Eliverd/bloc/events/authEvent.dart';
 import 'package:Eliverd/common/key.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -88,6 +90,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   onPressed: () {
+                    context.bloc<AuthenticationBloc>().add(RevokeAuthentication());
+
                     Navigator.pop(context);
                   },
                 ),
@@ -172,13 +176,41 @@ class _HomePageState extends State<HomePage> {
   Widget _buildMainBody(StockState state, double height) {
     if (state is StockFetchErrorState) {
       return Center(
-        child: Text(
-          ErrorMessages.stocksCannotbeFetched,
-          style: TextStyle(
-            color: Colors.black26,
-            fontWeight: FontWeight.w600,
-          ),
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ButtonTheme(
+              materialTapTargetSize:
+              MaterialTapTargetSize.shrinkWrap,
+              minWidth: 0,
+              height: 0,
+              child: FlatButton(
+                padding: EdgeInsets.all(0.0),
+                textColor: Colors.black12,
+                child: Text(
+                  '⟳',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 56.0,
+                  ),
+                ),
+                onPressed: () {
+                  context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                ),
+              ),
+            ),
+            Text(
+              ErrorMessages.stocksCannotbeFetched,
+              style: TextStyle(
+                color: Colors.black26,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       );
     } else if (state is StockFetchSuccessState) {

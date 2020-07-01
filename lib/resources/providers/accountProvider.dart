@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:Eliverd/models/models.dart';
 
@@ -28,6 +29,14 @@ class AccountAPIClient {
   }
 
   Future<String> createSession(String userId, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final currentSession = prefs.getString('session');
+
+    if (currentSession != null) {
+      return currentSession;
+    }
+
     final Map<String, dynamic> user = {
       'user_id': userId,
       'password': password
@@ -44,16 +53,24 @@ class AccountAPIClient {
       throw Exception('Error occurred while creating session');
     }
 
-    final session = json.decode(res.body)['session'] as String;
+    final jsonData = utf8.decode(res.bodyBytes);
+
+    final session = json.decode(jsonData)['session'] as String;
+
+    await prefs.setString('session', session);
 
     return session;
   }
 
-  Future<Map<String, dynamic>> validateSession(String session) async {
+  Future<Map<String, dynamic>> validateSession() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final currentSession = prefs.getString('session');
+
     final url = '$baseUrl/account/session/';
     final res = await this.httpClient.get(url,
         headers: {
-          'Authorization': session,
+          'Authorization': currentSession,
         }
     );
 
@@ -61,18 +78,30 @@ class AccountAPIClient {
       throw Exception('Error occurred while validating session');
     }
 
-    final userInfo = json.decode(res.body);
+    final jsonData = utf8.decode(res.bodyBytes);
+
+    final userInfo = json.decode(jsonData);
 
     return userInfo;
   }
 
-  Future<void> deleteSession(int session) async {
+  Future<void> deleteSession() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final currentSession = prefs.getString('session');
+
+    if (currentSession == null) {
+      return;
+    }
+
     final url = '$baseUrl/account/session/';
     final res = await this.httpClient.delete(url,
       headers: {
-        'Authorization': session.toString(),
+        'Authorization': currentSession,
       }
     );
+
+    await prefs.remove('session');
 
     if (res.statusCode != 204) {
       throw Exception('Error occurred while deleting session');
@@ -92,20 +121,24 @@ class AccountAPIClient {
       throw Exception('Error occurred while validating user');
     }
 
-    final data = json.decode(res.body);
+    final jsonData = utf8.decode(res.bodyBytes);
+
+    final data = json.decode(jsonData);
 
     return data;
   }
 
   Future<List<User>> searchUser(String keyword) async {
-    final url = '$baseUrl/account/user/search/$keyword?is_seller=true';
+    final url = '$baseUrl/account/user/search/$keyword?is_seller=true/';
     final res = await this.httpClient.get(url);
 
     if (res.statusCode != 200) {
       throw Exception('Error occurred while searching user');
     }
 
-    final data = json.decode(res.body)['results'] as List;
+    final jsonData = utf8.decode(res.bodyBytes);
+
+    final data = json.decode(jsonData)['results'] as List;
 
     return data.map((rawUser) {
       return User(
