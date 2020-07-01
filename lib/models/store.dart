@@ -101,6 +101,7 @@ class Stock extends Equatable {
         'ian': product.ian,
         'name': product.name,
         'manufacturer': product.manufacturer.name,
-        'amount': amount,
+        'price': price.toString(),
+        'amount': amount.toString(),
       };
 }
