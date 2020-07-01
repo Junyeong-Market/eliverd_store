@@ -316,7 +316,7 @@ class _SignUpPageState extends State<SignUpPage> {
       [String duplicateMsg]) {
     if (isInvalidField(state, fieldName)) {
       return invalidMsg;
-    } else if (duplicateMsg.isNotEmpty && isDuplicatedField(state, fieldName)) {
+    } else if (duplicateMsg != null && isDuplicatedField(state, fieldName)) {
       return duplicateMsg;
     } else {
       return null;
