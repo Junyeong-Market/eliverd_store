@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:Eliverd/bloc/authBloc.dart';
-import 'package:Eliverd/bloc/events/authEvent.dart';
-import 'package:Eliverd/common/key.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:Eliverd/bloc/authBloc.dart';
+import 'package:Eliverd/bloc/events/authEvent.dart';
 import 'package:Eliverd/bloc/states/stockState.dart';
 import 'package:Eliverd/bloc/events/stockEvent.dart';
 import 'package:Eliverd/bloc/stockBloc.dart';
@@ -15,7 +14,9 @@ import 'package:Eliverd/models/models.dart';
 
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
+import 'package:Eliverd/common/key.dart';
 
+import 'package:Eliverd/ui/pages/login.dart';
 import 'package:Eliverd/ui/pages/add_product.dart';
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/ui/widgets/product.dart';
@@ -92,7 +93,11 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     context.bloc<AuthenticationBloc>().add(RevokeAuthentication());
 
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                        context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginPage()),
+                    );
                   },
                 ),
               ),
@@ -143,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => AddProductPage(

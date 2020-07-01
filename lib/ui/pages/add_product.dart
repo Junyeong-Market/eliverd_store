@@ -21,6 +21,7 @@ import 'package:Eliverd/common/key.dart';
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/ui/widgets/form_text.dart';
 import 'package:Eliverd/ui/widgets/form_text_field.dart';
+import 'package:Eliverd/ui/pages/home.dart';
 
 class AddProductPage extends StatefulWidget {
   final Store currentStore;
@@ -46,8 +47,7 @@ class _AddProductPageState extends State<AddProductPage> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    return BlocConsumer<StockBloc, StockState>(
-      listener: (context, state) {},
+    return BlocBuilder<StockBloc, StockState>(
       builder: (context, state) {
         return Scaffold(
           key: AddProductPageKeys.addProductPage,
@@ -74,7 +74,14 @@ class _AddProductPageState extends State<AddProductPage> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(
+                              currentStore: widget.currentStore,
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -156,6 +163,15 @@ class _AddProductPageState extends State<AddProductPage> {
     );
 
     context.bloc<StockBloc>().add(StockAdded(stock));
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(
+          currentStore: widget.currentStore,
+        ),
+      ),
+    );
   }
 
   Future<void> _scanBarcode() async {
