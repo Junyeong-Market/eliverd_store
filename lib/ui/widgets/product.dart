@@ -229,7 +229,7 @@ showDeleteProductAlertDialog(BuildContext context, Stock stock) {
       ),
     ),
     onPressed: () {
-      context.bloc<StockBloc>().add(StockDeleted(stock));
+      context.bloc<StockBloc>().add(DeleteStock(stock));
       Navigator.pop(context);
     },
   );
@@ -256,7 +256,7 @@ showDeleteProductAlertDialog(BuildContext context, Stock stock) {
       ),
     ),
     onPressed: () {
-      context.bloc<StockBloc>().add(StockDeleted(stock));
+      context.bloc<StockBloc>().add(DeleteStock(stock));
       Navigator.pop(context);
     },
   );

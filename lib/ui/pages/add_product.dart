@@ -162,7 +162,7 @@ class _AddProductPageState extends State<AddProductPage> {
       amount: int.parse(_amountController.text.replaceAll(',', '')),
     );
 
-    context.bloc<StockBloc>().add(StockAdded(stock));
+    context.bloc<StockBloc>().add(AddStock(stock));
 
     Navigator.pushReplacement(
       context,

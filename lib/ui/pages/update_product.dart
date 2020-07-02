@@ -96,7 +96,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
       amount: int.parse(_amountController.text),
     );
 
-    context.bloc<StockBloc>().add(StockUpdated(stock));
+    context.bloc<StockBloc>().add(UpdateStock(stock));
 
     Navigator.pop(context);
   }

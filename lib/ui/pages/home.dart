@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     _scrollController.addListener(_onScroll);
     _refreshCompleter = Completer<void>();
 
-    context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
+    context.bloc<StockBloc>().add(LoadStock(widget.currentStore));
   }
 
   @override
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     return BlocConsumer<StockBloc, StockState>(
       listener: (context, state) {
         if (state is StockNotFetchedState) {
-          context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
+          context.bloc<StockBloc>().add(LoadStock(widget.currentStore));
 
           _refreshCompleter?.complete();
           _refreshCompleter = Completer();
@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 onPressed: () {
-                  context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
+                  context.bloc<StockBloc>().add(LoadStock(widget.currentStore));
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -233,7 +233,7 @@ class _HomePageState extends State<HomePage> {
 
       return RefreshIndicator(
         onRefresh: () {
-          context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
+          context.bloc<StockBloc>().add(LoadStock(widget.currentStore));
 
           return _refreshCompleter.future;
         },
@@ -296,7 +296,7 @@ class _HomePageState extends State<HomePage> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
-      context.bloc<StockBloc>().add(StockLoaded(widget.currentStore));
+      context.bloc<StockBloc>().add(LoadStock(widget.currentStore));
     }
   }
 }
