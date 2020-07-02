@@ -237,7 +237,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   : ProductStrings.noBarcodeDesc,
               style: TextStyle(
                 fontWeight: FontWeight.w800,
-                fontSize: 28.0,
+                fontSize: 26.0,
               ),
             ),
             SizedBox(height: height / 120.0),
