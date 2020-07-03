@@ -65,22 +65,68 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       builder: (context, state) {
+        if (state is Authenticated) {
+          return Scaffold(
+            extendBodyBehindAppBar: true,
+            key: LoginPageKeys.loginPage,
+            appBar: _transparentAppBar,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _buildLoginPageLogo(width),
+                  SizedBox(height: height / 48.0),
+                  CupertinoActivityIndicator(),
+                  SizedBox(height: height / 64.0),
+                  Center(
+                    child: Text(
+                      SignInStrings.alreadyLoggedIn,
+                      style: TextStyle(
+                        color: Colors.black38,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
         return Scaffold(
           extendBodyBehindAppBar: true,
           key: LoginPageKeys.loginPage,
           appBar: _transparentAppBar,
           body: ListView(
-            padding: EdgeInsets.all(50.0),
+            padding: EdgeInsets.only(
+              left: width * 0.15,
+              right: width * 0.15,
+              top: height * 0.15,
+              bottom: height * 0.15,
+            ),
             children: <Widget>[
-              _buildLoginPageLogo(width),
-              SizedBox(height: height / 24.0),
-              _buildLoginErrorSection(height),
-              _buildIdFieldSection(),
-              SizedBox(height: height / 80.0),
-              _buildPasswordFieldSection(),
-              SizedBox(height: height / 80.0),
-              _buildSignInSection(),
-              _buildSignUpSection(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _buildLoginPageLogo(width),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      _buildLoginErrorSection(height),
+                      _buildIdFieldSection(),
+                      SizedBox(height: height / 88.0),
+                      _buildPasswordFieldSection(),
+                      SizedBox(height: height / 88.0),
+                      _buildSignInSection(),
+                      _buildSignUpSection(),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
         );
@@ -90,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _idRegex = WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9^\s]"));
   final _passwordRegex =
-  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9\x01-\x19\x21-\x7F]"));
+      WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9\x01-\x19\x21-\x7F]"));
 
   final _passwordNavigationFocus = FocusNode();
 
@@ -102,107 +148,109 @@ class _LoginPageState extends State<LoginPage> {
   );
 
   Widget _buildLoginPageLogo(double width) => Image(
-  key: LoginPageKeys.loginLogo,
-  width: width / 1.5,
-  height: width / 1.5,
-  image:
-  AssetImage('assets/images/logo/eliverd_logo_original.png'),
-  );
+        key: LoginPageKeys.loginLogo,
+        width: width / 1.5,
+        height: width / 1.5,
+        image: AssetImage('assets/images/logo/eliverd_logo_original.png'),
+      );
 
   Widget _buildLoginErrorSection(double height) => Visibility(
-    key: LoginPageKeys.loginErrorMsg,
-    child: Column(
-      children: <Widget>[
-        Text(
-          errorMessage,
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
+        key: LoginPageKeys.loginErrorMsg,
+        child: Column(
+          children: <Widget>[
+            Text(
+              errorMessage,
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: height / 120.0),
+          ],
         ),
-        SizedBox(height: height / 120.0),
-      ],
-    ),
-    maintainSize: true,
-    maintainAnimation: true,
-    maintainState: true,
-    visible: errorOccurred,
-  );
+        maintainSize: true,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: errorOccurred,
+      );
 
   Widget _buildIdFieldSection() => TextField(
-    key: LoginPageKeys.idTextField,
-    obscureText: false,
-    autocorrect: false,
-    inputFormatters: [_idRegex],
-    keyboardAppearance: Brightness.light,
-    controller: _idController,
-    decoration: InputDecoration(
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      labelText: SignInStrings.idText,
-    ),
-    onSubmitted: (_) {
-      FocusScope.of(context).requestFocus(_passwordNavigationFocus);
-    },
-  );
+        key: LoginPageKeys.idTextField,
+        obscureText: false,
+        autocorrect: false,
+        inputFormatters: [_idRegex],
+        keyboardAppearance: Brightness.light,
+        controller: _idController,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          labelText: SignInStrings.idText,
+        ),
+        onSubmitted: (_) {
+          FocusScope.of(context).requestFocus(_passwordNavigationFocus);
+        },
+      );
 
   Widget _buildPasswordFieldSection() => TextField(
-    focusNode: _passwordNavigationFocus,
-    key: LoginPageKeys.passwordTextField,
-    autocorrect: false,
-    obscureText: true,
-    keyboardAppearance: Brightness.light,
-    inputFormatters: [_passwordRegex],
-    controller: _passwordController,
-    decoration: InputDecoration(
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      labelText: SignInStrings.passwordText,
-    ),
-  );
+        focusNode: _passwordNavigationFocus,
+        key: LoginPageKeys.passwordTextField,
+        autocorrect: false,
+        obscureText: true,
+        keyboardAppearance: Brightness.light,
+        inputFormatters: [_passwordRegex],
+        controller: _passwordController,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          labelText: SignInStrings.passwordText,
+        ),
+      );
 
-  Widget _buildSignInSection() => CupertinoButton(
-    key: LoginPageKeys.loginBtn,
-    child: Text(
-      SignInStrings.login,
-      style: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: 16.0,
+  Widget _buildSignInSection() => ButtonTheme(
+    minWidth: double.infinity,
+    child: CupertinoButton(
+      key: LoginPageKeys.loginBtn,
+      child: Text(
+        SignInStrings.login,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16.0,
+        ),
       ),
+      color: eliverdColor,
+      borderRadius: BorderRadius.circular(15.0),
+      padding: EdgeInsets.symmetric(
+        vertical: 15.0,
+      ),
+      onPressed: () {
+        context.bloc<AuthenticationBloc>().add(GrantAuthentication(
+            _idController.text, _passwordController.text));
+      },
     ),
-    color: eliverdColor,
-    borderRadius: BorderRadius.circular(15.0),
-    padding: EdgeInsets.symmetric(
-      vertical: 15.0,
-    ),
-    onPressed: () {
-      context.bloc<AuthenticationBloc>().add(GrantAuthentication(
-          _idController.text, _passwordController.text));
-    },
   );
 
   Widget _buildSignUpSection() => FlatButton(
-    key: LoginPageKeys.signUpBtn,
-    child: Text(
-      SignInStrings.notSignUp,
-      style: TextStyle(
-        fontWeight: FontWeight.w400,
-        color: Colors.black,
-      ),
-    ),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SignUpPage(),
+        key: LoginPageKeys.signUpBtn,
+        child: Text(
+          SignInStrings.notSignUp,
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            color: Colors.black,
+          ),
         ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignUpPage(),
+            ),
+          );
+        },
       );
-    },
-  );
 
   void _setErrorActivate(AuthenticationState state) {
     if (state is! AuthenticationError) {
@@ -217,7 +265,8 @@ class _LoginPageState extends State<LoginPage> {
 
   void _setErrorDeactivate(AuthenticationState state) {
     if (state is AuthenticationError) {
-      throw Exception('Tried to deactivate error when error is not completely solved!');
+      throw Exception(
+          'Tried to deactivate error when error is not completely solved!');
     }
     setState(() {
       errorOccurred = false;
@@ -227,7 +276,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildNextPageByStoreState(AuthenticationState state) {
     if (state is! Authenticated) {
-      throw Exception('Tried to navigate to next page when it is not authenticated!');
+      throw Exception(
+          'Tried to navigate to next page when it is not authenticated!');
     }
 
     final _state = state as Authenticated;

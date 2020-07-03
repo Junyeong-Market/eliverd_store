@@ -11,6 +11,7 @@ class FormTextField extends StatefulWidget {
   final errorMessage;
   final isFocused;
   final onSubmitted;
+  final focusNode;
 
   const FormTextField({
     Key key,
@@ -22,6 +23,7 @@ class FormTextField extends StatefulWidget {
     this.maxLength,
     this.isFocused,
     this.onSubmitted,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -38,16 +40,17 @@ class _FormTextFieldState extends State<FormTextField> {
           : widget.regex is List ? widget.regex : [widget.regex],
       maxLength: widget.maxLength,
       maxLengthEnforced: widget.maxLength == null ? false : true,
-      obscureText: widget.isObscured == null ? false : widget.isObscured,
-      controller: widget.controller,
+      obscureText: widget.isObscured ?? false,
+      controller: widget.controller ?? null,
       autocorrect: false,
       keyboardAppearance: Brightness.light,
-      autofocus: widget.isFocused == null ? false : widget.isFocused,
+      focusNode: widget.focusNode ?? null,
+      autofocus: widget.isFocused ?? false,
       decoration: InputDecoration(
-        helperText: widget.helperText,
+        helperText: widget.helperText ?? '',
         contentPadding: EdgeInsets.all(2.0),
         isDense: true,
-        errorText: widget.errorMessage,
+        errorText: widget.errorMessage ?? null,
         errorStyle: const TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.bold,
@@ -57,7 +60,7 @@ class _FormTextFieldState extends State<FormTextField> {
         fontSize: 22.0,
         color: Colors.black54,
       ),
-      onSubmitted: widget.onSubmitted,
+      onSubmitted: widget.onSubmitted ?? null,
     );
   }
 }

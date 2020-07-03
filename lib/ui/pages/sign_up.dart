@@ -31,6 +31,11 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   bool _isSeller = false;
 
+  final _realnameNavigationFocus = FocusNode();
+  final _nicknameNavigationFocus = FocusNode();
+  final _userIdNavigationFocus = FocusNode();
+  final _passwordNavigationFocus = FocusNode();
+
   AccountBloc _accountBloc;
 
   @override
@@ -48,12 +53,21 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void dispose() {
     _accountBloc.close();
+
+    _realnameNavigationFocus.dispose();
+    _nicknameNavigationFocus.dispose();
+    _userIdNavigationFocus.dispose();
+    _passwordNavigationFocus.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    _realnameNavigationFocus.requestFocus();
 
     return BlocProvider<AccountBloc>.value(
       value: _accountBloc,
@@ -69,7 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
             appBar: _brightAppBar,
             body: ListView(
               padding: EdgeInsets.symmetric(
-                horizontal: 20.0,
+                horizontal: width * 0.075,
               ),
               children: <Widget>[
                 _signUpTitle,
@@ -82,10 +96,9 @@ class _SignUpPageState extends State<SignUpPage> {
               ],
             ),
             bottomNavigationBar: Padding(
-              padding: EdgeInsets.only(
-                left: 15.0,
-                right: 15.0,
-                bottom: 15.0,
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.075,
+                vertical: 15.0,
               ),
               child: _buildSignUpBtn(),
             ),
@@ -138,6 +151,11 @@ class _SignUpPageState extends State<SignUpPage> {
               helperText: SignUpStrings.realnameHelperText,
               errorMessage: getErrorMessage(
                   state, 'realname', ErrorMessages.realnameInvalidMessage),
+              focusNode: _realnameNavigationFocus,
+              onSubmitted: (_) {
+                _realnameNavigationFocus.unfocus();
+                _nicknameNavigationFocus.requestFocus();
+              },
             ),
             SizedBox(height: height / 120.0),
           ],
@@ -170,6 +188,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   'nickname',
                   ErrorMessages.nicknameInvalidMessage,
                   ErrorMessages.nicknameDuplicatedMessage),
+              focusNode: _nicknameNavigationFocus,
+              onSubmitted: (_) {
+                _userIdNavigationFocus.requestFocus();
+              },
             ),
             SizedBox(height: height / 120.0),
           ],
@@ -177,7 +199,7 @@ class _SignUpPageState extends State<SignUpPage> {
         maintainSize: true,
         maintainAnimation: true,
         maintainState: true,
-        visible: _nameController.text.length != 0,
+        visible: !_realnameNavigationFocus.hasFocus,
       );
 
   Widget _buildUserIdSection(AccountState state, double height) => Visibility(
@@ -202,6 +224,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   'userId',
                   ErrorMessages.userIdInvalidMessage,
                   ErrorMessages.userIdDuplicatedMessage),
+              focusNode: _userIdNavigationFocus,
+              onSubmitted: (_) {
+                _passwordNavigationFocus.requestFocus();
+              },
             ),
             SizedBox(height: height / 120.0),
           ],
@@ -231,6 +257,7 @@ class _SignUpPageState extends State<SignUpPage> {
               regex: _passwordRegex,
               errorMessage: getErrorMessage(
                   state, 'password', ErrorMessages.passwordInvalidMessage),
+              focusNode: _passwordNavigationFocus,
             ),
             SizedBox(height: height / 120.0),
           ],
