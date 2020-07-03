@@ -104,7 +104,7 @@ class _AddProductPageState extends State<AddProductPage> {
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(
-              horizontal: 20.0,
+              horizontal: width * 0.075,
             ),
             children: <Widget>[
               SizedBox(height: height / 16.0),
@@ -121,7 +121,10 @@ class _AddProductPageState extends State<AddProductPage> {
             ],
           ),
           bottomNavigationBar: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.075,
+              vertical: 20.0,
+            ),
             child: BottomAppBar(
               color: Colors.transparent,
               elevation: 0.0,
@@ -189,6 +192,8 @@ class _AddProductPageState extends State<AddProductPage> {
     setState(() {
       _barcodeIan = barcodeIan;
     });
+
+    _registerBarcode();
   }
 
   Widget _buildRegisterBarcodeSection(double width, double height) =>
@@ -246,12 +251,8 @@ class _AddProductPageState extends State<AddProductPage> {
                   ? BarcodeWidget(
                       barcode: Barcode.ean13(),
                       data: _barcodeIan,
-                      width: width / 1.2,
-                      height: height / 24.0,
+                      height: height * 0.15,
                       drawText: true,
-                      style: TextStyle(
-                        fontSize: 10.0,
-                      ),
                       errorBuilder: (context, error) =>
                           Center(child: Text(error)),
                     )
