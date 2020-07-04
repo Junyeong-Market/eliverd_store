@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -41,6 +42,16 @@ class _AddProductPageState extends State<AddProductPage> {
 
   bool _isBarcodeRegistered = false;
   bool _isLastPage = false;
+
+  final _nameNavigationFocus = FocusNode();
+  final _priceNavigationFocus = FocusNode();
+  final _manufacturerNavigationFocus = FocusNode();
+  final _amountNavigationFocus = FocusNode();
+
+  bool _isNameSubmitted = false;
+  bool _isPriceSubmitted = false;
+  bool _isManufacturerSubmitted = false;
+  bool _isAmountSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -101,12 +112,17 @@ class _AddProductPageState extends State<AddProductPage> {
   void _registerBarcode() {
     setState(() {
       _isBarcodeRegistered = true;
+
+      _nameNavigationFocus.requestFocus();
     });
   }
 
   void _submitActivate(value) {
     setState(() {
+      _isAmountSubmitted = true;
       _isLastPage = true;
+
+      _amountNavigationFocus.unfocus();
     });
   }
 
@@ -238,6 +254,15 @@ class _AddProductPageState extends State<AddProductPage> {
             FormTextField(
               key: AddProductPageKeys.productNameTextField,
               controller: _nameController,
+              isEnabled: !_isNameSubmitted,
+              focusNode: _nameNavigationFocus,
+              onSubmitted: (value) {
+                setState(() {
+                  _isNameSubmitted = true;
+                });
+
+                _priceNavigationFocus.requestFocus();
+              },
             ),
           ],
         ),
@@ -264,6 +289,15 @@ class _AddProductPageState extends State<AddProductPage> {
                 DecimalInputFormatter(),
               ],
               controller: _priceController,
+              focusNode: _priceNavigationFocus,
+              isEnabled: !_isPriceSubmitted,
+              onSubmitted: (value) {
+                setState(() {
+                  _isPriceSubmitted = true;
+                });
+
+                _manufacturerNavigationFocus.requestFocus();
+              },
               prefixText: currency,
             ),
           ],
@@ -271,7 +305,7 @@ class _AddProductPageState extends State<AddProductPage> {
         maintainSize: false,
         maintainAnimation: true,
         maintainState: true,
-        visible: _nameController.text.length != 0,
+        visible: _isNameSubmitted,
       );
 
   Widget _buildManufacturerSection(double height) => Visibility(
@@ -288,13 +322,22 @@ class _AddProductPageState extends State<AddProductPage> {
             FormTextField(
               key: AddProductPageKeys.productManufacturerTextField,
               controller: _manufacturerController,
+              isEnabled: !_isManufacturerSubmitted,
+              focusNode: _manufacturerNavigationFocus,
+              onSubmitted: (value) {
+                setState(() {
+                  _isManufacturerSubmitted = true;
+                });
+
+                _amountNavigationFocus.requestFocus();
+              },
             ),
           ],
         ),
         maintainSize: false,
         maintainAnimation: true,
         maintainState: true,
-        visible: _priceController.text.length != 0,
+        visible: _isPriceSubmitted,
       );
 
   Widget _buildAmountSection(double height) => Visibility(
@@ -314,6 +357,8 @@ class _AddProductPageState extends State<AddProductPage> {
                 DecimalInputFormatter(),
               ],
               controller: _amountController,
+              focusNode: _amountNavigationFocus,
+              isEnabled: !_isAmountSubmitted,
               onSubmitted: _submitActivate,
             ),
           ],
@@ -321,7 +366,7 @@ class _AddProductPageState extends State<AddProductPage> {
         maintainSize: false,
         maintainAnimation: true,
         maintainState: true,
-        visible: _manufacturerController.text.length != 0,
+        visible: _isManufacturerSubmitted,
       );
 
   Widget _buildSubmitBtn() => CupertinoButton(

@@ -36,11 +36,17 @@ class _SignUpPageState extends State<SignUpPage> {
   final _userIdNavigationFocus = FocusNode();
   final _passwordNavigationFocus = FocusNode();
 
+  bool _isRealnameSubmitted = false;
+  bool _isNicknameSubmitted = false;
+  bool _isUserIdSubmitted = false;
+  bool _isPasswordSubmitted = false;
+
   AccountBloc _accountBloc;
 
   @override
   void initState() {
     super.initState();
+
     _accountBloc = AccountBloc(
       accountRepository: AccountRepository(
         accountAPIClient: AccountAPIClient(
@@ -148,12 +154,16 @@ class _SignUpPageState extends State<SignUpPage> {
               maxLength: 128,
               isObscured: false,
               controller: _nameController,
+              isEnabled: !_isRealnameSubmitted,
               helperText: SignUpStrings.realnameHelperText,
               errorMessage: getErrorMessage(
                   state, 'realname', ErrorMessages.realnameInvalidMessage),
               focusNode: _realnameNavigationFocus,
               onSubmitted: (_) {
-                _realnameNavigationFocus.unfocus();
+                setState(() {
+                  _isRealnameSubmitted = true;
+                });
+
                 _nicknameNavigationFocus.requestFocus();
               },
             ),
@@ -183,6 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
               isObscured: false,
               controller: _nicknameController,
               helperText: SignUpStrings.nicknameHelperText,
+              isEnabled: !_isNicknameSubmitted,
               errorMessage: getErrorMessage(
                   state,
                   'nickname',
@@ -190,6 +201,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ErrorMessages.nicknameDuplicatedMessage),
               focusNode: _nicknameNavigationFocus,
               onSubmitted: (_) {
+                setState(() {
+                  _isNicknameSubmitted = true;
+                });
+
                 _userIdNavigationFocus.requestFocus();
               },
             ),
@@ -199,7 +214,7 @@ class _SignUpPageState extends State<SignUpPage> {
         maintainSize: true,
         maintainAnimation: true,
         maintainState: true,
-        visible: !_realnameNavigationFocus.hasFocus,
+        visible: _isRealnameSubmitted,
       );
 
   Widget _buildUserIdSection(AccountState state, double height) => Visibility(
@@ -219,6 +234,7 @@ class _SignUpPageState extends State<SignUpPage> {
               isObscured: false,
               controller: _userIdController,
               helperText: SignUpStrings.userIdHelperText,
+              isEnabled: !_isUserIdSubmitted,
               errorMessage: getErrorMessage(
                   state,
                   'userId',
@@ -226,6 +242,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ErrorMessages.userIdDuplicatedMessage),
               focusNode: _userIdNavigationFocus,
               onSubmitted: (_) {
+                setState(() {
+                  _isUserIdSubmitted = true;
+                });
+
                 _passwordNavigationFocus.requestFocus();
               },
             ),
@@ -235,7 +255,7 @@ class _SignUpPageState extends State<SignUpPage> {
         maintainSize: true,
         maintainAnimation: true,
         maintainState: true,
-        visible: _nicknameController.text.length != 0,
+        visible: _isNicknameSubmitted,
       );
 
   Widget _buildPasswordSection(AccountState state, double height) => Visibility(
@@ -254,10 +274,18 @@ class _SignUpPageState extends State<SignUpPage> {
               isObscured: true,
               helperText: SignUpStrings.passwordHelperText,
               controller: _passwordController,
+              isEnabled: !_isPasswordSubmitted,
               regex: _passwordRegex,
               errorMessage: getErrorMessage(
                   state, 'password', ErrorMessages.passwordInvalidMessage),
               focusNode: _passwordNavigationFocus,
+              onSubmitted: (value) {
+                setState(() {
+                  _isPasswordSubmitted = true;
+                });
+
+                _passwordNavigationFocus.unfocus();
+              },
             ),
             SizedBox(height: height / 120.0),
           ],
@@ -265,7 +293,7 @@ class _SignUpPageState extends State<SignUpPage> {
         maintainSize: true,
         maintainAnimation: true,
         maintainState: true,
-        visible: _userIdController.text.length != 0,
+        visible: _isUserIdSubmitted,
       );
 
   Widget _buildIsSellerSection(AccountState state, double height) => Visibility(
@@ -313,7 +341,7 @@ class _SignUpPageState extends State<SignUpPage> {
         maintainSize: true,
         maintainAnimation: true,
         maintainState: true,
-        visible: _passwordController.text.length != 0,
+        visible: true,
       );
 
   Widget _buildSignUpBtn() => BottomAppBar(
@@ -330,7 +358,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           color: eliverdColor,
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(25.0),
           padding: EdgeInsets.symmetric(vertical: 15.0),
           onPressed: _passwordController.text.length != 0
               ? validateAndSignUpUser

@@ -83,14 +83,20 @@ class _ProductCardState extends State<ProductCard> {
                           ],
                         ),
                       ),
-                      Text(
-                        formattedPrice(widget.stock.price),
-                        maxLines: 1,
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20.0,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            formattedPrice(widget.stock.price),
+                            maxLines: 1,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          _buildAmountText(widget.stock.amount),
+                        ],
                       ),
                     ],
                   ),
@@ -197,6 +203,39 @@ class _ProductCardState extends State<ProductCard> {
     ),
     errorBuilder: (context, error) => Center(child: Text(error)),
   );
+
+  Widget _buildAmountText(int amount) {
+    String text;
+    TextStyle textStyle;
+
+    if (amount == 0) {
+      text = '재고 소진됨';
+      textStyle = const TextStyle(
+        color: Colors.red,
+        fontWeight: FontWeight.w800,
+        fontSize: 14.0,
+      );
+    } else if (amount == 1) {
+      text = '서두르세요! $amount개 남음';
+      textStyle = const TextStyle(
+        color: Colors.red,
+        fontWeight: FontWeight.w800,
+        fontSize: 14.0,
+      );
+    } else {
+      text = '현재 $amount개 남음';
+      textStyle = const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w300,
+        fontSize: 14.0,
+      );
+    }
+
+    return Text(
+      text,
+      style: textStyle,
+    );
+  }
 
   String formattedPrice(int price) {
     return NumberFormat.currency(
