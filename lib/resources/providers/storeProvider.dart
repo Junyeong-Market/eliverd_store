@@ -51,7 +51,7 @@ class StoreAPIClient {
         store: store,
         product: Product.fromJson(rawStock['product']),
         price: rawStock['price'],
-        amount: rawStock['number'],
+        amount: rawStock['amount'],
       );
     }).toList();
 
