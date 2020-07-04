@@ -52,59 +52,21 @@ class _AddProductPageState extends State<AddProductPage> {
         return Scaffold(
           key: AddProductPageKeys.addProductPage,
           appBar: Header(
-            height: height / 4.8,
-            child: Column(
-              children: <Widget>[
-                AppBar(
-                  leading: ButtonTheme(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    minWidth: 0,
-                    height: 0,
-                    child: FlatButton(
-                      padding: EdgeInsets.all(0.0),
-                      key: HomePageKeys.searchProductBtn,
-                      textColor: Colors.white,
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      child: Text(
-                        '􀆉',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24.0,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(
-                              currentStore: widget.currentStore,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  backgroundColor: eliverdColor,
-                  elevation: 0.0,
-                ),
-                Align(
-                  alignment: FractionalOffset(0.1, 0.0),
-                  child: Text(
-                    TitleStrings.addProductTitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 36.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+            onBackButtonPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(
+                    currentStore: widget.currentStore,
                   ),
                 ),
-              ],
-            ),
+              );
+            },
+            title: TitleStrings.addProductTitle,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(
-              horizontal: width * 0.075,
+              horizontal: width * 0.05,
             ),
             children: <Widget>[
               SizedBox(height: height / 16.0),
@@ -112,17 +74,14 @@ class _AddProductPageState extends State<AddProductPage> {
               _buildBarcodeSection(width, height),
               SizedBox(height: height / 48.0),
               _buildNameSection(height),
-              SizedBox(height: height / 48.0),
               _buildPriceSection(height),
-              SizedBox(height: height / 48.0),
               _buildManufacturerSection(height),
-              SizedBox(height: height / 48.0),
               _buildAmountSection(height),
             ],
           ),
           bottomNavigationBar: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: width * 0.075,
+              horizontal: width * 0.05,
               vertical: 20.0,
             ),
             child: BottomAppBar(
@@ -298,23 +257,14 @@ class _AddProductPageState extends State<AddProductPage> {
               textWhenNotCompleted: ProductStrings.priceDescWhenImcompleted,
             ),
             SizedBox(height: height / 120.0),
-            TextField(
+            FormTextField(
               key: AddProductPageKeys.productPriceTextField,
-              textInputAction: TextInputAction.done,
-              inputFormatters: [
+              regex: [
                 WhitelistingTextInputFormatter.digitsOnly,
                 DecimalInputFormatter(),
               ],
               controller: _priceController,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(2.0),
-                isDense: true,
-                prefixText: currency,
-              ),
-              style: TextStyle(
-                fontSize: 22.0,
-                color: Colors.black54,
-              ),
+              prefixText: currency,
             ),
           ],
         ),

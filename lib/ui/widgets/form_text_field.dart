@@ -12,6 +12,7 @@ class FormTextField extends StatefulWidget {
   final isFocused;
   final onSubmitted;
   final focusNode;
+  final prefixText;
 
   const FormTextField({
     Key key,
@@ -24,6 +25,7 @@ class FormTextField extends StatefulWidget {
     this.isFocused,
     this.onSubmitted,
     this.focusNode,
+    this.prefixText,
   }) : super(key: key);
 
   @override
@@ -55,6 +57,7 @@ class _FormTextFieldState extends State<FormTextField> {
           color: Colors.red,
           fontWeight: FontWeight.bold,
         ),
+        prefixText: widget.prefixText ?? null,
       ),
       style: TextStyle(
         fontSize: 22.0,
