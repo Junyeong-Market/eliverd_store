@@ -61,6 +61,7 @@ class _AddProductPageState extends State<AddProductPage> {
       builder: (context, state) {
         return Scaffold(
           key: AddProductPageKeys.addProductPage,
+          extendBodyBehindAppBar: true,
           appBar: Header(
             onBackButtonPressed: () {
               Navigator.pushReplacement(
@@ -79,6 +80,7 @@ class _AddProductPageState extends State<AddProductPage> {
               horizontal: width * 0.05,
             ),
             children: <Widget>[
+              SizedBox(height: kToolbarHeight + 60.0),
               SizedBox(height: height / 16.0),
               _buildRegisterBarcodeSection(width, height),
               _buildBarcodeSection(width, height),
