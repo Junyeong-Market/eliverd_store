@@ -55,3 +55,13 @@ class RegisterStorePageKeys {
   static final registerStorePage = Key('__RegisterStorePage__');
   static final registerStoreBtn = Key('__RegisterStoreButton__');
 }
+
+class UpdateProductPageKeys {
+  static final updateProductPage = Key('__UpdateProductPage__');
+  static final barcodeImage = Key('__UpdateProductBarcodeImage__');
+  static final productNameTextField = Key('__UpdateProductNameTextField__');
+  static final productPriceTextField = Key('__UpdateProductPriceTextField__');
+  static final productManufacturerTextField = Key('__UpdateProductManufacturerTextField__');
+  static final productAmountTextField = Key('__UpdateProductAmountTextField__');
+  static final productSubmitBtn = Key('__UpdateProductSubmitButton__');
+}
