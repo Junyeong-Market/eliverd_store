@@ -12,7 +12,6 @@ import 'package:Eliverd/bloc/stockBloc.dart';
 
 import 'package:Eliverd/models/models.dart';
 
-import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/key.dart';
 
@@ -61,121 +60,81 @@ class _HomePageState extends State<HomePage> {
       builder: (context, state) {
         return Scaffold(
           key: HomePageKeys.homePage,
-          appBar: _buildMainHeader(height),
+          appBar: _buildMainHeader(),
           body: _buildMainBody(state, height),
         );
       },
     );
   }
 
-  Widget _buildMainHeader(double height) => Header(
-        height: height / 4.8,
-        child: Column(
-          children: <Widget>[
-            AppBar(
-              leading: ButtonTheme(
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                minWidth: 0,
-                height: 0,
-                child: FlatButton(
-                  padding: EdgeInsets.all(0.0),
-                  key: HomePageKeys.searchProductBtn,
-                  textColor: Colors.white,
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  child: Text(
-                    '􀆉',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 24.0,
-                    ),
-                  ),
-                  onPressed: () {
-                    context.bloc<AuthenticationBloc>().add(RevokeAuthentication());
+  Widget _buildMainHeader() => Header(
+        onBackButtonPressed: () {
+          context.bloc<AuthenticationBloc>().add(RevokeAuthentication());
 
-                    Navigator.pushReplacement(
-                        context,
-                      MaterialPageRoute(
-                          builder: (context) => LoginPage()),
-                    );
-                  },
-                ),
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        },
+        title: widget.currentStore.name,
+        actions: <Widget>[
+          ButtonTheme(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minWidth: 0,
+            height: 0,
+            child: FlatButton(
+              padding: EdgeInsets.only(
+                right: 8.0,
               ),
-              backgroundColor: eliverdColor,
-              actions: <Widget>[
-                ButtonTheme(
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  minWidth: 0,
-                  height: 0,
-                  child: FlatButton(
-                    padding: EdgeInsets.only(
-                      right: 8.0,
-                    ),
-                    key: HomePageKeys.searchProductBtn,
-                    textColor: Colors.white,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    child: Text(
-                      '􀊫',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 22.0,
-                      ),
-                    ),
-                    onPressed: () {
-                      // TO-DO: 상품 조건적 검색 BLOC 구현
-                      // TO-DO: 상품 검색 페이지로 Navigate
-                    },
-                  ),
-                ),
-                ButtonTheme(
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  minWidth: 0,
-                  height: 0,
-                  child: FlatButton(
-                    padding: EdgeInsets.only(
-                      right: 16.0,
-                    ),
-                    key: HomePageKeys.addProductBtn,
-                    textColor: Colors.white,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    child: Text(
-                      '􀅼',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 22.0,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddProductPage(
-                            currentStore: widget.currentStore,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-              elevation: 0.0,
-            ),
-            Align(
-              alignment: FractionalOffset(0.1, 0.0),
+              key: HomePageKeys.searchProductBtn,
+              textColor: Colors.white,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               child: Text(
-                widget.currentStore.name,
-                key: HomePageKeys.currentStoreName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 36.0,
-                  fontWeight: FontWeight.bold,
+                '􀊫',
+                style: TextStyle(
+                  fontWeight: FontWeight.w200,
+                  fontSize: 22.0,
                 ),
               ),
+              onPressed: () {
+                // TO-DO: 상품 조건적 검색 BLOC 구현
+                // TO-DO: 상품 검색 페이지로 Navigate
+              },
             ),
-          ],
-        ),
+          ),
+          ButtonTheme(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minWidth: 0,
+            height: 0,
+            child: FlatButton(
+              padding: EdgeInsets.only(
+                right: 16.0,
+              ),
+              key: HomePageKeys.addProductBtn,
+              textColor: Colors.white,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              child: Text(
+                '􀅼',
+                style: TextStyle(
+                  fontWeight: FontWeight.w200,
+                  fontSize: 22.0,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddProductPage(
+                      currentStore: widget.currentStore,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       );
 
   Widget _buildMainBody(StockState state, double height) {
@@ -185,8 +144,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ButtonTheme(
-              materialTapTargetSize:
-              MaterialTapTargetSize.shrinkWrap,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               minWidth: 0,
               height: 0,
               child: FlatButton(
@@ -249,7 +207,6 @@ class _HomePageState extends State<HomePage> {
                           indent: 160.0,
                           endIndent: 160.0,
                           thickness: 2.4,
-
                           color: Colors.black12,
                         ),
                         Text(
