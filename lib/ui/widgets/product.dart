@@ -1,12 +1,14 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:Eliverd/bloc/events/stockEvent.dart';
 import 'package:Eliverd/bloc/states/stockState.dart';
 import 'package:Eliverd/bloc/stockBloc.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:io' show Platform;
-
-import 'package:intl/intl.dart';
 
 import 'package:Eliverd/models/models.dart';
 
@@ -30,117 +32,125 @@ class _ProductCardState extends State<ProductCard> {
     return BlocProvider<StockBloc>.value(
       value: context.bloc<StockBloc>(),
       child: BlocConsumer<StockBloc, StockState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            return Card(
-              margin: EdgeInsets.zero,
-              elevation: 0.0,
-              color: Colors.transparent,
-              shape: Border(
-                bottom: BorderSide(
-                  color: Colors.black12,
-                  width: 1,
-                ),
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Card(
+            margin: EdgeInsets.zero,
+            elevation: 0.0,
+            color: Colors.transparent,
+            shape: Border(
+              bottom: BorderSide(
+                color: Colors.black12,
+                width: 1,
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 12.0,
+                top: 16.0,
+                bottom: 8.0,
+                right: 16.0,
               ),
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 12.0,
-                      top: 12.0,
-                      right: 15.0,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                widget.stock.product.name,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                              Text(
-                                widget.stock.product.manufacturer.name,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          formattedPrice(widget.stock.price),
-                          maxLines: 1,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Image(
-                        width: 100.0,
-                        height: 50.0,
-                        image: AssetImage('assets/images/barcode_example.png'),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.stock.product.name,
+                              maxLines: 1,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                            Text(
+                              widget.stock.product.manufacturer.name,
+                              maxLines: 1,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      ButtonBar(
-                        buttonMinWidth: 25.0,
-                        buttonHeight: 25.0,
-                        buttonPadding: EdgeInsets.all(0.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            formattedPrice(widget.stock.price),
+                            maxLines: 1,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          _buildAmountText(widget.stock.amount),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4.0),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _buildBarcodeImage(),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           ButtonTheme(
-                            padding: EdgeInsets.all(3.0),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                             minWidth: 0,
                             height: 0,
                             child: FlatButton(
+                              padding: EdgeInsets.all(1.0),
                               textColor: eliverdColor,
                               child: Text(
                                 '􀈎',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 22.0,
+                                  fontSize: 24.0,
                                 ),
                               ),
                               onPressed: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            UpdateProductPage()));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdateProductPage(
+                                      stock: widget.stock,
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ),
                           ButtonTheme(
-                            padding: EdgeInsets.all(3.0),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                             minWidth: 0,
                             height: 0,
                             child: FlatButton(
+                              padding: EdgeInsets.all(1.0),
                               textColor: eliverdColor,
                               child: Text(
                                 '􀈕',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 22.0,
+                                  fontSize: 24.0,
                                 ),
                               ),
                               onPressed: () {
@@ -149,16 +159,18 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                           ButtonTheme(
-                            minWidth: 25.0,
-                            height: 25.0,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            minWidth: 0,
+                            height: 0,
                             child: FlatButton(
-                              padding: EdgeInsets.all(0.0),
+                              padding: EdgeInsets.all(1.0),
                               textColor: eliverdColor,
                               child: Text(
                                 '􀈑',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 22.0,
+                                  fontSize: 24.0,
                                 ),
                               ),
                               onPressed: () {
@@ -168,13 +180,60 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ],
               ),
-            );
-          }),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildBarcodeImage() => BarcodeWidget(
+    barcode: Barcode.ean13(),
+    data: widget.stock.product.ian,
+    width: 110,
+    height: 45,
+    drawText: true,
+    style: TextStyle(
+      fontSize: 10.0,
+    ),
+    errorBuilder: (context, error) => Center(child: Text(error)),
+  );
+
+  Widget _buildAmountText(int amount) {
+    String text;
+    TextStyle textStyle;
+
+    if (amount == 0) {
+      text = '재고 소진됨';
+      textStyle = const TextStyle(
+        color: Colors.red,
+        fontWeight: FontWeight.w800,
+        fontSize: 14.0,
+      );
+    } else if (amount == 1) {
+      text = '서두르세요! $amount개 남음';
+      textStyle = const TextStyle(
+        color: Colors.red,
+        fontWeight: FontWeight.w800,
+        fontSize: 14.0,
+      );
+    } else {
+      text = '현재 $amount개 남음';
+      textStyle = const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w300,
+        fontSize: 14.0,
+      );
+    }
+
+    return Text(
+      text,
+      style: textStyle,
     );
   }
 
@@ -209,7 +268,7 @@ showDeleteProductAlertDialog(BuildContext context, Stock stock) {
       ),
     ),
     onPressed: () {
-      context.bloc<StockBloc>().add(StockDeleted(stock));
+      context.bloc<StockBloc>().add(DeleteStock(stock));
       Navigator.pop(context);
     },
   );
@@ -236,7 +295,7 @@ showDeleteProductAlertDialog(BuildContext context, Stock stock) {
       ),
     ),
     onPressed: () {
-      context.bloc<StockBloc>().add(StockDeleted(stock));
+      context.bloc<StockBloc>().add(DeleteStock(stock));
       Navigator.pop(context);
     },
   );

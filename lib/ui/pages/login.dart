@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:Eliverd/bloc/accountBloc.dart';
 import 'package:Eliverd/bloc/authBloc.dart';
-import 'package:Eliverd/bloc/events/accountEvent.dart';
 import 'package:Eliverd/bloc/events/authEvent.dart';
 import 'package:Eliverd/bloc/states/authState.dart';
 
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
+import 'package:Eliverd/common/key.dart';
 
 import 'package:Eliverd/ui/pages/home.dart';
 import 'package:Eliverd/ui/pages/store_selection.dart';
@@ -23,6 +24,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -30,160 +32,262 @@ class _LoginPageState extends State<LoginPage> {
   String errorMessage = '';
 
   @override
+  void initState() {
+    super.initState();
+
+    _prefs.then((prefs) {
+      _idController.text = prefs.getString('userId') ?? '';
+      _passwordController.text = prefs.getString('password') ?? '';
+
+      context.bloc<AuthenticationBloc>().add(CheckAuthentication());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthenticationBloc>.value(
-          value: context.bloc<AuthenticationBloc>(),
-        ),
-        BlocProvider<AccountBloc>.value(
-          value: context.bloc<AccountBloc>(),
-        ),
-      ],
-      child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-          if (state is AuthenticationError) {
-            setState(() {
-              errorOccurred = true;
-              errorMessage = state.errorMessage;
-            });
-          } else {
-            setState(() {
-              errorOccurred = false;
-              errorMessage = '';
-            });
-          }
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        if (state is AuthenticationError) {
+          _setErrorActivate(state);
+        } else {
+          _setErrorDeactivate(state);
+        }
 
-          if (state is Authenticated) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => state.stores.length == 0
-                    ? RegisterStorePage()
-                    : (state.stores.length == 1
-                        ? HomePage(currentStore: state.stores[0])
-                        : StoreSelectionPage()),
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
+        if (state is Authenticated) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => _buildNextPageByStoreState(state)),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is Authenticated) {
           return Scaffold(
             extendBodyBehindAppBar: true,
-            key: Key('LoginPage'),
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              brightness: Brightness.light,
-              elevation: 0.0,
-              automaticallyImplyLeading: false,
-            ),
-            body: Padding(
-              padding: EdgeInsets.only(
-                left: 50.0,
-                right: 50.0,
-              ),
-              child: ListView(
+            key: LoginPageKeys.loginPage,
+            appBar: _transparentAppBar,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Image(
-                    width: width / 1.5,
-                    height: width / 1.5,
-                    image: AssetImage(
-                        'assets/images/logo/eliverd_logo_original.png'),
-                  ),
-                  SizedBox(height: height / 24.0),
-                  Visibility(
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          errorMessage,
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: height / 120.0),
-                      ],
-                    ),
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: errorOccurred,
-                  ),
-                  TextField(
-                    key: Key('IdField'),
-                    obscureText: false,
-                    controller: _idController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(15.0),
-                      ),
-                      labelText: SignInStrings.idText,
-                    ),
-                  ),
-                  SizedBox(height: height / 80.0),
-                  TextField(
-                    key: Key('PasswordField'),
-                    obscureText: true,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(15.0),
-                      ),
-                      labelText: SignInStrings.passwordText,
-                    ),
-                  ),
-                  SizedBox(height: height / 80.0),
-                  CupertinoButton(
-                    key: Key('SignInButton'),
+                  _buildLoginPageLogo(width),
+                  SizedBox(height: height / 48.0),
+                  CupertinoActivityIndicator(),
+                  SizedBox(height: height / 64.0),
+                  Center(
                     child: Text(
-                      SignInStrings.login,
+                      SignInStrings.alreadyLoggedIn,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
+                        color: Colors.black38,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w700,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    color: eliverdColor,
-                    borderRadius: BorderRadius.circular(15.0),
-                    padding: EdgeInsets.symmetric(
-                      vertical: 15.0,
-                    ),
-                    onPressed: () {
-                      context.bloc<AuthenticationBloc>().add(
-                          SignInAuthentication(
-                              _idController.text, _passwordController.text));
-                    },
-                  ),
-                  FlatButton(
-                    key: Key('SignUpButton'),
-                    child: Text(
-                      SignInStrings.notSignUp,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onPressed: () {
-                      context.bloc<AccountBloc>().add(NewAccountRequested());
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUpPage(),
-                        ),
-                      );
-                    },
                   ),
                 ],
               ),
             ),
           );
-        },
-      ),
+        }
+
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          key: LoginPageKeys.loginPage,
+          appBar: _transparentAppBar,
+          body: ListView(
+            padding: EdgeInsets.only(
+              left: width * 0.15,
+              right: width * 0.15,
+              top: height * 0.15,
+              bottom: height * 0.15,
+            ),
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _buildLoginPageLogo(width),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      _buildLoginErrorSection(height),
+                      _buildIdFieldSection(),
+                      SizedBox(height: height / 88.0),
+                      _buildPasswordFieldSection(),
+                      SizedBox(height: height / 88.0),
+                      _buildSignInSection(),
+                      _buildSignUpSection(),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
+  }
+
+  final _idRegex = WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9^\s]"));
+  final _passwordRegex =
+      WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9\x01-\x19\x21-\x7F]"));
+
+  final _passwordNavigationFocus = FocusNode();
+
+  final _transparentAppBar = AppBar(
+    backgroundColor: Colors.transparent,
+    brightness: Brightness.light,
+    elevation: 0.0,
+    automaticallyImplyLeading: false,
+  );
+
+  Widget _buildLoginPageLogo(double width) => Image(
+        key: LoginPageKeys.loginLogo,
+        width: width / 1.5,
+        height: width / 1.5,
+        image: AssetImage('assets/images/logo/eliverd_logo_original.png'),
+      );
+
+  Widget _buildLoginErrorSection(double height) => Visibility(
+        key: LoginPageKeys.loginErrorMsg,
+        child: Column(
+          children: <Widget>[
+            Text(
+              errorMessage,
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: height / 120.0),
+          ],
+        ),
+        maintainSize: true,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: errorOccurred,
+      );
+
+  Widget _buildIdFieldSection() => TextField(
+        key: LoginPageKeys.idTextField,
+        obscureText: false,
+        autocorrect: false,
+        inputFormatters: [_idRegex],
+        keyboardAppearance: Brightness.light,
+        controller: _idController,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          labelText: SignInStrings.idText,
+        ),
+        onSubmitted: (_) {
+          FocusScope.of(context).requestFocus(_passwordNavigationFocus);
+        },
+      );
+
+  Widget _buildPasswordFieldSection() => TextField(
+        focusNode: _passwordNavigationFocus,
+        key: LoginPageKeys.passwordTextField,
+        autocorrect: false,
+        obscureText: true,
+        keyboardAppearance: Brightness.light,
+        inputFormatters: [_passwordRegex],
+        controller: _passwordController,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          labelText: SignInStrings.passwordText,
+        ),
+      );
+
+  Widget _buildSignInSection() => ButtonTheme(
+    minWidth: double.infinity,
+    child: CupertinoButton(
+      key: LoginPageKeys.loginBtn,
+      child: Text(
+        SignInStrings.login,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16.0,
+        ),
+      ),
+      color: eliverdColor,
+      borderRadius: BorderRadius.circular(15.0),
+      padding: EdgeInsets.symmetric(
+        vertical: 15.0,
+      ),
+      onPressed: () {
+        context.bloc<AuthenticationBloc>().add(GrantAuthentication(
+            _idController.text, _passwordController.text));
+      },
+    ),
+  );
+
+  Widget _buildSignUpSection() => FlatButton(
+        key: LoginPageKeys.signUpBtn,
+        child: Text(
+          SignInStrings.notSignUp,
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            color: Colors.black,
+          ),
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignUpPage(),
+            ),
+          );
+        },
+      );
+
+  void _setErrorActivate(AuthenticationState state) {
+    if (state is! AuthenticationError) {
+      throw Exception('Tried to activate error when error is not occurred!');
+    }
+
+    setState(() {
+      errorOccurred = true;
+      errorMessage = (state as AuthenticationError).errorMessage;
+    });
+  }
+
+  void _setErrorDeactivate(AuthenticationState state) {
+    if (state is AuthenticationError) {
+      throw Exception(
+          'Tried to deactivate error when error is not completely solved!');
+    }
+    setState(() {
+      errorOccurred = false;
+      errorMessage = '';
+    });
+  }
+
+  Widget _buildNextPageByStoreState(AuthenticationState state) {
+    if (state is! Authenticated) {
+      throw Exception(
+          'Tried to navigate to next page when it is not authenticated!');
+    }
+
+    final _state = state as Authenticated;
+
+    if (_state.stores.length == 0) {
+      return RegisterStorePage();
+    } else if (_state.stores.length == 1) {
+      return HomePage(currentStore: _state.stores[0]);
+    } else {
+      return StoreSelectionPage();
+    }
   }
 }

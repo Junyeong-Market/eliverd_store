@@ -22,7 +22,7 @@ class Store extends Equatable {
   final int id;
   final String name;
   final String description;
-  final List<User> registerers;
+  final List<dynamic> registerers;
   final String registeredNumber;
   final Coordinate location;
 
@@ -47,7 +47,7 @@ class Store extends Equatable {
           {int id,
           String name,
           String description,
-          List<User> registerers,
+          List<dynamic> registerers,
           String registeredNumber,
           Coordinate location}) =>
       Store(
@@ -70,8 +70,8 @@ class Store extends Equatable {
     'name': name,
     'description': description,
     'registered_number': registeredNumber,
-    'lat': location.lat,
-    'lng': location.lng,
+    'lat': location.lat.toString(),
+    'lng': location.lng.toString(),
   };
 }
 
@@ -102,6 +102,7 @@ class Stock extends Equatable {
         'ian': product.ian,
         'name': product.name,
         'manufacturer': product.manufacturer.name,
-        'amount': amount,
+        'price': price.toString(),
+        'amount': amount.toString(),
       };
 }

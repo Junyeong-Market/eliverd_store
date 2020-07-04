@@ -17,7 +17,7 @@ class ErrorMessages {
   static final passwordInvalidMessage =
       '비밀번호는 영어, 숫자, 특수문자를 조합하여 256자 이내만 가능합니다.';
   static final loginErrorMessage =
-      '입력하신 계정은 존재하지 않는 계정입니다. 아이디와 비밀번호를 다시 입력해주세요.';
+      '네트워크 오류로 로그인을 할 수 없습니다. 아이디와 비밀번호를 다시 확인해주세요.';
 
   static final signUpErrorMessage = '회원가입 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요.';
   static final disallowedToManageStoreMessage = '이 계정은 사업장을 관리할 수 없는 계정입니다. 다른 계정으로 시도해주세요.';
@@ -26,7 +26,7 @@ class ErrorMessages {
 
   static final noRegisteredBusinessMessage = '먼저 사업장을 등록하세요!';
 
-  static final stocksCannotbeFetched = '네트워크 오류로 재고를 불러올 수 없습니다. 나중에 다시 시도해주세요.';
+  static final stocksCannotbeFetched = '네트워크 오류로 재고를 불러올 수 없습니다.\n나중에 다시 시도해주세요.';
 }
 
 class SignInStrings {
@@ -34,6 +34,7 @@ class SignInStrings {
   static final passwordText = '비밀번호';
   static final login = '로그인';
   static final notSignUp = '아직 회원이 아니십니까?';
+  static final alreadyLoggedIn = '이미 로그인이 되었습니다.\n잠시만 기다려주세요!';
 }
 
 class SignUpStrings {
@@ -88,6 +89,9 @@ class HomePageStrings {
   static final updateProductDesc = '재고 수정';
   static final checkOutProductDesc = '상품 결제';
   static final deleteProductDesc = '재고 폐기';
+
+  static final fetchingStockMsg = '재고 목록을 불러오는 중입니다. 잠시만 기다려주세요.';
+  static final stockEmptyMsg = '재고가 텅 비었네요😏. 􀅼 버튼을 클릭해서 재고를 추가해보세요!';
 }
 
 class ProductStrings {

@@ -7,25 +7,15 @@ abstract class AuthenticationEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ValidateAuthentication extends AuthenticationEvent {
-  final String token;
+class ValidateAuthentication extends AuthenticationEvent {}
 
-  const ValidateAuthentication(this.token);
+class CheckAuthentication extends AuthenticationEvent {}
 
-  @override
-  List<Object> get props => [token];
-
-  @override
-  String toString() {
-    return 'ValidateAuthentication{ token: $token }';
-  }
-}
-
-class SignInAuthentication extends AuthenticationEvent {
+class GrantAuthentication extends AuthenticationEvent {
   final String userId;
   final String password;
 
-  const SignInAuthentication(this.userId, this.password);
+  const GrantAuthentication(this.userId, this.password);
 
   @override
   List<Object> get props => [userId, password];
@@ -36,16 +26,4 @@ class SignInAuthentication extends AuthenticationEvent {
   }
 }
 
-class SignOutAuthentication extends AuthenticationEvent {
-  final String token;
-
-  const SignOutAuthentication(this.token);
-
-  @override
-  List<Object> get props => [token];
-
-  @override
-  String toString() {
-    return 'SignOutAuthentication{ token: $token }';
-  }
-}
+class RevokeAuthentication extends AuthenticationEvent {}
