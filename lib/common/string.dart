@@ -6,6 +6,7 @@ class TitleStrings {
   static final registerStoreTitle = '먼저 사업장을 등록하세요.';
   static final addProductTitle = '재고 등록';
   static final updateProductTitle = '재고 수정';
+  static final registerLocationTitle = '위치 등록';
 }
 
 class ErrorMessages {
@@ -27,6 +28,8 @@ class ErrorMessages {
   static final noRegisteredBusinessMessage = '먼저 사업장을 등록하세요!';
 
   static final stocksCannotbeFetched = '네트워크 오류로 재고를 불러올 수 없습니다.\n나중에 다시 시도해주세요.';
+  static final googleMapNotLoaded = '구글 지도를 불러올 수 없습니다.\n⟳ 버튼을 눌러 다시 시도해주세요.';
+  static final retryForFetchingAddress = '변환 중 오류가 발생했습니다. 다시 시도해주세요.';
 }
 
 class SignInStrings {
@@ -80,6 +83,7 @@ class RegisterStoreStrings {
   static final reigsterersTitle = '사업자';
   static final storeLocationTitle = '사업장 위치';
 
+  static final waitUntilAddressFetched = '주소로 변환될 때까지 기다려주세요.';
   static final registerBtnDesc = '등록하기';
 }
 
@@ -119,4 +123,14 @@ class ProductStrings {
   static final next = '다음';
   static final submit = '완료';
   static final delete = '삭제';
+}
+
+class SearchSheetStrings {
+  static final mapLoadingMsg = '지도를 불러오고 있습니다. 잠시만 기다려주세요.';
+  static final registerLocationDesc = '지도에서 원하는 위치를 터치하여 등록합니다.';
+
+  static final registeredMarkerTitle = '등록된 사업장 위치';
+  static final registerProceedTitle = '이대로 등록하시겠습니까?';
+  static final resetBtnText = '다시 설정';
+  static final confirmBtnText = '확인';
 }
