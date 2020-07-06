@@ -81,7 +81,7 @@ class _AddProductPageState extends State<AddProductPage> {
             ),
             children: <Widget>[
               SizedBox(height: kToolbarHeight + 60.0),
-              SizedBox(height: height / 16.0),
+              SizedBox(height: height / 12.0),
               _buildRegisterBarcodeSection(width, height),
               _buildBarcodeSection(width, height),
               SizedBox(height: height / 48.0),
