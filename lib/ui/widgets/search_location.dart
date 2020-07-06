@@ -43,7 +43,6 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
 
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
-        print(state);
         if (state is StoreLocationRegistered) {
           Navigator.pop(context);
         }
