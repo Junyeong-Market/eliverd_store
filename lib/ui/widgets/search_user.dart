@@ -1,3 +1,4 @@
+import 'package:Eliverd/bloc/events/storeEvent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Eliverd/bloc/states/storeState.dart';
 import 'package:Eliverd/bloc/storeBloc.dart';
 
+import 'package:Eliverd/models/models.dart';
+
 import 'package:Eliverd/common/string.dart';
+import 'package:Eliverd/common/color.dart';
 
 class SearchUserDialog extends StatefulWidget {
   @override
@@ -13,17 +17,15 @@ class SearchUserDialog extends StatefulWidget {
 }
 
 class _SearchUserDialogState extends State<SearchUserDialog> {
+  List<dynamic> _registerers = [User(realname: 'ㅁㅁㅁ', nickname: 'aaa')];
+
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final height = MediaQuery.of(context).size.height;
 
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
-        print(state);
-        if (state is StoreLocationRegistered) {
+        if (state is StoreRegisterersRegistered) {
           Navigator.pop(context);
         }
       },
@@ -34,31 +36,93 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
             horizontal: 20.0,
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              SizedBox(height: height / 64.0),
-              Divider(
-                indent: 140.0,
-                endIndent: 140.0,
-                height: 16.0,
-                thickness: 4.0,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: height / 64.0),
+                  Divider(
+                    indent: 140.0,
+                    endIndent: 140.0,
+                    height: 16.0,
+                    thickness: 4.0,
+                  ),
+                  SizedBox(height: height / 64.0),
+                  Text(
+                    TitleStrings.searchRegisterersTitle,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 26.0,
+                    ),
+                  ),
+                  Text(
+                    SearchSheetStrings.searchRegisterersDesc,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w200,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  SizedBox(height: height / 48.0),
+                  CupertinoTextField(
+                    placeholder: RegisterStoreStrings.registererSearchDesc,
+                    autofocus: true,
+                    onSubmitted: (value) {
+                      // TO-DO: 사업자 BLOC 구현 후 Search 이벤트 call
+                    },
+                    cursorRadius: Radius.circular(25.0),
+                  ),
+                ],
               ),
-              SizedBox(height: height / 64.0),
-              Text(
-                TitleStrings.searchRegisterersTitle,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 26.0,
-                ),
+              Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      ButtonTheme(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        minWidth: 0,
+                        height: 0,
+                        child: FlatButton(
+                          padding: EdgeInsets.all(0.0),
+                          child: Text(
+                            '취소',
+                            style: TextStyle(
+                              color: eliverdColor,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      ButtonTheme(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        minWidth: 0,
+                        height: 0,
+                        child: FlatButton(
+                          padding: EdgeInsets.all(0.0),
+                          child: Text(
+                            '완료',
+                            style: TextStyle(
+                              color: eliverdColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (_registerers.length != 0) {
+                              context.bloc<StoreBloc>().add(RegisterStoreRegisterers(_registerers));
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: height / 48.0),
+                ],
               ),
-              Text(
-                SearchSheetStrings.searchRegisterersDesc,
-                style: TextStyle(
-                  fontWeight: FontWeight.w200,
-                  fontSize: 16.0,
-                ),
-              ),
-              SizedBox(height: height / 48.0),
             ],
           ),
         );
