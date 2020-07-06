@@ -1,4 +1,5 @@
 import 'package:Eliverd/bloc/events/storeEvent.dart';
+import 'package:Eliverd/ui/widgets/registerers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,14 +65,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                     ),
                   ),
                   SizedBox(height: height / 48.0),
-                  CupertinoTextField(
-                    placeholder: RegisterStoreStrings.registererSearchDesc,
-                    autofocus: true,
-                    onSubmitted: (value) {
-                      // TO-DO: 사업자 BLOC 구현 후 Search 이벤트 call
-                    },
-                    cursorRadius: Radius.circular(25.0),
-                  ),
+                  RegistererCards(),
                 ],
               ),
               Column(
@@ -113,7 +107,9 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                           ),
                           onPressed: () {
                             if (_registerers.length != 0) {
-                              context.bloc<StoreBloc>().add(RegisterStoreRegisterers(_registerers));
+                              context
+                                  .bloc<StoreBloc>()
+                                  .add(RegisterStoreRegisterers(_registerers));
                             }
                           },
                         ),
