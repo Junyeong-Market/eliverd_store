@@ -16,6 +16,7 @@ import 'package:Eliverd/common/key.dart';
 
 import 'package:Eliverd/ui/widgets/form_text.dart';
 import 'package:Eliverd/ui/widgets/form_text_field.dart';
+import 'package:Eliverd/ui/widgets/search_user.dart';
 import 'package:Eliverd/ui/widgets/search_location.dart';
 
 class RegisterStorePage extends StatefulWidget {
@@ -250,7 +251,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
               showModalBottomSheet(
                 context: context,
                 builder: (context) =>
-                    SearchLocationDialog(),
+                    SearchUserDialog(),
                 isScrollControlled: true,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(

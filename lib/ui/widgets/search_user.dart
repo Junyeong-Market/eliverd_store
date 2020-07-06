@@ -1,16 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:Eliverd/bloc/events/storeEvent.dart';
 import 'package:Eliverd/bloc/states/storeState.dart';
 import 'package:Eliverd/bloc/storeBloc.dart';
 
-import 'package:Eliverd/models/models.dart';
-
-import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 
 class SearchUserDialog extends StatefulWidget {
