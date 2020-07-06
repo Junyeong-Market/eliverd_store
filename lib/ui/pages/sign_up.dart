@@ -160,11 +160,15 @@ class _SignUpPageState extends State<SignUpPage> {
                   state, 'realname', ErrorMessages.realnameInvalidMessage),
               focusNode: _realnameNavigationFocus,
               onSubmitted: (_) {
-                setState(() {
-                  _isRealnameSubmitted = true;
-                });
+                if (_nameController.text.length != 0) {
+                  setState(() {
+                    _isRealnameSubmitted = true;
+                  });
 
-                _nicknameNavigationFocus.requestFocus();
+                  _nicknameNavigationFocus.requestFocus();
+                }
+
+                // TO-DO: 이름 미입력 시 Snackbar 띄우기
               },
             ),
             SizedBox(height: height / 120.0),
@@ -201,11 +205,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   ErrorMessages.nicknameDuplicatedMessage),
               focusNode: _nicknameNavigationFocus,
               onSubmitted: (_) {
-                setState(() {
-                  _isNicknameSubmitted = true;
-                });
+                if (_nicknameController.text.length != 0) {
+                  setState(() {
+                    _isNicknameSubmitted = true;
+                  });
 
-                _userIdNavigationFocus.requestFocus();
+                  _userIdNavigationFocus.requestFocus();
+                } else {
+                  _nicknameNavigationFocus.requestFocus();
+                }
+
+                // TO-DO: 닉네임 미입력 시 Snackbar 띄우기
               },
             ),
             SizedBox(height: height / 120.0),
@@ -242,11 +252,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   ErrorMessages.userIdDuplicatedMessage),
               focusNode: _userIdNavigationFocus,
               onSubmitted: (_) {
-                setState(() {
-                  _isUserIdSubmitted = true;
-                });
+                if (_userIdController.text.length != 0) {
+                  setState(() {
+                    _isUserIdSubmitted = true;
+                  });
 
-                _passwordNavigationFocus.requestFocus();
+                  _passwordNavigationFocus.requestFocus();
+                } else {
+                  _userIdNavigationFocus.requestFocus();
+                }
+
+                // TO-DO: 아이디 미입력 시 Snackbar 띄우기
               },
             ),
             SizedBox(height: height / 120.0),
@@ -280,11 +296,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   state, 'password', ErrorMessages.passwordInvalidMessage),
               focusNode: _passwordNavigationFocus,
               onSubmitted: (value) {
-                setState(() {
-                  _isPasswordSubmitted = true;
-                });
+                if (_passwordController.text.length != 0) {
+                  setState(() {
+                    _isPasswordSubmitted = true;
+                  });
 
-                _passwordNavigationFocus.unfocus();
+                  _passwordNavigationFocus.unfocus();
+                } else {
+                  _passwordNavigationFocus.requestFocus();
+                }
+
+                // TO-DO: 비밀번호 미입력 시 Snackbar 띄우기
               },
             ),
             SizedBox(height: height / 120.0),
@@ -341,7 +363,7 @@ class _SignUpPageState extends State<SignUpPage> {
         maintainSize: true,
         maintainAnimation: true,
         maintainState: true,
-        visible: true,
+        visible: _isPasswordSubmitted,
       );
 
   Widget _buildSignUpBtn() => BottomAppBar(

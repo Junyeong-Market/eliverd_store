@@ -7,6 +7,7 @@ class TitleStrings {
   static final addProductTitle = '재고 등록';
   static final updateProductTitle = '재고 수정';
   static final registerLocationTitle = '위치 등록';
+  static final searchRegisterersTitle = '사업자 검색';
 }
 
 class ErrorMessages {
@@ -128,6 +129,7 @@ class ProductStrings {
 class SearchSheetStrings {
   static final mapLoadingMsg = '지도를 불러오고 있습니다. 잠시만 기다려주세요.';
   static final registerLocationDesc = '지도에서 원하는 위치를 터치하여 등록합니다.';
+  static final searchRegisterersDesc = '사업장에 추가할 사업자를 검색해서 선택합니다.';
 
   static final registeredMarkerTitle = '등록된 사업장 위치';
   static final registerProceedTitle = '이대로 등록하시겠습니까?';
