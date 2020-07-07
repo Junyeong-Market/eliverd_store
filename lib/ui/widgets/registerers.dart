@@ -1,4 +1,3 @@
-import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/resources/providers/accountProvider.dart';
 import 'package:Eliverd/resources/repositories/accountRepository.dart';
 import 'package:flutter/cupertino.dart';
