@@ -1,3 +1,5 @@
+import 'package:Eliverd/ui/pages/home.dart';
+import 'package:Eliverd/ui/widgets/registerers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,29 +38,30 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
   bool _isDescSubmitted = false;
   bool _isRegisteredNumberSubmitted = false;
 
-  List<dynamic> _registerers = [];
+  List<User> _registerers = [];
   Coordinate _storeLocation;
 
   Future<String> _locationAddress;
 
+  Store _createdStore;
+
   void _registerStore() {
-    final store = Store(
-      name: _storeDescController.text,
+    final formattedRegisteredNumber = _registeredNumberController.text.replaceAll('-', '');
+
+    _createdStore = Store(
+      name: _storeNameController.text,
       description: _storeDescController.text,
-      registeredNumber: _registeredNumberController.text,
+      registeredNumber: formattedRegisteredNumber,
       registerers: _registerers,
       location: _storeLocation,
     );
 
-    context.bloc<StoreBloc>().add(CreateStore(store));
+    context.bloc<StoreBloc>().add(CreateStore(_createdStore));
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final height = MediaQuery.of(context).size.height;
 
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
@@ -77,7 +80,14 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
         }
 
         if (state is StoreCreated) {
-          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(
+                currentStore: _createdStore,
+              ),
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -129,8 +139,9 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                   maintainState: true,
                   visible: _isRegisteredNumberSubmitted,
                 ),
+                SizedBox(height: height / 120.0),
                 Visibility(
-                  child: _buildRegisterersText(),
+                  child: _buildRegisterers(height),
                   maintainSize: true,
                   maintainAnimation: true,
                   maintainState: true,
@@ -144,12 +155,27 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                   maintainState: true,
                   visible: _registerers.length != 0,
                 ),
+                SizedBox(height: height / 120.0),
                 Visibility(
                   child: _buildAddressText(),
                   maintainSize: true,
                   maintainAnimation: true,
                   maintainState: true,
                   visible: _storeLocation != null,
+                ),
+                SizedBox(height: height / 120.0),
+                Visibility(
+                  child: Text(
+                    ErrorMessages.registerStoreNotProceed,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  maintainSize: false,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: state is StoreError,
                 ),
               ],
             ),
@@ -172,178 +198,115 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
   }
 
   final _storeNameRegex =
-  WhitelistingTextInputFormatter(RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣 ]"));
+      WhitelistingTextInputFormatter(RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣 ]"));
   final _registeredNumberRegex = [
     WhitelistingTextInputFormatter(RegExp("[0-9^\s]")),
     RegisterNumberTextInputFormatter(),
   ];
 
   Widget _buildStoreNameSection(double height) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      FormText(
-        controller: _storeNameController,
-        textWhenCompleted: RegisterStoreStrings.storeNameTitle,
-        textWhenNotCompleted:
-        RegisterStoreStrings.storeNameTitleWhenImcompleted,
-      ),
-      SizedBox(height: height / 120.0),
-      FormTextField(
-        controller: _storeNameController,
-        isFocused: true,
-        isEnabled: !_isNameSubmitted,
-        regex: _storeNameRegex,
-        maxLength: 50,
-        helperText: RegisterStoreStrings.storeNameHelperText,
-        onSubmitted: (value) {
-          if (_storeNameController.text.length != 0) {
-            setState(() {
-              _isNameSubmitted = true;
-            });
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          FormText(
+            controller: _storeNameController,
+            textWhenCompleted: RegisterStoreStrings.storeNameTitle,
+            textWhenNotCompleted:
+                RegisterStoreStrings.storeNameTitleWhenImcompleted,
+          ),
+          SizedBox(height: height / 120.0),
+          FormTextField(
+            controller: _storeNameController,
+            isFocused: true,
+            isEnabled: !_isNameSubmitted,
+            regex: _storeNameRegex,
+            maxLength: 50,
+            helperText: RegisterStoreStrings.storeNameHelperText,
+            onSubmitted: (value) {
+              if (_storeNameController.text.length != 0) {
+                setState(() {
+                  _isNameSubmitted = true;
+                });
 
-            _descNavigationFocus.requestFocus();
-          }
-        },
-      ),
-      SizedBox(height: height / 120.0),
-    ],
-  );
-
-  Widget _buildStoreDescSection(double height) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      FormText(
-        controller: _storeDescController,
-        textWhenCompleted: RegisterStoreStrings.storeDescTitle,
-        textWhenNotCompleted:
-        RegisterStoreStrings.storeDescTitleWhenImcompleted,
-      ),
-      SizedBox(height: height / 120.0),
-      FormTextField(
-        controller: _storeDescController,
-        helperText: RegisterStoreStrings.storeDescHelperText,
-        isEnabled: !_isDescSubmitted,
-        focusNode: _descNavigationFocus,
-        onSubmitted: (value) {
-          if (_storeDescController.text.length != 0) {
-            setState(() {
-              _isDescSubmitted = true;
-            });
-
-            _registeredNumberNavigationFocus.requestFocus();
-          } else {
-            _descNavigationFocus.requestFocus();
-          }
-        },
-      ),
-      SizedBox(height: height / 120.0),
-    ],
-  );
-
-  Widget _buildRegisteredNumberSection(double height) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      FormText(
-        controller: _registeredNumberController,
-        textWhenCompleted:
-        RegisterStoreStrings.registerNumberTitle,
-        textWhenNotCompleted: RegisterStoreStrings
-            .registerNumberTitleWhenImcompleted,
-      ),
-      SizedBox(height: height / 120.0),
-      FormTextField(
-        controller: _registeredNumberController,
-        regex: _registeredNumberRegex,
-        maxLength: 12,
-        isEnabled: !_isRegisteredNumberSubmitted,
-        helperText:
-        RegisterStoreStrings.registerNumberHelperText,
-        focusNode: _registeredNumberNavigationFocus,
-        onSubmitted: (value) {
-          if (_registeredNumberController.text.length != 0) {
-            setState(() {
-              _isRegisteredNumberSubmitted = true;
-            });
-
-            _registeredNumberNavigationFocus.unfocus();
-          } else {
-            _registeredNumberNavigationFocus.requestFocus();
-          }
-        },
-      ),
-      SizedBox(height: height / 120.0),
-    ],
-  );
-
-  Widget _buildRegisterRegisterersSection() => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Text(
-        _registerers.length == 0
-            ? RegisterStoreStrings
-            .reigsterersTitleWhenImcompleted
-            : RegisterStoreStrings.reigsterersTitle,
-        style: TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 26.0,
-        ),
-      ),
-      Visibility(
-        child: ButtonTheme(
-          padding: EdgeInsets.all(2.0),
-          materialTapTargetSize:
-          MaterialTapTargetSize.shrinkWrap,
-          minWidth: 0,
-          height: 0,
-          child: FlatButton(
-            child: Text(
-              '􀅼',
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 22.0,
-              ),
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) =>
-                    SearchUserDialog(),
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
-                ),
-              );
+                _descNavigationFocus.requestFocus();
+              }
             },
           ),
-        ),
-        maintainSize: true,
-        maintainAnimation: true,
-        maintainState: true,
-        visible: _registerers.length == 0,
-      ),
-    ],
-  );
+          SizedBox(height: height / 120.0),
+        ],
+      );
 
-  Widget _buildRegisterersText() => Text(
-    _registerers.toString(),
-  );
+  Widget _buildStoreDescSection(double height) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          FormText(
+            controller: _storeDescController,
+            textWhenCompleted: RegisterStoreStrings.storeDescTitle,
+            textWhenNotCompleted:
+                RegisterStoreStrings.storeDescTitleWhenImcompleted,
+          ),
+          SizedBox(height: height / 120.0),
+          FormTextField(
+            controller: _storeDescController,
+            helperText: RegisterStoreStrings.storeDescHelperText,
+            isEnabled: !_isDescSubmitted,
+            focusNode: _descNavigationFocus,
+            onSubmitted: (value) {
+              if (_storeDescController.text.length != 0) {
+                setState(() {
+                  _isDescSubmitted = true;
+                });
 
-  Widget _buildRegisterLocationSection(StoreState state, double height) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Row(
+                _registeredNumberNavigationFocus.requestFocus();
+              } else {
+                _descNavigationFocus.requestFocus();
+              }
+            },
+          ),
+          SizedBox(height: height / 120.0),
+        ],
+      );
+
+  Widget _buildRegisteredNumberSection(double height) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          FormText(
+            controller: _registeredNumberController,
+            textWhenCompleted: RegisterStoreStrings.registerNumberTitle,
+            textWhenNotCompleted:
+                RegisterStoreStrings.registerNumberTitleWhenImcompleted,
+          ),
+          SizedBox(height: height / 120.0),
+          FormTextField(
+            controller: _registeredNumberController,
+            regex: _registeredNumberRegex,
+            maxLength: 12,
+            isEnabled: !_isRegisteredNumberSubmitted,
+            helperText: RegisterStoreStrings.registerNumberHelperText,
+            focusNode: _registeredNumberNavigationFocus,
+            onSubmitted: (value) {
+              if (_registeredNumberController.text.length != 0) {
+                setState(() {
+                  _isRegisteredNumberSubmitted = true;
+                });
+
+                _registeredNumberNavigationFocus.unfocus();
+              } else {
+                _registeredNumberNavigationFocus.requestFocus();
+              }
+            },
+          ),
+          SizedBox(height: height / 120.0),
+        ],
+      );
+
+  Widget _buildRegisterRegisterersSection() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            _storeLocation == null
-                ? RegisterStoreStrings
-                .storeLocationTitleWhenImcompleted
-                : RegisterStoreStrings.storeLocationTitle,
+            _registerers.length == 0
+                ? RegisterStoreStrings.reigsterersTitleWhenImcompleted
+                : RegisterStoreStrings.reigsterersTitle,
             style: TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 26.0,
@@ -352,8 +315,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
           Visibility(
             child: ButtonTheme(
               padding: EdgeInsets.all(2.0),
-              materialTapTargetSize:
-              MaterialTapTargetSize.shrinkWrap,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               minWidth: 0,
               height: 0,
               child: FlatButton(
@@ -367,8 +329,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (context) =>
-                        SearchLocationDialog(),
+                    builder: (context) => SearchUserDialog(),
                     isScrollControlled: true,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
@@ -383,103 +344,154 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
             maintainSize: true,
             maintainAnimation: true,
             maintainState: true,
-            visible: _storeLocation == null,
+            visible: _registerers.length == 0,
           ),
         ],
-      ),
-      SizedBox(height: height / 120.0),
-      Visibility(
-        child: Text(
-          ErrorMessages.registerStoreNotProceed,
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
+      );
+
+  Widget _buildRegisterers(double height) => Container(
+        height: height * 0.12,
+        child: CupertinoScrollbar(
+          child: ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return Registerer(
+                user: _registerers[index],
+              );
+            },
+            itemCount: _registerers.length,
           ),
         ),
-        maintainSize: false,
-        maintainAnimation: true,
-        maintainState: true,
-        visible: state is StoreError,
-      ),
-    ],
-  );
+      );
 
-  Widget _buildAddressText() => FutureBuilder(
-    future: _locationAddress,
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.done) {
-        if (snapshot.hasData) {
-          return Text(
-            snapshot.data,
-            style: TextStyle(
-              fontWeight: FontWeight.w300,
-              fontSize: 16.0,
-            ),
-          );
-        } else {
-          return RefreshIndicator(
-            child: Row(
-              children: <Widget>[
-                ButtonTheme(
-                  materialTapTargetSize:
-                  MaterialTapTargetSize.shrinkWrap,
+  Widget _buildRegisterLocationSection(StoreState state, double height) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                _storeLocation == null
+                    ? RegisterStoreStrings.storeLocationTitleWhenImcompleted
+                    : RegisterStoreStrings.storeLocationTitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 26.0,
+                ),
+              ),
+              Visibility(
+                child: ButtonTheme(
+                  padding: EdgeInsets.all(2.0),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   minWidth: 0,
                   height: 0,
                   child: FlatButton(
-                    padding: EdgeInsets.all(0.0),
-                    textColor: Colors.black12,
                     child: Text(
-                      '⟳',
+                      '􀅼',
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 56.0,
+                        fontSize: 22.0,
                       ),
                     ),
                     onPressed: () {
-                      return _getAddressFromCoordinate(_storeLocation);
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => SearchLocationDialog(),
+                        isScrollControlled: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30.0),
+                            topRight: Radius.circular(30.0),
+                          ),
+                        ),
+                      );
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(25.0)),
-                    ),
                   ),
                 ),
-                Text(
-                  ErrorMessages.retryForFetchingAddress,
-                  style: TextStyle(
-                    color: Colors.black26,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            onRefresh: () {
-              return _getAddressFromCoordinate(_storeLocation);
-            },
-          );
-        }
-      }
-
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            RegisterStoreStrings.waitUntilAddressFetched,
-            style: TextStyle(
-              color: Colors.black26,
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.center,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _storeLocation == null,
+              ),
+            ],
           ),
-          CupertinoActivityIndicator(),
         ],
       );
-    },
-  );
 
-  Widget _buildSubmitBtn() =>
-      CupertinoButton(
+  Widget _buildAddressText() => FutureBuilder(
+        future: _locationAddress,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              return Text(
+                snapshot.data,
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 16.0,
+                ),
+              );
+            } else {
+              return RefreshIndicator(
+                child: Row(
+                  children: <Widget>[
+                    ButtonTheme(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      minWidth: 0,
+                      height: 0,
+                      child: FlatButton(
+                        padding: EdgeInsets.all(0.0),
+                        textColor: Colors.black12,
+                        child: Text(
+                          '⟳',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 56.0,
+                          ),
+                        ),
+                        onPressed: () {
+                          return _getAddressFromCoordinate(_storeLocation);
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      ErrorMessages.retryForFetchingAddress,
+                      style: TextStyle(
+                        color: Colors.black26,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                onRefresh: () {
+                  return _getAddressFromCoordinate(_storeLocation);
+                },
+              );
+            }
+          }
+
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                RegisterStoreStrings.waitUntilAddressFetched,
+                style: TextStyle(
+                  color: Colors.black26,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              CupertinoActivityIndicator(),
+            ],
+          );
+        },
+      );
+
+  Widget _buildSubmitBtn() => CupertinoButton(
         key: RegisterStorePageKeys.registerStoreBtn,
         child: Text(
           RegisterStoreStrings.registerBtnDesc,
@@ -504,16 +516,15 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
 
     return placemarks
         .map((placemark) =>
-    '${placemark.country} ${placemark.administrativeArea} ${placemark
-        .locality} ${placemark.name} ${placemark.postalCode}')
+            '${placemark.country} ${placemark.administrativeArea} ${placemark.locality} ${placemark.name} ${placemark.postalCode}')
         .join(',');
   }
 }
 
 class RegisterNumberTextInputFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue,
-      TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     final newTextLength = newValue.text.length;
     final newText = StringBuffer();
 

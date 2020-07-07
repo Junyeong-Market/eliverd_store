@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Eliverd/bloc/states/storeState.dart';
 import 'package:Eliverd/bloc/events/storeEvent.dart';
 import 'package:Eliverd/bloc/storeBloc.dart';
+
+import 'package:Eliverd/models/models.dart';
 
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/color.dart';
@@ -18,7 +19,7 @@ class SearchUserDialog extends StatefulWidget {
 }
 
 class _SearchUserDialogState extends State<SearchUserDialog> {
-  List<dynamic> _registerers = [];
+  List<User> _registerers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,10 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                     ),
                   ),
                   SizedBox(height: height / 48.0),
-                  RegistererCards(),
+                  RegistererCards(
+                    registerers: _registerers,
+                    toggleSelectedRegisterers: _toggleSelectedRegisterers,
+                  ),
                 ],
               ),
               Column(
@@ -124,5 +128,11 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
         );
       },
     );
+  }
+
+  void _toggleSelectedRegisterers(List<User> updatedRegisterers) {
+    setState(() {
+      _registerers = updatedRegisterers;
+    });
   }
 }
