@@ -1,16 +1,16 @@
-import 'package:Eliverd/bloc/events/storeEvent.dart';
-import 'package:Eliverd/ui/widgets/registerers.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:Eliverd/bloc/states/storeState.dart';
+import 'package:Eliverd/bloc/events/storeEvent.dart';
 import 'package:Eliverd/bloc/storeBloc.dart';
-
-import 'package:Eliverd/models/models.dart';
 
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/color.dart';
+
+import 'package:Eliverd/ui/widgets/registerers.dart';
 
 class SearchUserDialog extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class SearchUserDialog extends StatefulWidget {
 }
 
 class _SearchUserDialogState extends State<SearchUserDialog> {
-  List<dynamic> _registerers = [User(realname: 'ㅁㅁㅁ', nickname: 'aaa')];
+  List<dynamic> _registerers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                         child: FlatButton(
                           padding: EdgeInsets.all(0.0),
                           child: Text(
-                            '취소',
+                            SearchSheetStrings.cancel,
                             style: TextStyle(
                               color: eliverdColor,
                               fontSize: 16.0,
@@ -98,7 +98,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                         child: FlatButton(
                           padding: EdgeInsets.all(0.0),
                           child: Text(
-                            '완료',
+                            SearchSheetStrings.proceed,
                             style: TextStyle(
                               color: eliverdColor,
                               fontWeight: FontWeight.bold,

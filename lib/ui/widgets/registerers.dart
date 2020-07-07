@@ -1,3 +1,4 @@
+import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/resources/providers/accountProvider.dart';
 import 'package:Eliverd/resources/repositories/accountRepository.dart';
 import 'package:flutter/cupertino.dart';
@@ -72,7 +73,7 @@ class _RegistererCardsState extends State<RegistererCards> {
                 if (state is UserFound) {
                   if (state.users.length == 0) {
                     return Text(
-                      '사업자가 검색되지 않습니다. 다른 키워드로 검색해보세요.',
+                      SearchSheetStrings.noResultMsg,
                       style: TextStyle(
                         color: Colors.black26,
                         fontWeight: FontWeight.w600,
@@ -97,7 +98,7 @@ class _RegistererCardsState extends State<RegistererCards> {
                       CupertinoActivityIndicator(),
                       SizedBox(height: height / 120.0),
                       Text(
-                        '검색 결과에 따라서 사업자 목록을 불러오고 있습니다.\n잠시만 기다려주세요.',
+                        SearchSheetStrings.searchResultLoadingMsg,
                         style: TextStyle(
                           color: Colors.black26,
                           fontWeight: FontWeight.w600,
@@ -127,8 +128,71 @@ class RegistererCard extends StatefulWidget {
 class _RegistererCardState extends State<RegistererCard> {
   @override
   Widget build(BuildContext context) {
-    return Text(
-      widget.user.toString(),
+    final width = MediaQuery.of(context).size.width;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: 10.0,
+      ),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 75.0,
+            height: 75.0,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.black12, Colors.black45],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+              borderRadius: BorderRadius.all(Radius.circular(50.0)),
+            ),
+            child: Center(
+              child: Text(
+                widget.user.nickname,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          SizedBox(width: width / 60.0),
+          Expanded(
+            flex: 1,
+            child: Container(
+              height: 75.0,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        widget.user.realname,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      SizedBox(width: width / 240.0),
+                      Text(
+                        widget.user.isSeller ? SearchSheetStrings.isSellerText : SearchSheetStrings.isCustomerText,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black54,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

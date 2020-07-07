@@ -131,8 +131,16 @@ class SearchSheetStrings {
   static final registerLocationDesc = '지도에서 원하는 위치를 터치하여 등록합니다.';
   static final searchRegisterersDesc = '사업장에 추가할 사업자를 검색해서 선택합니다.';
 
+  static final searchResultLoadingMsg = '검색 결과에 따라서 사업자 목록을 불러오고 있습니다.\n잠시만 기다려주세요.';
+  static final noResultMsg = '사업자가 검색되지 않았습니다. 다른 키워드로 검색해보세요.';
+
+  static final isSellerText = '현재 사업자로 활동 중';
+  static final isCustomerText = '일반 고객';
+
   static final registeredMarkerTitle = '등록된 사업장 위치';
   static final registerProceedTitle = '이대로 등록하시겠습니까?';
+  static final cancel = '취소';
+  static final proceed = '확인';
   static final resetBtnText = '다시 설정';
   static final confirmBtnText = '확인';
 }
