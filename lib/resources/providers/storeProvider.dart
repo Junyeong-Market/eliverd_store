@@ -54,9 +54,18 @@ class StoreAPIClient {
   }
 
   Future<List<Stock>> fetchStock(Store store) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final currentSession = prefs.getString('session');
+
     final storeId = store.id;
     final url = '$baseUrl/store/$storeId/stocks/';
-    final res = await this.httpClient.get(url);
+    final res = await this.httpClient.get(
+      url,
+      headers: {
+        'Authorization': currentSession,
+      },
+    );
 
     if (res.statusCode != 200) {
       throw Exception('Error occurred while fetching all stocks on your store');
@@ -141,5 +150,23 @@ class StoreAPIClient {
     // TO-DO: location 필드 추출 로직 구성하기
 
     return store;
+  }
+
+  Future<List<Manufacturer>> searchManufacturer(String keyword) async {
+    final url = '$baseUrl/product/manufacturer/search/$keyword/';
+    final res = await this.httpClient.get(url);
+
+    if (res.statusCode != 200) {
+      return <Manufacturer>[];
+    }
+
+    final jsonData = utf8.decode(res.bodyBytes);
+
+    final data = json.decode(jsonData)['results'] as List;
+
+    return data.map((rawManufacturer) => Manufacturer(
+      id: rawManufacturer['id'],
+      name: rawManufacturer['name'],
+    )).toList();
   }
 }
