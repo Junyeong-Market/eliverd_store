@@ -31,13 +31,13 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
   @override
   Stream<StockState> mapEventToState(StockEvent event) async* {
-    if (event is StockLoaded) {
+    if (event is LoadStock) {
       yield* _mapStockLoadedToState(event);
-    } else if (event is StockAdded) {
+    } else if (event is AddStock) {
       yield* _mapStockAddedToState(event);
-    } else if (event is StockUpdated) {
+    } else if (event is UpdateStock) {
       yield* _mapStockUpdatedToState(event);
-    } else if (event is StockDeleted) {
+    } else if (event is DeleteStock) {
       yield* _mapStockDeletedToState(event);
     }
   }
@@ -46,17 +46,18 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     final currentState = state;
     if (!_isStockAllFetched(currentState)) {
       try {
-        if (currentState is StockNotFetchedState) {
-          final stocks = await storeRepository.fetchStock((event as StockLoaded).store);
+        if (currentState is! StockFetchSuccessState) {
+          final stocks = await storeRepository.fetchStock((event as LoadStock).store);
+
           yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
           return;
         }
         if (currentState is StockFetchSuccessState) {
-          final stocks = await storeRepository.fetchStock((event as StockLoaded).store);
+          final stocks = await storeRepository.fetchStock((event as LoadStock).store);
           yield stocks.isEmpty
               ? currentState.copyWith(isAllFetched: true)
               : StockFetchSuccessState(
-            stocks: currentState.stocks + stocks,
+            stocks: stocks,
             isAllFetched: false,
           );
         }
@@ -66,41 +67,53 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     }
   }
 
-  Stream<StockState> _mapStockAddedToState(StockAdded event) async* {
+  Stream<StockState> _mapStockAddedToState(AddStock event) async* {
     if (state is StockFetchSuccessState) {
-      await storeRepository.addStock(
-          event.stock.store.id, event.stock.toJson());
+      try {
+        await storeRepository.addStock(
+            event.stock.store.id, event.stock.toJson());
 
-      final List<Stock> updatedStocks = (state as StockFetchSuccessState).stocks
-          .toList()
-        ..add(event.stock);
-      yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
+        final List<Stock> updatedStocks = (state as StockFetchSuccessState).stocks
+            .toList()
+          ..add(event.stock);
+        yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
+      } catch (_) {
+        yield StockFetchErrorState();
+      }
     }
   }
 
-  Stream<StockState> _mapStockUpdatedToState(StockUpdated event) async* {
+  Stream<StockState> _mapStockUpdatedToState(UpdateStock event) async* {
     if (state is StockFetchSuccessState) {
-      await storeRepository.updateStock(
-          event.stock.store.id, event.stock.toJson());
+      try {
+        await storeRepository.updateStock(
+            event.stock.store.id, event.stock.toJson());
 
-      final List<Stock> updatedStocks = (state as StockFetchSuccessState)
-          .stocks
-          .toList()
-        ..map((stock) =>
-        stock.product.id == event.stock.product.id ? event.stock : stock);
-      yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
+        final List<Stock> updatedStocks = (state as StockFetchSuccessState)
+            .stocks
+            .toList()
+          ..map((stock) =>
+          stock.product.id == event.stock.product.id ? event.stock : stock);
+        yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
+      } catch (_) {
+        yield StockFetchErrorState();
+      }
     }
   }
 
-  Stream<StockState> _mapStockDeletedToState(StockDeleted event) async* {
+  Stream<StockState> _mapStockDeletedToState(DeleteStock event) async* {
     if (state is StockFetchSuccessState) {
-      await storeRepository.removeStock(
-          event.stock.store.id, event.stock.toJson());
+      try {
+        await storeRepository.removeStock(
+            event.stock.store.id, event.stock.toJson());
 
-      final List<Stock> updatedStocks = (state as StockFetchSuccessState).stocks
-          .toList()
-        ..remove(event.stock);
-      yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
+        final List<Stock> updatedStocks = (state as StockFetchSuccessState).stocks
+            .toList()
+          ..remove(event.stock);
+        yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
+      } catch (_) {
+        yield StockFetchErrorState();
+      }
     }
   }
 

@@ -6,6 +6,9 @@ class TitleStrings {
   static final registerStoreTitle = '먼저 사업장을 등록하세요.';
   static final addProductTitle = '재고 등록';
   static final updateProductTitle = '재고 수정';
+  static final registerLocationTitle = '위치 등록';
+  static final searchRegisterersTitle = '사업자 검색';
+  static final searchManufacturerTitle = '제조사 검색';
 }
 
 class ErrorMessages {
@@ -17,7 +20,7 @@ class ErrorMessages {
   static final passwordInvalidMessage =
       '비밀번호는 영어, 숫자, 특수문자를 조합하여 256자 이내만 가능합니다.';
   static final loginErrorMessage =
-      '입력하신 계정은 존재하지 않는 계정입니다. 아이디와 비밀번호를 다시 입력해주세요.';
+      '네트워크 오류로 로그인을 할 수 없습니다. 아이디와 비밀번호를 다시 확인해주세요.';
 
   static final signUpErrorMessage = '회원가입 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요.';
   static final disallowedToManageStoreMessage = '이 계정은 사업장을 관리할 수 없는 계정입니다. 다른 계정으로 시도해주세요.';
@@ -26,7 +29,9 @@ class ErrorMessages {
 
   static final noRegisteredBusinessMessage = '먼저 사업장을 등록하세요!';
 
-  static final stocksCannotbeFetched = '네트워크 오류로 재고를 불러올 수 없습니다. 나중에 다시 시도해주세요.';
+  static final stocksCannotbeFetched = '네트워크 오류로 재고를 불러올 수 없습니다.\n나중에 다시 시도해주세요.';
+  static final googleMapNotLoaded = '구글 지도를 불러올 수 없습니다.\n⟳ 버튼을 눌러 다시 시도해주세요.';
+  static final retryForFetchingAddress = '변환 중 오류가 발생했습니다. 다시 시도해주세요.';
 }
 
 class SignInStrings {
@@ -34,6 +39,7 @@ class SignInStrings {
   static final passwordText = '비밀번호';
   static final login = '로그인';
   static final notSignUp = '아직 회원이 아니십니까?';
+  static final alreadyLoggedIn = '이미 로그인이 되었습니다.\n잠시만 기다려주세요!';
 }
 
 class SignUpStrings {
@@ -79,6 +85,7 @@ class RegisterStoreStrings {
   static final reigsterersTitle = '사업자';
   static final storeLocationTitle = '사업장 위치';
 
+  static final waitUntilAddressFetched = '주소로 변환될 때까지 기다려주세요.';
   static final registerBtnDesc = '등록하기';
 }
 
@@ -88,13 +95,16 @@ class HomePageStrings {
   static final updateProductDesc = '재고 수정';
   static final checkOutProductDesc = '상품 결제';
   static final deleteProductDesc = '재고 폐기';
+
+  static final fetchingStockMsg = '재고 목록을 불러오는 중입니다. 잠시만 기다려주세요.';
+  static final stockEmptyMsg = '재고가 텅 비었네요😏. 􀅼 버튼을 클릭해서 재고를 추가해보세요!';
 }
 
 class ProductStrings {
   static final barcodeDescWhenImcompleted = '바코드가 있다면 등록하세요.';
   static final nameDescWhenImcompleted = '상품 이름을 입력하세요.';
   static final priceDescWhenImcompleted = '상품 가격을 입력하세요.';
-  static final manufacturerDescWhenImcompleted = '제조사를 입력하세요.';
+  static final manufacturerDescWhenImcompleted = '제조사를 추가하세요.';
   static final amountDescWhenImcompleted = '현재 재고 수를 입력하세요.';
 
   static final barcodeDescWhenUpdate = '바코드 수정 시 클릭하세요.';
@@ -110,9 +120,33 @@ class ProductStrings {
   static final manufacturerDesc = '제조사';
   static final amountDesc = '재고 수';
 
+  static final manufacturerSearchDesc = '제조사를 이름으로 검색하세요.';
+
   static final deleteWarningContent = '한 번 삭제하면 영원히 복구할 수 없습니다.';
+  static final selected = '선택됨';
   static final cancel = '취소';
   static final next = '다음';
   static final submit = '완료';
   static final delete = '삭제';
+}
+
+class SearchSheetStrings {
+  static final mapLoadingMsg = '지도를 불러오고 있습니다. 잠시만 기다려주세요.';
+  static final registerLocationDesc = '지도에서 원하는 위치를 터치하여 등록합니다.';
+  static final searchRegisterersDesc = '사업장에 추가할 사업자를 검색해서 터치합니다.';
+  static final searchManufacturerDesc = '등록할 재고의 제조사를 검색해서 터치합니다.';
+
+  static final searchResultLoadingMsg = '검색 결과에 따라서 목록을 불러오고 있습니다.';
+  static final noResultMsg = '아무 것도 검색되지 않았습니다. 다른 키워드로 검색해보세요.';
+
+  static final isSellerText = '현재 사업자로 활동 중';
+  static final isCustomerText = '일반 고객';
+
+  static final registeredMarkerTitle = '등록된 사업장 위치';
+  static final registerProceedTitle = '이대로 등록하시겠습니까?';
+  static final cancel = '취소';
+  static final proceed = '확인';
+  static final selected = '선택됨';
+  static final resetBtnText = '다시 설정';
+  static final confirmBtnText = '확인';
 }

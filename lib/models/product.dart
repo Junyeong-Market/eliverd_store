@@ -27,13 +27,13 @@ class Product extends Equatable {
   static Product fromJson(dynamic json) => Product(
         id: json['id'],
         name: json['name'],
-        manufacturer: json['manufacturer'],
+        manufacturer: Manufacturer.fromJson(json['manufacturer']),
         ian: json['ian'],
       );
 }
 
 class Manufacturer extends Equatable {
-  final String id;
+  final int id;
   final String name;
 
   Manufacturer({this.id, this.name});
@@ -44,8 +44,13 @@ class Manufacturer extends Equatable {
   @override
   String toString() => 'Manufacturer { id: $id, name: $name }';
 
-  Manufacturer copyWith({String id, String name}) => Manufacturer(
+  Manufacturer copyWith({int id, String name}) => Manufacturer(
         id: id,
         name: name,
+      );
+
+  static Manufacturer fromJson(dynamic json) => Manufacturer(
+        id: json['id'],
+        name: json['name'],
       );
 }

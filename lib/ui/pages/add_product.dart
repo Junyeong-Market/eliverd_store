@@ -1,10 +1,13 @@
 import 'dart:ui';
 
+import 'package:Eliverd/ui/widgets/search_manufacturer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:barcode_widget/barcode_widget.dart';
 
 import 'package:Eliverd/bloc/stockBloc.dart';
 import 'package:Eliverd/bloc/states/stockState.dart';
@@ -14,19 +17,12 @@ import 'package:Eliverd/models/models.dart';
 
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/color.dart';
+import 'package:Eliverd/common/key.dart';
 
 import 'package:Eliverd/ui/widgets/header.dart';
-
-// TO-DO: BLOC 구현 후 import
-/*
-import 'package:Eliverd/bloc/events/stockEvent.dart';
-import 'package:Eliverd/bloc/stockBloc.dart';
-import 'package:Eliverd/models/models.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-*/
-
-// TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
-// import 'package:camera/camera.dart';
+import 'package:Eliverd/ui/widgets/form_text.dart';
+import 'package:Eliverd/ui/widgets/form_text_field.dart';
+import 'package:Eliverd/ui/pages/home.dart';
 
 class AddProductPage extends StatefulWidget {
   final Store currentStore;
@@ -38,57 +34,95 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
-  // TO-DO: Camera 인터페이스 구현 후 선언하도록 하기
-  // CameraController _controller;
-  // Future<void> _initializeControllerFuture;
+  String _barcodeIan = '';
+  Manufacturer _manufacturer;
 
-  // TO-DO: Product BLOC 구현 후 Controller 자동 채우기 옵션
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
-  final _manufacturerController = TextEditingController();
   final _amountController = TextEditingController();
 
-  // TO-DO: Camera 인터페이스 구현 후 선언하도록 하기
-  // bool isCameraReady = false;
-  // bool showCapturedPhoto = false;
-  // TO-DO: Camera 인터페이스 구현 후 false로 변경
-  bool isBarcodeAdded = false;
-  bool isLastPage = false;
+  bool _isBarcodeRegistered = false;
+
+  final _nameNavigationFocus = FocusNode();
+  final _priceNavigationFocus = FocusNode();
+  final _amountNavigationFocus = FocusNode();
+
+  bool _isNameSubmitted = false;
+  bool _isPriceSubmitted = false;
+  bool _isAmountSubmitted = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
+    return BlocBuilder<StockBloc, StockState>(
+      builder: (context, state) {
+        return Scaffold(
+          key: AddProductPageKeys.addProductPage,
+          extendBodyBehindAppBar: true,
+          appBar: Header(
+            onBackButtonPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(
+                    currentStore: widget.currentStore,
+                  ),
+                ),
+              );
+            },
+            title: TitleStrings.addProductTitle,
+          ),
+          body: ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.05,
+            ),
+            children: <Widget>[
+              SizedBox(height: kToolbarHeight + 60.0),
+              SizedBox(height: height / 12.0),
+              _buildRegisterBarcodeSection(width, height),
+              _buildBarcodeSection(width, height),
+              SizedBox(height: height / 48.0),
+              _buildNameSection(height),
+              _buildPriceSection(height),
+              _buildAmountSection(height),
+              _buildManufacturerSection(height),
+              SizedBox(height: height / 120.0),
+              _buildSelectedManufacturerText(),
+            ],
+          ),
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.05,
+              vertical: 20.0,
+            ),
+            child: BottomAppBar(
+              color: Colors.transparent,
+              elevation: 0.0,
+              child: _buildSubmitBtn(),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   String get currency =>
       NumberFormat.compactSimpleCurrency(locale: 'ko').currencySymbol;
 
-  // TO-DO: Camera 인터페이스 구현 후 정의하도록 하기
-  /*
-  Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    final selectedCamera = cameras.first;
-
-    _controller = CameraController(selectedCamera, ResolutionPreset.medium);
-    _initializeControllerFuture = _controller.initialize();
-
-    if (!mounted) {
-      return;
-    }
-
+  void _registerBarcode() {
     setState(() {
-      isCameraReady = true;
-    });
-  }
-  */
+      _isBarcodeRegistered = true;
 
-  void _stateToBarcodeAdded() {
-    setState(() {
-      isBarcodeAdded = true;
+      _nameNavigationFocus.requestFocus();
     });
   }
 
-  void _stateToLastPage(text) {
-    if (text.length != 0) {
-      setState(() {
-        isLastPage = true;
-      });
-    }
+  void _onManufacturerChanged(Manufacturer manufacturer) {
+    setState(() {
+      _manufacturer = manufacturer;
+    });
   }
 
   void _submitProduct() {
@@ -96,321 +130,314 @@ class _AddProductPageState extends State<AddProductPage> {
       store: widget.currentStore,
       product: Product(
         name: _nameController.text,
-        manufacturer: Manufacturer(
-          name: _manufacturerController.text,
+        manufacturer: _manufacturer,
+        ian: _barcodeIan,
+      ),
+      price: int.parse(_priceController.text.replaceAll(',', '')),
+      amount: int.parse(_amountController.text.replaceAll(',', '')),
+    );
+
+    context.bloc<StockBloc>().add(AddStock(stock));
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(
+          currentStore: widget.currentStore,
         ),
-        ian: '', // TO-DO: 바코드 기능 구현 후 value 넣기
       ),
-      price: int.parse(_priceController.text),
-      amount: int.parse(_amountController.text),
     );
-
-    context.bloc<StockBloc>().add(StockAdded(stock));
-
-    Navigator.pop(context);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // TO-DO: Camera 인터페이스 구현 후 호출하도록 하기
-    // initializeCamera();
+  Future<void> _scanBarcode() async {
+    String barcodeIan;
+
+    try {
+      barcodeIan = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "Cancel", true, ScanMode.BARCODE);
+    } on PlatformException {
+      throw Exception('Failed to get platform version.');
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _barcodeIan = barcodeIan;
+    });
+
+    _registerBarcode();
   }
 
-  @override
-  void dispose() {
-    // TO-DO: Camera 인터페이스 구현 후 호출하도록 하기
-    // controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-
-    return BlocProvider<StockBloc>.value(
-      value: context.bloc<StockBloc>(),
-      child: BlocBuilder<StockBloc, StockState>(
-        builder: (context, state) {
-          return Scaffold(
-            key: Key('AddProductPage'),
-            appBar: Header(
-              height: height / 4.8,
-              child: Column(
-                children: <Widget>[
-                  AppBar(
-                    backgroundColor: eliverdColor,
-                    elevation: 0.0,
-                  ),
-                  Align(
-                    alignment: FractionalOffset(0.1, 0.0),
-                    child: Text(
-                      TitleStrings.addProductTitle,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 36.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+  Widget _buildRegisterBarcodeSection(double width, double height) =>
+      Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              ProductStrings.barcodeDescWhenImcompleted,
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 28.0,
               ),
+              textAlign: TextAlign.left,
             ),
-            body: ListView(
-              children: <Widget>[
-                SizedBox(height: height / 30.0),
-                Visibility(
-                  child: Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Text(
-                      ProductStrings.barcodeDescWhenImcompleted,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 28.0,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: !isBarcodeAdded,
-                ),
-                // TO-DO: CameraPreview 위젯을 추가하여 바코드 인식이 되도록 하기
-                Visibility(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Text(
-                            isBarcodeAdded
-                                ? ProductStrings.noBarcodeDesc
-                                : ProductStrings.barcodeDesc,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 28.0,
-                            ),
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: true,
-                      ),
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                _nameController.text.length != 0
-                                    ? ProductStrings.nameDesc
-                                    : ProductStrings.nameDescWhenImcompleted,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                              SizedBox(height: height / 120.0),
-                              TextField(
-                                textInputAction: TextInputAction.done,
-                                controller: _nameController,
-                                enabled: _nameController.text.length == 0,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(2.0),
-                                  isDense: true,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: isBarcodeAdded,
-                      ),
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                _priceController.text.length != 0
-                                    ? ProductStrings.priceDesc
-                                    : ProductStrings.priceDescWhenImcompleted,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                              SizedBox(height: height / 120.0),
-                              TextField(
-                                textInputAction: TextInputAction.done,
-                                controller: _priceController,
-                                enabled: _priceController.text.length == 0,
-                                keyboardType: TextInputType.numberWithOptions(),
-                                inputFormatters: [
-                                  WhitelistingTextInputFormatter.digitsOnly,
-                                  CurrencyInputFormatter(),
-                                ],
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(2.0),
-                                  isDense: true,
-                                  prefixText: currency,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: _nameController.text.length != 0,
-                      ),
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                _manufacturerController.text.length != 0
-                                    ? ProductStrings.manufacturerDesc
-                                    : ProductStrings
-                                        .manufacturerDescWhenImcompleted,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                              SizedBox(height: height / 120.0),
-                              TextField(
-                                textInputAction: TextInputAction.done,
-                                controller: _manufacturerController,
-                                enabled:
-                                    _manufacturerController.text.length == 0,
-                                onSubmitted: _stateToLastPage,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(2.0),
-                                  isDense: true,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: _priceController.text.length != 0,
-                      ),
-                      Visibility(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                _amountController.text.length != 0
-                                    ? ProductStrings.amountDesc
-                                    : ProductStrings
-                                    .amountDescWhenImcompleted,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                              SizedBox(height: height / 120.0),
-                              TextField(
-                                textInputAction: TextInputAction.done,
-                                controller: _amountController,
-                                enabled:
-                                _amountController.text.length == 0,
-                                onSubmitted: _stateToLastPage,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(2.0),
-                                  isDense: true,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        maintainSize: false,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: _manufacturerController.text.length != 0,
-                      ),
-                    ],
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: isBarcodeAdded,
-                ),
-              ],
-            ),
-            bottomNavigationBar: BottomAppBar(
-              color: Colors.transparent,
-              elevation: 0.0,
-              child: Padding(
-                padding: EdgeInsets.all(15.0),
+            SizedBox(height: height / 120.0),
+            Center(
+              child: Container(
+                height: height / 4.8,
+                width: width,
                 child: CupertinoButton(
-                  color: eliverdColor,
-                  disabledColor: Colors.black12,
-                  child: Text(
-                    isBarcodeAdded
-                        ? ProductStrings.submit
-                        : ProductStrings.next,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                    ),
+                  child: Image(
+                    image: AssetImage('assets/images/camera.png'),
                   ),
-                  onPressed: isBarcodeAdded
-                      ? (isLastPage ? _submitProduct : null)
-                      : _stateToBarcodeAdded,
-                  borderRadius: BorderRadius.circular(25.0),
+                  color: Colors.black12.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(15.0),
+                  onPressed: _scanBarcode,
                 ),
               ),
             ),
-          );
-        },
+          ],
+        ),
+        maintainSize: false,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: !_isBarcodeRegistered,
+      );
+
+  Widget _buildBarcodeSection(double width, double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              _barcodeIan.length != 0
+                  ? ProductStrings.barcodeDesc
+                  : ProductStrings.noBarcodeDesc,
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 26.0,
+              ),
+            ),
+            SizedBox(height: height / 120.0),
+            Center(
+              child: _barcodeIan.length != 0
+                  ? BarcodeWidget(
+                      barcode: Barcode.ean13(),
+                      data: _barcodeIan,
+                      height: height * 0.15,
+                      drawText: true,
+                      errorBuilder: (context, error) =>
+                          Center(child: Text(error)),
+                    )
+                  : null,
+            ),
+          ],
+        ),
+        maintainSize: false,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: _isBarcodeRegistered,
+      );
+
+  Widget _buildNameSection(double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            FormText(
+              controller: _nameController,
+              textWhenCompleted: ProductStrings.nameDesc,
+              textWhenNotCompleted: ProductStrings.nameDescWhenImcompleted,
+            ),
+            SizedBox(height: height / 120.0),
+            FormTextField(
+              key: AddProductPageKeys.productNameTextField,
+              controller: _nameController,
+              isEnabled: !_isNameSubmitted,
+              focusNode: _nameNavigationFocus,
+              onSubmitted: (value) {
+                setState(() {
+                  _isNameSubmitted = true;
+                });
+
+                _priceNavigationFocus.requestFocus();
+              },
+            ),
+          ],
+        ),
+        maintainSize: false,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: _isBarcodeRegistered,
+      );
+
+  Widget _buildPriceSection(double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            FormText(
+              controller: _priceController,
+              textWhenCompleted: ProductStrings.priceDesc,
+              textWhenNotCompleted: ProductStrings.priceDescWhenImcompleted,
+            ),
+            SizedBox(height: height / 120.0),
+            FormTextField(
+              key: AddProductPageKeys.productPriceTextField,
+              regex: [
+                WhitelistingTextInputFormatter.digitsOnly,
+                DecimalInputFormatter(),
+              ],
+              controller: _priceController,
+              focusNode: _priceNavigationFocus,
+              isEnabled: !_isPriceSubmitted,
+              onSubmitted: (value) {
+                setState(() {
+                  _isPriceSubmitted = true;
+                });
+
+                _amountNavigationFocus.requestFocus();
+              },
+              prefixText: currency,
+            ),
+          ],
+        ),
+        maintainSize: false,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: _isNameSubmitted,
+      );
+
+  Widget _buildAmountSection(double height) => Visibility(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            FormText(
+              controller: _amountController,
+              textWhenCompleted: ProductStrings.amountDesc,
+              textWhenNotCompleted: ProductStrings.amountDescWhenImcompleted,
+            ),
+            SizedBox(height: height / 120.0),
+            FormTextField(
+              key: AddProductPageKeys.productAmountTextField,
+              regex: [
+                WhitelistingTextInputFormatter.digitsOnly,
+                DecimalInputFormatter(),
+              ],
+              controller: _amountController,
+              focusNode: _amountNavigationFocus,
+              isEnabled: !_isAmountSubmitted,
+              onSubmitted: (value) {
+                setState(() {
+                  _isAmountSubmitted = true;
+                });
+
+                _amountNavigationFocus.unfocus();
+              },
+            ),
+          ],
+        ),
+        maintainSize: false,
+        maintainAnimation: true,
+        maintainState: true,
+        visible: _isPriceSubmitted,
+      );
+
+  Widget _buildManufacturerSection(double height) => Visibility(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          _manufacturer != null
+              ? ProductStrings.manufacturerDesc
+              : ProductStrings.manufacturerDescWhenImcompleted,
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 26.0,
+          ),
+        ),
+        SizedBox(height: height / 120.0),
+        Visibility(
+          child: ButtonTheme(
+            padding: EdgeInsets.all(2.0),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minWidth: 0,
+            height: 0,
+            child: FlatButton(
+              child: Text(
+                '􀅼',
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 22.0,
+                ),
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => SearchManufacturerDialog(
+                    manufacturer: _manufacturer,
+                    onManufacturerChanged: _onManufacturerChanged,
+                  ),
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          visible: _manufacturer == null,
+        ),
+      ],
+    ),
+    maintainSize: false,
+    maintainAnimation: true,
+    maintainState: true,
+    visible: _isAmountSubmitted,
+  );
+
+  Widget _buildSelectedManufacturerText() => Visibility(
+    child: Text(
+      _manufacturer?.name ?? '',
+      style: TextStyle(
+        fontSize: 22.0,
+        color: Colors.black54,
       ),
-    );
-  }
+    ),
+    visible: _manufacturer != null,
+  );
+
+  Widget _buildSubmitBtn() => CupertinoButton(
+        key: AddProductPageKeys.productSubmitBtn,
+        color: eliverdColor,
+        disabledColor: Colors.black12,
+        child: Text(
+          _isBarcodeRegistered ? ProductStrings.submit : ProductStrings.next,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18.0,
+          ),
+        ),
+        onPressed: _manufacturer != null
+            ? _submitProduct
+            : (!_isBarcodeRegistered ? _registerBarcode : null),
+        borderRadius: BorderRadius.circular(25.0),
+      );
 }
 
-class CurrencyInputFormatter extends TextInputFormatter {
+class DecimalInputFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     String formattedPrice = newValue.text.replaceAll(',', '');
 
     int price = int.parse(formattedPrice);
 
-    String newText = NumberFormat.currency(
-      locale: 'ko',
-      symbol: '',
-    ).format(price);
+    String newText = NumberFormat.decimalPattern().format(price);
 
     return newValue.copyWith(
         text: newText,

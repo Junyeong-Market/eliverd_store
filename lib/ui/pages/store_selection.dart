@@ -6,6 +6,7 @@ import 'package:Eliverd/bloc/authBloc.dart';
 import 'package:Eliverd/bloc/states/authState.dart';
 
 import 'package:Eliverd/common/string.dart';
+import 'package:Eliverd/common/key.dart';
 
 class StoreSelectionPage extends StatefulWidget {
   @override
@@ -17,54 +18,51 @@ class _StoreSelectionPageState extends State<StoreSelectionPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 
-    return BlocProvider<AuthenticationBloc>.value(
-      value: context.bloc<AuthenticationBloc>(),
-      child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-          if (state is! Authenticated) {
-            Navigator.pop(context);
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            key: Key('StoreSelectionPage'),
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              brightness: Brightness.light,
-              elevation: 0.0,
-              automaticallyImplyLeading: false,
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        if (state is! Authenticated) {
+          Navigator.pop(context);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          key: StoreSelectionPageKeys.storeSelectionPage,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            brightness: Brightness.light,
+            elevation: 0.0,
+            automaticallyImplyLeading: false,
+          ),
+          body: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.0,
             ),
-            body: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    state is Authenticated
-                        ? state.user.nickname + TitleStrings.storeSelectionTitle
-                        : '',
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 36.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: height / 32.0),
-                  CupertinoPicker(
-                    itemExtent: 25.0,
-                    looping: true,
-                    onSelectedItemChanged: null,
-                    children: <Widget>[
-                      // TO-DO: Store Widget UI 구현 후 매핑
-                    ],
-                  ),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  state is Authenticated
+                      ? state.user.nickname + TitleStrings.storeSelectionTitle
+                      : '',
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 36.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: height / 32.0),
+                CupertinoPicker(
+                  itemExtent: 25.0,
+                  looping: true,
+                  onSelectedItemChanged: null,
+                  children: <Widget>[
+                    // TO-DO: Store Widget UI 구현 후 매핑
+                  ],
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

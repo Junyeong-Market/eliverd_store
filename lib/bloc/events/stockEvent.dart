@@ -9,37 +9,37 @@ abstract class StockEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class StockLoaded extends StockEvent {
+class LoadStock extends StockEvent {
   final Store store;
 
-  const StockLoaded(this.store);
+  const LoadStock(this.store);
 
   @override
   List<Object> get props => [store];
 }
 
-class StockAdded extends StockEvent {
+class AddStock extends StockEvent {
   final Stock stock;
 
-  const StockAdded(this.stock);
+  const AddStock(this.stock);
 
   @override
   List<Object> get props => [stock];
 }
 
-class StockUpdated extends StockEvent {
+class UpdateStock extends StockEvent {
   final Stock stock;
 
-  const StockUpdated(this.stock);
+  const UpdateStock(this.stock);
 
   @override
   List<Object> get props => [stock];
 }
 
-class StockDeleted extends StockEvent {
+class DeleteStock extends StockEvent {
   final Stock stock;
 
-  const StockDeleted(this.stock);
+  const DeleteStock(this.stock);
 
   @override
   List<Object> get props => [stock];

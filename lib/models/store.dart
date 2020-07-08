@@ -70,8 +70,9 @@ class Store extends Equatable {
     'name': name,
     'description': description,
     'registered_number': registeredNumber,
-    'lat': location.lat,
-    'lng': location.lng,
+    'registerer': registerers.map((registerer) => registerer.pid).toList().toString(),
+    'lat': location.lat.toString(),
+    'lng': location.lng.toString(),
   };
 }
 
@@ -102,6 +103,7 @@ class Stock extends Equatable {
         'ian': product.ian,
         'name': product.name,
         'manufacturer': product.manufacturer.name,
-        'amount': amount,
+        'price': price.toString(),
+        'amount': amount.toString(),
       };
 }

@@ -26,18 +26,19 @@ class AuthenticationBloc
       AuthenticationEvent event) async* {
     if (event is ValidateAuthentication) {
       yield* _mapValidateAuthenticationToState(event);
-    } else if (event is SignInAuthentication) {
-      yield* _mapSignInAuthenticationToState(event);
-    } else if (event is SignOutAuthentication) {
-      yield* _mapSignOutAuthenticationToState(event);
+    } else if (event is CheckAuthentication) {
+      yield* _mapCheckAuthenticationToState(event);
+    } else if (event is GrantAuthentication) {
+      yield* _mapGrantAuthenticationToState(event);
+    } else if (event is RevokeAuthentication) {
+      yield* _mapRevokeAuthenticationToState(event);
     }
   }
 
   Stream<AuthenticationState> _mapValidateAuthenticationToState(
       ValidateAuthentication event) async* {
     try {
-      final session = int.parse(event.token);
-      final data = await accountRepository.validateSession(session);
+      final data = await accountRepository.validateSession();
 
       if (data.isEmpty) {
         yield NotAuthenticated();
@@ -60,8 +61,34 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapSignInAuthenticationToState(
-      SignInAuthentication event) async* {
+  Stream<AuthenticationState> _mapCheckAuthenticationToState(
+      CheckAuthentication event) async* {
+    final session = await accountRepository.createSession();
+
+    if (session != null) {
+      final data = await accountRepository.validateSession();
+
+      if (data['is_seller'] == false) {
+        yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
+      }
+
+      final authenticatedUser = User(
+        userId: data['user_id'],
+        nickname: data['nickname'],
+        realname: data['realname'],
+        isSeller: data['is_seller'],
+      );
+
+      final stores = await Future.wait((data['stores'] as List)
+          .map((storeId) async => await storeRepository.getStore(storeId))
+          .toList());
+
+      yield Authenticated(authenticatedUser, stores);
+    }
+  }
+
+  Stream<AuthenticationState> _mapGrantAuthenticationToState(
+      GrantAuthentication event) async* {
     try {
       final session =
           await accountRepository.createSession(event.userId, event.password);
@@ -70,7 +97,7 @@ class AuthenticationBloc
         yield NotAuthenticated();
       }
 
-      final data = await accountRepository.validateSession(session.id);
+      final data = await accountRepository.validateSession();
 
       if (data['is_seller'] == false) {
         yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
@@ -93,11 +120,10 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapSignOutAuthenticationToState(
-      SignOutAuthentication event) async* {
+  Stream<AuthenticationState> _mapRevokeAuthenticationToState(
+      RevokeAuthentication event) async* {
     try {
-      final session = int.parse(event.token);
-      await accountRepository.deleteSession(session);
+      await accountRepository.deleteSession();
 
       yield NotAuthenticated();
     } catch (_) {
