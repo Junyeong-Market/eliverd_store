@@ -23,7 +23,7 @@ class _SearchManufacturerDialogState extends State<SearchManufacturerDialog> {
     final height = MediaQuery.of(context).size.height;
 
     return Container(
-      height: height * 0.6,
+      height: height * 0.7,
       padding: EdgeInsets.symmetric(
         horizontal: 20.0,
       ),
