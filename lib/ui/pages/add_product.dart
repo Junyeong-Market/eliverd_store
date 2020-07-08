@@ -373,7 +373,6 @@ class _AddProductPageState extends State<AddProductPage> {
                 showModalBottomSheet(
                   context: context,
                   builder: (context) => SearchManufacturerDialog(
-                    manufacturer: _manufacturer,
                     onManufacturerChanged: _onManufacturerChanged,
                   ),
                   isScrollControlled: true,

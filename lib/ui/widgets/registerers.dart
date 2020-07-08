@@ -15,10 +15,9 @@ import 'package:Eliverd/models/models.dart';
 import 'package:Eliverd/common/string.dart';
 
 class RegistererCards extends StatefulWidget {
-  final List<User> registerers;
-  final ValueChanged<List<User>> toggleSelectedRegisterers;
+  final ValueChanged<List<User>> onSelectedRegisterersChanged;
 
-  const RegistererCards({Key key, @required this.registerers, @required this.toggleSelectedRegisterers}) : super(key: key);
+  const RegistererCards({Key key, @required this.onSelectedRegisterersChanged}) : super(key: key);
 
   @override
   _RegistererCardsState createState() => _RegistererCardsState();
@@ -28,6 +27,8 @@ class RegistererCards extends StatefulWidget {
 class _RegistererCardsState extends State<RegistererCards> {
   String _enteredKeyword;
   SearchUserBloc _searchUserBloc;
+
+  List<User> _registerers = [];
 
   @override
   void initState() {
@@ -90,10 +91,20 @@ class _RegistererCardsState extends State<RegistererCards> {
                   return CupertinoScrollbar(
                     child: ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
-                        return RegistererCard(
-                          user: state.users[index],
-                          registerers: widget.registerers,
-                          toggleSelectedRegisterers: widget.toggleSelectedRegisterers,
+                        return GestureDetector(
+                            onTap: () {
+                              if (_registerers.contains(state.users[index])) {
+                                _registerers.remove(state.users[index]);
+                              } else {
+                                _registerers.add(state.users[index]);
+                              }
+
+                              widget.onSelectedRegisterersChanged(_registerers);
+                            },
+                            child: Registerer(
+                              user: state.users[index],
+                              isSelected: _isSelected(state.users[index]),
+                            )
                         );
                       },
                       itemCount: state.users.length,
@@ -126,43 +137,9 @@ class _RegistererCardsState extends State<RegistererCards> {
       ],
     );
   }
-}
 
-class RegistererCard extends StatefulWidget {
-  final User user;
-  final List<User> registerers;
-  final ValueChanged<List<User>> toggleSelectedRegisterers;
-
-  const RegistererCard({Key key, @required this.user, @required this.registerers, @required this.toggleSelectedRegisterers}) : super(key: key);
-
-  @override
-  _RegistererCardState createState() => _RegistererCardState();
-}
-
-class _RegistererCardState extends State<RegistererCard> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _toggleSelect,
-      child: Registerer(
-        user: widget.user,
-        isSelected: _isSelected(),
-      )
-    );
-  }
-
-  void _toggleSelect() {
-    if (widget.registerers.contains(widget.user)) {
-      widget.registerers.remove(widget.user);
-    } else {
-      widget.registerers.add(widget.user);
-    }
-
-    widget.toggleSelectedRegisterers(widget.registerers);
-  }
-
-  bool _isSelected() {
-    return widget.registerers.contains(widget.user);
+  bool _isSelected(User user) {
+    return _registerers.contains(user);
   }
 }
 

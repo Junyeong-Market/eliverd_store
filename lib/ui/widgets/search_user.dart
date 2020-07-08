@@ -67,8 +67,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                   ),
                   SizedBox(height: height / 48.0),
                   RegistererCards(
-                    registerers: _registerers,
-                    toggleSelectedRegisterers: _toggleSelectedRegisterers,
+                    onSelectedRegisterersChanged: _onSelectedRegisterersChanged,
                   ),
                 ],
               ),
@@ -110,7 +109,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                             ),
                           ),
                           onPressed: () {
-                            if (_registerers.length != 0) {
+                            if (_registerers.isNotEmpty) {
                               context
                                   .bloc<StoreBloc>()
                                   .add(RegisterStoreRegisterers(_registerers));
@@ -130,7 +129,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
     );
   }
 
-  void _toggleSelectedRegisterers(List<User> updatedRegisterers) {
+  void _onSelectedRegisterersChanged(List<User> updatedRegisterers) {
     setState(() {
       _registerers = updatedRegisterers;
     });
