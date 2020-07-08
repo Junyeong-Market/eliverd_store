@@ -36,10 +36,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final height = MediaQuery.of(context).size.height;
 
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
@@ -115,7 +112,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
                             children: <Widget>[
                               ButtonTheme(
                                 materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                                    MaterialTapTargetSize.shrinkWrap,
                                 minWidth: 0,
                                 height: 0,
                                 child: FlatButton(
@@ -133,7 +130,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
                                   },
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(25.0)),
+                                        BorderRadius.all(Radius.circular(25.0)),
                                   ),
                                 ),
                               ),
@@ -183,7 +180,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
 
   final _gesterRecognizer = <Factory<OneSequenceGestureRecognizer>>[
     Factory<OneSequenceGestureRecognizer>(
-          () => EagerGestureRecognizer(),
+      () => EagerGestureRecognizer(),
     ),
   ].toSet();
 
@@ -201,55 +198,54 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
 
     showCupertinoModalPopup(
       context: context,
-      builder: (context) =>
-          CupertinoAlertDialog(
-            title: Text(
-              SearchSheetStrings.registerProceedTitle,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18.0,
-              ),
-            ),
-            content: Text(
-              '사업장 위치를 ${_selectedMarker.infoWindow.snippet}(으)로 설정했습니다.',
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 14.0,
-              ),
-            ),
-            actions: <Widget>[
-              CupertinoButton(
-                child: Text(
-                  SearchSheetStrings.resetBtnText,
-                  style: TextStyle(
-                    color: eliverdColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              CupertinoButton(
-                child: Text(
-                  SearchSheetStrings.confirmBtnText,
-                  style: TextStyle(
-                    color: eliverdColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                onPressed: () {
-                  final coordinate = Coordinate(
-                    lat: _selectedMarker.position.latitude,
-                    lng: _selectedMarker.position.longitude,
-                  );
-
-                  context.bloc<StoreBloc>().add(RegisterStoreLocation(coordinate));
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(
+          SearchSheetStrings.registerProceedTitle,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18.0,
           ),
+        ),
+        content: Text(
+          '사업장 위치를 ${_selectedMarker.infoWindow.snippet}(으)로 설정했습니다.',
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 14.0,
+          ),
+        ),
+        actions: <Widget>[
+          CupertinoButton(
+            child: Text(
+              SearchSheetStrings.resetBtnText,
+              style: TextStyle(
+                color: eliverdColor,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          CupertinoButton(
+            child: Text(
+              SearchSheetStrings.confirmBtnText,
+              style: TextStyle(
+                color: eliverdColor,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            onPressed: () {
+              final coordinate = Coordinate(
+                lat: _selectedMarker.position.latitude,
+                lng: _selectedMarker.position.longitude,
+              );
+
+              context.bloc<StoreBloc>().add(RegisterStoreLocation(coordinate));
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -264,7 +260,9 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
       _selectedMarker = Marker(
           markerId: MarkerId('Selected'),
           position: latlng,
-          infoWindow: InfoWindow(title: SearchSheetStrings.registeredMarkerTitle, snippet: address),
+          infoWindow: InfoWindow(
+              title: SearchSheetStrings.registeredMarkerTitle,
+              snippet: address),
           draggable: true,
           onDragEnd: (position) {
             _selectedMarker = _selectedMarker.copyWith(
@@ -288,8 +286,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
 
     return placemarks
         .map((placemark) =>
-    '${placemark.country} ${placemark.administrativeArea} ${placemark
-        .locality} ${placemark.name} ${placemark.postalCode}')
+            '${placemark.country} ${placemark.administrativeArea} ${placemark.locality} ${placemark.name} ${placemark.postalCode}')
         .join(',');
   }
 }
