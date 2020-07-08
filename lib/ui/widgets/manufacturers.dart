@@ -15,12 +15,9 @@ import 'package:Eliverd/models/models.dart';
 import 'package:Eliverd/common/string.dart';
 
 class Manufacturers extends StatefulWidget {
-  final Manufacturer manufacturer;
   final ValueChanged<Manufacturer> onManufacturerChanged;
 
-  Manufacturers({Key key,
-    @required this.manufacturer,
-    @required this.onManufacturerChanged})
+  Manufacturers({Key key, @required this.onManufacturerChanged})
       : super(key: key);
 
   @override
@@ -57,10 +54,7 @@ class _ManufacturersState extends State<Manufacturers> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final height = MediaQuery.of(context).size.height;
 
     return Column(
       children: <Widget>[
@@ -101,7 +95,9 @@ class _ManufacturersState extends State<Manufacturers> {
                           onTap: () {
                             setState(() {
                               if (_manufacturer == state.manufacturers[index]) {
-                                _manufacturer = _manufacturer != null ? null : state.manufacturers[index];
+                                _manufacturer = _manufacturer != null
+                                    ? null
+                                    : state.manufacturers[index];
                               } else {
                                 _manufacturer = state.manufacturers[index];
                               }
@@ -147,7 +143,7 @@ class _ManufacturersState extends State<Manufacturers> {
   }
 
   bool _isSelected(Manufacturer manufacturer) {
-    return widget.manufacturer == manufacturer;
+    return _manufacturer == manufacturer;
   }
 }
 
@@ -155,7 +151,8 @@ class ManufacturerCard extends StatelessWidget {
   final Manufacturer manufacturer;
   final bool isSelected;
 
-  const ManufacturerCard({Key key, this.manufacturer, this.isSelected}) : super(key: key);
+  const ManufacturerCard({Key key, this.manufacturer, this.isSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
