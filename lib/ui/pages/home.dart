@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context, state) {
         return Scaffold(
           key: HomePageKeys.homePage,
+          extendBodyBehindAppBar: true,
           appBar: _buildMainHeader(),
           body: _buildMainBody(state, height),
         );

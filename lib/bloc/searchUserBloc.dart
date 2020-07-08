@@ -21,9 +21,13 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
   @override
   Stream<SearchUserState> mapEventToState(SearchUserEvent event) async* {
     if (event is SearchUser) {
-      final users = await accountRepository.searchUser(event.keyword);
+      try {
+        final users = await accountRepository.searchUser(event.keyword);
 
-      yield UserFound(users);
+        yield UserFound(users);
+      } catch (_) {
+        yield UserFound([]);
+      }
     }
   }
 

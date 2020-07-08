@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:Eliverd/models/product.dart';
-import 'package:Eliverd/models/store.dart';
+import 'package:Eliverd/models/models.dart';
 
 class StoreAPIClient {
   static const baseUrl = 'SECRET:8000';
@@ -15,10 +15,18 @@ class StoreAPIClient {
   }) : assert(httpClient != null);
 
   Future<Store> createStore(Map<String, dynamic> jsonifiedStore) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final currentSession = prefs.getString('session');
+
     final url = '$baseUrl/store/';
+
     final res = await this.httpClient.post(
           url,
           body: jsonifiedStore,
+          headers: {
+            'Authorization': currentSession,
+          },
           encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
         );
 
@@ -28,15 +36,36 @@ class StoreAPIClient {
 
     final jsonData = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(jsonData) as Store;
+    final data = json.decode(jsonData);
 
-    return data;
+    final registerers = (data['registerer'] as List)
+        .map((rawRegisterer) => User.fromJson(rawRegisterer))
+        .toList();
+
+    final store = Store(
+      id: data['id'],
+      name: data['name'],
+      description: data['description'],
+      registerers: registerers,
+      registeredNumber: data['registered_number'],
+    );
+
+    return store;
   }
 
   Future<List<Stock>> fetchStock(Store store) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final currentSession = prefs.getString('session');
+
     final storeId = store.id;
     final url = '$baseUrl/store/$storeId/stocks/';
-    final res = await this.httpClient.get(url);
+    final res = await this.httpClient.get(
+      url,
+      headers: {
+        'Authorization': currentSession,
+      },
+    );
 
     if (res.statusCode != 200) {
       throw Exception('Error occurred while fetching all stocks on your store');
@@ -106,16 +135,38 @@ class StoreAPIClient {
 
     final data = json.decode(jsonData);
 
+    final registerers = (data['registerer'] as List)
+        .map((rawRegisterer) => User.fromJson(rawRegisterer))
+        .toList();
+
     final store = Store(
       id: storeId,
       name: data['name'],
       description: data['description'],
-      registerers: data['registerer'],
+      registerers: registerers,
       registeredNumber: data['registered_number'],
     );
 
     // TO-DO: location 필드 추출 로직 구성하기
 
     return store;
+  }
+
+  Future<List<Manufacturer>> searchManufacturer(String keyword) async {
+    final url = '$baseUrl/product/manufacturer/search/$keyword/';
+    final res = await this.httpClient.get(url);
+
+    if (res.statusCode != 200) {
+      return <Manufacturer>[];
+    }
+
+    final jsonData = utf8.decode(res.bodyBytes);
+
+    final data = json.decode(jsonData)['results'] as List;
+
+    return data.map((rawManufacturer) => Manufacturer(
+      id: rawManufacturer['id'],
+      name: rawManufacturer['name'],
+    )).toList();
   }
 }

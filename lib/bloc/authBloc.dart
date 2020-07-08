@@ -115,8 +115,7 @@ class AuthenticationBloc
           .toList());
 
       yield Authenticated(authenticatedUser, stores);
-    } catch (e) {
-      print(e.toString());
+    } catch (_) {
       yield AuthenticationError(ErrorMessages.loginErrorMessage);
     }
   }

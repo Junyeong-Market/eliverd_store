@@ -22,7 +22,7 @@ class Store extends Equatable {
   final int id;
   final String name;
   final String description;
-  final List<dynamic> registerers;
+  final List<User> registerers;
   final String registeredNumber;
   final Coordinate location;
 
@@ -47,7 +47,7 @@ class Store extends Equatable {
           {int id,
           String name,
           String description,
-          List<dynamic> registerers,
+          List<User> registerers,
           String registeredNumber,
           Coordinate location}) =>
       Store(
@@ -70,6 +70,7 @@ class Store extends Equatable {
     'name': name,
     'description': description,
     'registered_number': registeredNumber,
+    'registerer': registerers.map((registerer) => registerer.pid).toList().toString(),
     'lat': location.lat.toString(),
     'lng': location.lng.toString(),
   };

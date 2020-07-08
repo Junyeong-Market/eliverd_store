@@ -55,6 +55,7 @@ class AccountAPIClient {
     );
 
     if (res.statusCode != 201) {
+      prefs.remove('session');
       throw Exception('Error occurred while creating session');
     }
 
@@ -80,6 +81,7 @@ class AccountAPIClient {
     );
 
     if (res.statusCode != 200) {
+      prefs.remove('session');
       throw Exception('Error occurred while validating session');
     }
 
@@ -134,11 +136,11 @@ class AccountAPIClient {
   }
 
   Future<List<User>> searchUser(String keyword) async {
-    final url = '$baseUrl/account/user/search/$keyword?is_seller=true/';
+    final url = '$baseUrl/account/user/search/$keyword/?is_seller=True';
     final res = await this.httpClient.get(url);
 
     if (res.statusCode != 200) {
-      throw Exception('Error occurred while searching user');
+      return <User>[];
     }
 
     final jsonData = utf8.decode(res.bodyBytes);
@@ -147,6 +149,7 @@ class AccountAPIClient {
 
     return data.map((rawUser) {
       return User(
+        pid: rawUser['pid'],
         userId: rawUser['user_id'],
         nickname: rawUser['nickname'],
         realname: rawUser['realname'],
