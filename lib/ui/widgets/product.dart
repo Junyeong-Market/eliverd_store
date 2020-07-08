@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:Eliverd/ui/widgets/update_product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,12 +16,11 @@ import 'package:Eliverd/models/models.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/color.dart';
 
-import 'package:Eliverd/ui/pages/update_product.dart';
-
 class ProductCard extends StatefulWidget {
   final Stock stock;
+  final Store currentStore;
 
-  const ProductCard({Key key, this.stock}) : super(key: key);
+  const ProductCard({Key key, @required this.stock, @required this.currentStore}) : super(key: key);
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -127,11 +127,17 @@ class _ProductCardState extends State<ProductCard> {
                                 ),
                               ),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => UpdateProductPage(
-                                      stock: widget.stock,
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => UpdateProductDialog(
+                                    stock: widget.stock,
+                                    currentStore: widget.currentStore,
+                                  ),
+                                  isScrollControlled: true,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30.0),
+                                      topRight: Radius.circular(30.0),
                                     ),
                                   ),
                                 );
@@ -201,7 +207,13 @@ class _ProductCardState extends State<ProductCard> {
     style: TextStyle(
       fontSize: 10.0,
     ),
-    errorBuilder: (context, error) => Center(child: Text(error)),
+    errorBuilder: (context, error) => Text(
+      ProductStrings.noBarcodeDesc,
+      style: TextStyle(
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
   );
 
   Widget _buildAmountText(int amount) {

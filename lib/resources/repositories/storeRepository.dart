@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:meta/meta.dart';
 
@@ -29,25 +30,30 @@ class StoreRepository {
     return stocks;
   }
 
-  Future<Product> addStock(
+  Future<void> addStock(
       int storeId, Map<String, dynamic> jsonifiedProduct) async {
-    final product = await storeAPIClient.upsertStock(storeId, jsonifiedProduct);
-
-    return product;
+    await storeAPIClient.upsertStock(storeId, jsonifiedProduct);
   }
 
-  Future<Product> updateStock(
+  Future<void> updateStock(
       int storeId, Map<String, dynamic> jsonifiedProduct) async {
-    final product = await storeAPIClient.upsertStock(storeId, jsonifiedProduct);
+    final updateJson = {
+      'ian': jsonifiedProduct['ian'],
+      'price': jsonifiedProduct['price'],
+      'amount': jsonifiedProduct['amount'],
+    };
 
-    return product;
+    await storeAPIClient.upsertStock(storeId, updateJson);
   }
 
-  Future<Product> removeStock(
+  Future<void> removeStock(
       int storeId, Map<String, dynamic> jsonifiedProduct) async {
-    final product = await storeAPIClient.upsertStock(storeId, jsonifiedProduct);
+    final removeJson = {
+      'ian': jsonifiedProduct['ian'],
+      'amount': (-(json.decode(jsonifiedProduct['amount']) as int)).toString(),
+    };
 
-    return product;
+    await storeAPIClient.upsertStock(storeId, removeJson);
   }
 
   Future<List<Manufacturer>> searchManufacturer(String keyword) async {

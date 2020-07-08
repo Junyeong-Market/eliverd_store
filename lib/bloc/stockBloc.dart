@@ -8,8 +8,6 @@ import 'package:Eliverd/bloc/states/stockState.dart';
 
 import 'package:Eliverd/resources/repositories/repositories.dart';
 
-import 'package:Eliverd/models/models.dart';
-
 class StockBloc extends Bloc<StockEvent, StockState> {
   final StoreRepository storeRepository;
 
@@ -69,51 +67,35 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
   Stream<StockState> _mapStockAddedToState(AddStock event) async* {
     if (state is StockFetchSuccessState) {
-      try {
-        await storeRepository.addStock(
-            event.stock.store.id, event.stock.toJson());
+      await storeRepository.addStock(
+          event.stock.store.id, event.stock.toJson());
 
-        final List<Stock> updatedStocks = (state as StockFetchSuccessState).stocks
-            .toList()
-          ..add(event.stock);
-        yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
-      } catch (_) {
-        yield StockFetchErrorState();
-      }
+      final stocks = await storeRepository.fetchStock(event.stock.store);
+
+      yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
     }
   }
 
   Stream<StockState> _mapStockUpdatedToState(UpdateStock event) async* {
     if (state is StockFetchSuccessState) {
-      try {
-        await storeRepository.updateStock(
-            event.stock.store.id, event.stock.toJson());
+      await storeRepository.updateStock(
+          event.stock.store.id, event.stock.toJson());
 
-        final List<Stock> updatedStocks = (state as StockFetchSuccessState)
-            .stocks
-            .toList()
-          ..map((stock) =>
-          stock.product.id == event.stock.product.id ? event.stock : stock);
-        yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
-      } catch (_) {
-        yield StockFetchErrorState();
-      }
+
+      final stocks = await storeRepository.fetchStock(event.stock.store);
+
+      yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
     }
   }
 
   Stream<StockState> _mapStockDeletedToState(DeleteStock event) async* {
     if (state is StockFetchSuccessState) {
-      try {
-        await storeRepository.removeStock(
-            event.stock.store.id, event.stock.toJson());
+      await storeRepository.removeStock(
+          event.stock.store.id, event.stock.toJson());
 
-        final List<Stock> updatedStocks = (state as StockFetchSuccessState).stocks
-            .toList()
-          ..remove(event.stock);
-        yield StockFetchSuccessState(stocks: updatedStocks, isAllFetched: true);
-      } catch (_) {
-        yield StockFetchErrorState();
-      }
+      final stocks = await storeRepository.fetchStock(event.stock.store);
+
+      yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
     }
   }
 

@@ -54,7 +54,7 @@ class _SearchManufacturerDialogState extends State<SearchManufacturerDialog> {
                 ),
               ),
               Text(
-                SearchSheetStrings.searchManufacturerDesc,
+                BottomSheetStrings.searchManufacturerDesc,
                 style: TextStyle(
                   fontWeight: FontWeight.w200,
                   fontSize: 16.0,
@@ -78,7 +78,7 @@ class _SearchManufacturerDialogState extends State<SearchManufacturerDialog> {
                     child: FlatButton(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        SearchSheetStrings.cancel,
+                        BottomSheetStrings.cancel,
                         style: TextStyle(
                           color: eliverdColor,
                           fontSize: 16.0,
@@ -96,7 +96,7 @@ class _SearchManufacturerDialogState extends State<SearchManufacturerDialog> {
                     child: FlatButton(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        SearchSheetStrings.proceed,
+                        BottomSheetStrings.proceed,
                         style: TextStyle(
                           color: eliverdColor,
                           fontWeight: FontWeight.bold,

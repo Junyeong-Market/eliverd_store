@@ -59,7 +59,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                     ),
                   ),
                   Text(
-                    SearchSheetStrings.searchRegisterersDesc,
+                    BottomSheetStrings.searchRegisterersDesc,
                     style: TextStyle(
                       fontWeight: FontWeight.w200,
                       fontSize: 16.0,
@@ -83,7 +83,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                         child: FlatButton(
                           padding: EdgeInsets.all(0.0),
                           child: Text(
-                            SearchSheetStrings.cancel,
+                            BottomSheetStrings.cancel,
                             style: TextStyle(
                               color: eliverdColor,
                               fontSize: 16.0,
@@ -101,7 +101,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                         child: FlatButton(
                           padding: EdgeInsets.all(0.0),
                           child: Text(
-                            SearchSheetStrings.proceed,
+                            BottomSheetStrings.proceed,
                             style: TextStyle(
                               color: eliverdColor,
                               fontWeight: FontWeight.bold,

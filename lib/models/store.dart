@@ -102,7 +102,7 @@ class Stock extends Equatable {
   Map<String, dynamic> toJson() => {
         'ian': product.ian,
         'name': product.name,
-        'manufacturer': product.manufacturer.name,
+        'manufacturer': product.manufacturer.id.toString(),
         'price': price.toString(),
         'amount': amount.toString(),
       };

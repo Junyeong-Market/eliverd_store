@@ -87,7 +87,7 @@ class StoreAPIClient {
     return stocks;
   }
 
-  Future<Product> upsertStock(
+  Future<void> upsertStock(
       int storeId, Map<String, dynamic> jsonifiedStock) async {
     final url = '$baseUrl/store/$storeId/stock/';
     final res = await this.httpClient.post(
@@ -96,16 +96,10 @@ class StoreAPIClient {
           encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
         );
 
-    if (res.statusCode != 201) {
+    if (res.statusCode != 200 && res.statusCode != 201) {
       throw Exception(
           'Error occurred while adding/updating/deleting stock on your store');
     }
-
-    final jsonData = utf8.decode(res.bodyBytes);
-
-    final data = json.decode(jsonData);
-
-    return Product.fromJson(data);
   }
 
   Future<Product> getProduct(int productId) async {

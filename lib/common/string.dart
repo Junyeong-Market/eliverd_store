@@ -130,7 +130,7 @@ class ProductStrings {
   static final delete = '삭제';
 }
 
-class SearchSheetStrings {
+class BottomSheetStrings {
   static final mapLoadingMsg = '지도를 불러오고 있습니다. 잠시만 기다려주세요.';
   static final registerLocationDesc = '지도에서 원하는 위치를 터치하여 등록합니다.';
   static final searchRegisterersDesc = '사업장에 추가할 사업자를 검색해서 터치합니다.';

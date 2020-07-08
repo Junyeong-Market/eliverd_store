@@ -80,7 +80,7 @@ class _ManufacturersState extends State<Manufacturers> {
                 if (state is ManufacturerFound) {
                   if (state.manufacturers.length == 0) {
                     return Text(
-                      SearchSheetStrings.noResultMsg,
+                      BottomSheetStrings.noResultMsg,
                       style: TextStyle(
                         color: Colors.black26,
                         fontWeight: FontWeight.w600,
@@ -124,7 +124,7 @@ class _ManufacturersState extends State<Manufacturers> {
                       CupertinoActivityIndicator(),
                       SizedBox(height: height / 120.0),
                       Text(
-                        SearchSheetStrings.searchResultLoadingMsg,
+                        BottomSheetStrings.searchResultLoadingMsg,
                         style: TextStyle(
                           color: Colors.black26,
                           fontWeight: FontWeight.w600,

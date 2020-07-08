@@ -80,7 +80,7 @@ class _RegistererCardsState extends State<RegistererCards> {
                 if (state is UserFound) {
                   if (state.users.length == 0) {
                     return Text(
-                      SearchSheetStrings.noResultMsg,
+                      BottomSheetStrings.noResultMsg,
                       style: TextStyle(
                         color: Colors.black26,
                         fontWeight: FontWeight.w600,
@@ -120,7 +120,7 @@ class _RegistererCardsState extends State<RegistererCards> {
                       CupertinoActivityIndicator(),
                       SizedBox(height: height / 120.0),
                       Text(
-                        SearchSheetStrings.searchResultLoadingMsg,
+                        BottomSheetStrings.searchResultLoadingMsg,
                         style: TextStyle(
                           color: Colors.black26,
                           fontWeight: FontWeight.w600,
@@ -202,7 +202,7 @@ class Registerer extends StatelessWidget {
                       ),
                       SizedBox(width: width / 240.0),
                       Text(
-                        user.isSeller ? SearchSheetStrings.isSellerText : SearchSheetStrings.isCustomerText,
+                        user.isSeller ? BottomSheetStrings.isSellerText : BottomSheetStrings.isCustomerText,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           color: Colors.black54,
@@ -211,7 +211,7 @@ class Registerer extends StatelessWidget {
                       ),
                       Visibility(
                         child: Text(
-                          isSelected != null ? SearchSheetStrings.selected : '',
+                          isSelected != null ? BottomSheetStrings.selected : '',
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             color: eliverdColor,

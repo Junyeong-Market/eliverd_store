@@ -69,7 +69,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
                 ),
               ),
               Text(
-                SearchSheetStrings.registerLocationDesc,
+                BottomSheetStrings.registerLocationDesc,
                 style: TextStyle(
                   fontWeight: FontWeight.w200,
                   fontSize: 16.0,
@@ -159,7 +159,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
                         CupertinoActivityIndicator(),
                         SizedBox(height: 8.0),
                         Text(
-                          SearchSheetStrings.mapLoadingMsg,
+                          BottomSheetStrings.mapLoadingMsg,
                           style: TextStyle(
                             color: Colors.black26,
                             fontWeight: FontWeight.w600,
@@ -200,7 +200,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
       context: context,
       builder: (context) => CupertinoAlertDialog(
         title: Text(
-          SearchSheetStrings.registerProceedTitle,
+          BottomSheetStrings.registerProceedTitle,
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 18.0,
@@ -216,7 +216,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
         actions: <Widget>[
           CupertinoButton(
             child: Text(
-              SearchSheetStrings.resetBtnText,
+              BottomSheetStrings.resetBtnText,
               style: TextStyle(
                 color: eliverdColor,
                 fontWeight: FontWeight.w400,
@@ -228,7 +228,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
           ),
           CupertinoButton(
             child: Text(
-              SearchSheetStrings.confirmBtnText,
+              BottomSheetStrings.confirmBtnText,
               style: TextStyle(
                 color: eliverdColor,
                 fontWeight: FontWeight.w700,
@@ -261,7 +261,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
           markerId: MarkerId('Selected'),
           position: latlng,
           infoWindow: InfoWindow(
-              title: SearchSheetStrings.registeredMarkerTitle,
+              title: BottomSheetStrings.registeredMarkerTitle,
               snippet: address),
           draggable: true,
           onDragEnd: (position) {

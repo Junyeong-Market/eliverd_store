@@ -197,6 +197,7 @@ class _HomePageState extends State<HomePage> {
           return _refreshCompleter.future;
         },
         child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           key: HomePageKeys.stockList,
           itemBuilder: (BuildContext context, int index) {
             return index >= state.stocks.length
@@ -222,6 +223,7 @@ class _HomePageState extends State<HomePage> {
                   )
                 : ProductCard(
                     stock: state.stocks[index],
+                    currentStore: widget.currentStore,
                   );
           },
           itemCount: state.isAllFetched

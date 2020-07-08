@@ -125,7 +125,7 @@ class _AddProductPageState extends State<AddProductPage> {
     });
   }
 
-  void _submitProduct() {
+  void _submitProduct() async {
     final stock = Stock(
       store: widget.currentStore,
       product: Product(
@@ -138,6 +138,8 @@ class _AddProductPageState extends State<AddProductPage> {
     );
 
     context.bloc<StockBloc>().add(AddStock(stock));
+
+    await Future.delayed(Duration(milliseconds: 500));
 
     Navigator.pushReplacement(
       context,
