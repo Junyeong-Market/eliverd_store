@@ -166,7 +166,7 @@ class _RegistererCardState extends State<RegistererCard> {
   }
 }
 
-class Registerer extends StatelessWidget{
+class Registerer extends StatelessWidget {
   final User user;
   final bool isSelected;
 

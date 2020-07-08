@@ -49,4 +49,10 @@ class StoreRepository {
 
     return product;
   }
+
+  Future<List<Manufacturer>> searchManufacturer(String keyword) async {
+    final manufacturers = await storeAPIClient.searchManufacturer(keyword);
+
+    return manufacturers;
+  }
 }

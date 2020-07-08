@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:Eliverd/ui/widgets/search_manufacturer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,22 +35,20 @@ class AddProductPage extends StatefulWidget {
 
 class _AddProductPageState extends State<AddProductPage> {
   String _barcodeIan = '';
+  Manufacturer _manufacturer;
+
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
-  final _manufacturerController = TextEditingController();
   final _amountController = TextEditingController();
 
   bool _isBarcodeRegistered = false;
-  bool _isLastPage = false;
 
   final _nameNavigationFocus = FocusNode();
   final _priceNavigationFocus = FocusNode();
-  final _manufacturerNavigationFocus = FocusNode();
   final _amountNavigationFocus = FocusNode();
 
   bool _isNameSubmitted = false;
   bool _isPriceSubmitted = false;
-  bool _isManufacturerSubmitted = false;
   bool _isAmountSubmitted = false;
 
   @override
@@ -87,8 +86,10 @@ class _AddProductPageState extends State<AddProductPage> {
               SizedBox(height: height / 48.0),
               _buildNameSection(height),
               _buildPriceSection(height),
-              _buildManufacturerSection(height),
               _buildAmountSection(height),
+              _buildManufacturerSection(height),
+              SizedBox(height: height / 120.0),
+              _buildSelectedManufacturerText(),
             ],
           ),
           bottomNavigationBar: Padding(
@@ -118,12 +119,9 @@ class _AddProductPageState extends State<AddProductPage> {
     });
   }
 
-  void _submitActivate(value) {
+  void _onManufacturerChanged(Manufacturer manufacturer) {
     setState(() {
-      _isAmountSubmitted = true;
-      _isLastPage = true;
-
-      _amountNavigationFocus.unfocus();
+      _manufacturer = manufacturer;
     });
   }
 
@@ -132,9 +130,7 @@ class _AddProductPageState extends State<AddProductPage> {
       store: widget.currentStore,
       product: Product(
         name: _nameController.text,
-        manufacturer: Manufacturer(
-          name: _manufacturerController.text,
-        ),
+        manufacturer: _manufacturer,
         ian: _barcodeIan,
       ),
       price: int.parse(_priceController.text.replaceAll(',', '')),
@@ -297,7 +293,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   _isPriceSubmitted = true;
                 });
 
-                _manufacturerNavigationFocus.requestFocus();
+                _amountNavigationFocus.requestFocus();
               },
               prefixText: currency,
             ),
@@ -307,38 +303,6 @@ class _AddProductPageState extends State<AddProductPage> {
         maintainAnimation: true,
         maintainState: true,
         visible: _isNameSubmitted,
-      );
-
-  Widget _buildManufacturerSection(double height) => Visibility(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            FormText(
-              controller: _manufacturerController,
-              textWhenCompleted: ProductStrings.manufacturerDesc,
-              textWhenNotCompleted:
-                  ProductStrings.manufacturerDescWhenImcompleted,
-            ),
-            SizedBox(height: height / 120.0),
-            FormTextField(
-              key: AddProductPageKeys.productManufacturerTextField,
-              controller: _manufacturerController,
-              isEnabled: !_isManufacturerSubmitted,
-              focusNode: _manufacturerNavigationFocus,
-              onSubmitted: (value) {
-                setState(() {
-                  _isManufacturerSubmitted = true;
-                });
-
-                _amountNavigationFocus.requestFocus();
-              },
-            ),
-          ],
-        ),
-        maintainSize: false,
-        maintainAnimation: true,
-        maintainState: true,
-        visible: _isPriceSubmitted,
       );
 
   Widget _buildAmountSection(double height) => Visibility(
@@ -360,15 +324,92 @@ class _AddProductPageState extends State<AddProductPage> {
               controller: _amountController,
               focusNode: _amountNavigationFocus,
               isEnabled: !_isAmountSubmitted,
-              onSubmitted: _submitActivate,
+              onSubmitted: (value) {
+                setState(() {
+                  _isAmountSubmitted = true;
+                });
+
+                _amountNavigationFocus.unfocus();
+              },
             ),
           ],
         ),
         maintainSize: false,
         maintainAnimation: true,
         maintainState: true,
-        visible: _isManufacturerSubmitted,
+        visible: _isPriceSubmitted,
       );
+
+  Widget _buildManufacturerSection(double height) => Visibility(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          _manufacturer != null
+              ? ProductStrings.manufacturerDesc
+              : ProductStrings.manufacturerDescWhenImcompleted,
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 26.0,
+          ),
+        ),
+        SizedBox(height: height / 120.0),
+        Visibility(
+          child: ButtonTheme(
+            padding: EdgeInsets.all(2.0),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minWidth: 0,
+            height: 0,
+            child: FlatButton(
+              child: Text(
+                '􀅼',
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 22.0,
+                ),
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => SearchManufacturerDialog(
+                    manufacturer: _manufacturer,
+                    onManufacturerChanged: _onManufacturerChanged,
+                  ),
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          visible: _manufacturer == null,
+        ),
+      ],
+    ),
+    maintainSize: false,
+    maintainAnimation: true,
+    maintainState: true,
+    visible: _isAmountSubmitted,
+  );
+
+  Widget _buildSelectedManufacturerText() => Visibility(
+    child: Text(
+      _manufacturer?.name ?? '',
+      style: TextStyle(
+        fontSize: 22.0,
+        color: Colors.black54,
+      ),
+    ),
+    visible: _manufacturer != null,
+  );
 
   Widget _buildSubmitBtn() => CupertinoButton(
         key: AddProductPageKeys.productSubmitBtn,
@@ -382,7 +423,7 @@ class _AddProductPageState extends State<AddProductPage> {
             fontSize: 18.0,
           ),
         ),
-        onPressed: _isLastPage
+        onPressed: _manufacturer != null
             ? _submitProduct
             : (!_isBarcodeRegistered ? _registerBarcode : null),
         borderRadius: BorderRadius.circular(25.0),
