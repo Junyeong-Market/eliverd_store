@@ -46,7 +46,8 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
   Store _createdStore;
 
   void _registerStore() {
-    final formattedRegisteredNumber = _registeredNumberController.text.replaceAll('-', '');
+    final formattedRegisteredNumber =
+        _registeredNumberController.text.replaceAll('-', '');
 
     _createdStore = Store(
       name: _storeNameController.text,
@@ -197,10 +198,15 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
     );
   }
 
-  final _storeNameRegex =
-      WhitelistingTextInputFormatter(RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣 ]"));
+  final _storeNameRegex = FilteringTextInputFormatter(
+    RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣 ]"),
+    allow: true,
+  );
   final _registeredNumberRegex = [
-    WhitelistingTextInputFormatter(RegExp("[0-9^\s]")),
+    FilteringTextInputFormatter(
+      RegExp("[0-9^\s]"),
+      allow: true,
+    ),
     RegisterNumberTextInputFormatter(),
   ];
 
