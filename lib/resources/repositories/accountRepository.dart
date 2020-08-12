@@ -11,12 +11,12 @@ class AccountRepository {
   AccountRepository({@required this.accountAPIClient})
       : assert(accountAPIClient != null);
 
-  Future<void> signUpUser(Map<String, dynamic> jsonifiedUser) async {
-    await accountAPIClient.signUpUser(jsonifiedUser);
+  Future<void> signUpUser(Map<String, dynamic> user) async {
+    await accountAPIClient.signUpUser(user);
   }
 
-  Future<Map<String, dynamic>> validateUser(Map<String, dynamic> jsonifiedUser) async {
-    final validation = await accountAPIClient.validateUser(jsonifiedUser);
+  Future<Map<String, dynamic>> validateUser(Map<String, dynamic> user) async {
+    final validation = await accountAPIClient.validateUser(user);
 
     return validation;
   }

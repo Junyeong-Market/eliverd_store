@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
@@ -15,12 +16,15 @@ class AccountAPIClient {
     @required this.httpClient,
   }) : assert(httpClient != null);
 
-  Future<void> signUpUser(Map<String, dynamic> jsonifiedUser) async {
+  Future<void> signUpUser(Map<String, dynamic> user) async {
     final url = '$baseUrl/account/user/';
     final res = await this.httpClient.post(
       url,
-      body: jsonifiedUser,
-      encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: json.encode(user),
+      encoding: Encoding.getByName('utf-8'),
     );
 
     if (res.statusCode != 201) {
@@ -31,11 +35,7 @@ class AccountAPIClient {
   Future<String> createSession([String userId, String password]) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final currentSession = prefs.getString('session');
-
-    if (currentSession != null) {
-      return currentSession;
-    } else if (userId == null || password == null) {
+    if (userId == null || password == null) {
       return null;
     }
 
@@ -50,18 +50,20 @@ class AccountAPIClient {
     final url = '$baseUrl/account/session/';
     final res = await this.httpClient.post(
       url,
-      body: user,
-      encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: json.encode(user),
+      encoding: Encoding.getByName('utf-8'),
     );
 
     if (res.statusCode != 201) {
-      prefs.remove('session');
       throw Exception('Error occurred while creating session');
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final session = json.decode(jsonData)['session'] as String;
+    final session = json.decode(decoded)['session'] as String;
 
     prefs.setString('session', session);
 
@@ -71,13 +73,18 @@ class AccountAPIClient {
   Future<Map<String, dynamic>> validateSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final currentSession = prefs.getString('session');
+    final session = prefs.getString('session');
+
+    if (session == null) {
+      return null;
+    }
 
     final url = '$baseUrl/account/session/';
-    final res = await this.httpClient.get(url,
-        headers: {
-          'Authorization': currentSession,
-        }
+    final res = await this.httpClient.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: session,
+      },
     );
 
     if (res.statusCode != 200) {
@@ -85,71 +92,74 @@ class AccountAPIClient {
       throw Exception('Error occurred while validating session');
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final userInfo = json.decode(jsonData);
+    final data = json.decode(decoded);
 
-    return userInfo;
+    return data;
   }
 
   Future<void> deleteSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final currentSession = prefs.getString('session');
+    final session = prefs.getString('session');
 
-    if (currentSession == null) {
+    if (session == null) {
       return;
     }
 
     final url = '$baseUrl/account/session/';
-    final res = await this.httpClient.delete(url,
+    final res = await this.httpClient.delete(
+      url,
       headers: {
-        'Authorization': currentSession,
-      }
+        HttpHeaders.authorizationHeader: session,
+      },
     );
-
-    await prefs.remove('session');
 
     if (res.statusCode != 204) {
       throw Exception('Error occurred while deleting session');
     }
+
+    prefs.remove('session');
   }
 
-  Future<Map<String, dynamic>> validateUser(Map<String, dynamic> jsonifiedUser) async {
+  Future<Map<String, dynamic>> validateUser(Map<String, dynamic> user) async {
     final url = '$baseUrl/account/user/validate/';
 
     final res = await this.httpClient.post(
       url,
-      body: jsonifiedUser,
-      encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: json.encode(user),
+      encoding: Encoding.getByName('utf-8'),
     );
 
     if (res.statusCode != 200) {
       throw Exception('Error occurred while validating user');
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(jsonData);
+    final data = json.decode(decoded);
 
     return data;
   }
 
   Future<List<User>> searchUser(String keyword) async {
-    final url = '$baseUrl/account/user/search/$keyword/?is_seller=True';
+    final url = '$baseUrl/account/user/search/$keyword?is_seller=true/';
     final res = await this.httpClient.get(url);
 
     if (res.statusCode != 200) {
-      return <User>[];
+      throw Exception('Error occurred while searching user');
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(jsonData)['results'] as List;
+    final data = json.decode(decoded)['results'] as List;
 
     return data.map((rawUser) {
       return User(
-        pid: rawUser['pid'],
         userId: rawUser['user_id'],
         nickname: rawUser['nickname'],
         realname: rawUser['realname'],

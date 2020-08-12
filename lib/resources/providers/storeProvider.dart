@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
@@ -14,56 +15,54 @@ class StoreAPIClient {
     @required this.httpClient,
   }) : assert(httpClient != null);
 
-  Future<Store> createStore(Map<String, dynamic> jsonifiedStore) async {
+  Future<Store> createStore(Map<String, dynamic> store) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final currentSession = prefs.getString('session');
+    final session = prefs.getString('session');
 
     final url = '$baseUrl/store/';
 
     final res = await this.httpClient.post(
           url,
-          body: jsonifiedStore,
           headers: {
-            'Authorization': currentSession,
+            HttpHeaders.authorizationHeader: session,
+            HttpHeaders.contentTypeHeader: 'application/json',
           },
-          encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+          body: json.encode(store),
+          encoding: Encoding.getByName('utf-8'),
         );
 
     if (res.statusCode != 201) {
       throw Exception('Error occurred while creating your store');
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(jsonData);
+    final data = json.decode(decoded);
 
     final registerers = (data['registerer'] as List)
         .map((rawRegisterer) => User.fromJson(rawRegisterer))
         .toList();
 
-    final store = Store(
+    return Store(
       id: data['id'],
       name: data['name'],
       description: data['description'],
       registerers: registerers,
       registeredNumber: data['registered_number'],
     );
-
-    return store;
   }
 
   Future<List<Stock>> fetchStock(Store store) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final currentSession = prefs.getString('session');
+    final session = prefs.getString('session');
 
-    final storeId = store.id;
-    final url = '$baseUrl/store/$storeId/stocks/';
+    final url = '$baseUrl/store/${store.id}/stocks/';
     final res = await this.httpClient.get(
       url,
       headers: {
-        'Authorization': currentSession,
+        HttpHeaders.authorizationHeader: session,
       },
     );
 
@@ -71,9 +70,9 @@ class StoreAPIClient {
       throw Exception('Error occurred while fetching all stocks on your store');
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(jsonData)['results'] as List;
+    final data = json.decode(decoded)['results'] as List;
 
     final stocks = data.map((rawStock) {
       return Stock(
@@ -88,15 +87,18 @@ class StoreAPIClient {
   }
 
   Future<void> upsertStock(
-      int storeId, Map<String, dynamic> jsonifiedStock) async {
+      int storeId, Map<String, dynamic> stock) async {
     final url = '$baseUrl/store/$storeId/stock/';
     final res = await this.httpClient.post(
           url,
-          body: jsonifiedStock,
-          encoding: Encoding.getByName('application/json; charset=\'utf-8\''),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+          },
+          body: json.encode(stock),
+          encoding: Encoding.getByName('utf-8'),
         );
 
-    if (res.statusCode != 200 && res.statusCode != 201) {
+    if ([200, 201].any((statusCode) => statusCode == res.statusCode)) {
       throw Exception(
           'Error occurred while adding/updating/deleting stock on your store');
     }
@@ -110,9 +112,9 @@ class StoreAPIClient {
       throw Exception('Error occurred while fetching a product');
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(jsonData);
+    final data = json.decode(decoded);
 
     return Product.fromJson(data);
   }
@@ -125,9 +127,9 @@ class StoreAPIClient {
       throw Exception('Error occurred while fetching a store');
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(jsonData);
+    final data = json.decode(decoded);
 
     final registerers = (data['registerer'] as List)
         .map((rawRegisterer) => User.fromJson(rawRegisterer))
@@ -154,9 +156,9 @@ class StoreAPIClient {
       return <Manufacturer>[];
     }
 
-    final jsonData = utf8.decode(res.bodyBytes);
+    final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(jsonData)['results'] as List;
+    final data = json.decode(decoded)['results'] as List;
 
     return data.map((rawManufacturer) => Manufacturer(
       id: rawManufacturer['id'],
