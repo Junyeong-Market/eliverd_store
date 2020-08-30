@@ -37,9 +37,18 @@ class User extends Equatable {
       nickname: json['nickname'],
       realname: json['realname'],
       isSeller: json['is_seller'],
-      stores: json['stores'] != null && json['stores'][0] is! int
-          ? json['stores'].map<Store>((store) => Store.fromJson(store)).toList()
-          : null,
+      stores: json['stores'].map<Store>((store) => Store.fromJson(store)).toList(),
+    );
+  }
+
+  static User fromJsonWithoutStore(dynamic json) {
+    return User(
+      pid: json['pid'],
+      userId: json['user_id'],
+      password: json['password'],
+      nickname: json['nickname'],
+      realname: json['realname'],
+      isSeller: json['is_seller'],
     );
   }
 
