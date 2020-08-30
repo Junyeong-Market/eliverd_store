@@ -17,11 +17,11 @@ import 'package:Eliverd/common/string.dart';
 class RegistererCards extends StatefulWidget {
   final ValueChanged<List<User>> onSelectedRegisterersChanged;
 
-  const RegistererCards({Key key, @required this.onSelectedRegisterersChanged}) : super(key: key);
+  const RegistererCards({Key key, @required this.onSelectedRegisterersChanged})
+      : super(key: key);
 
   @override
   _RegistererCardsState createState() => _RegistererCardsState();
-
 }
 
 class _RegistererCardsState extends State<RegistererCards> {
@@ -70,68 +70,54 @@ class _RegistererCardsState extends State<RegistererCards> {
           },
           cursorRadius: Radius.circular(25.0),
         ),
-        SizedBox(height: height / 48.0),
+        SizedBox(
+          height: 16.0,
+        ),
         Container(
           height: height * 0.5,
-          child: BlocProvider<SearchUserBloc>.value(
-            value: _searchUserBloc,
-            child: BlocBuilder<SearchUserBloc, SearchUserState>(
-              builder: (context, state) {
-                if (state is UserFound) {
-                  if (state.users.length == 0) {
-                    return Text(
-                      BottomSheetStrings.noResultMsg,
-                      style: TextStyle(
-                        color: Colors.black26,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    );
-                  }
-
-                  return CupertinoScrollbar(
-                    child: ListView.builder(
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                            onTap: () {
-                              if (_registerers.contains(state.users[index])) {
-                                _registerers.remove(state.users[index]);
-                              } else {
-                                _registerers.add(state.users[index]);
-                              }
-
-                              widget.onSelectedRegisterersChanged(_registerers);
-                            },
-                            child: Registerer(
-                              user: state.users[index],
-                              isSelected: _isSelected(state.users[index]),
-                            )
-                        );
-                      },
-                      itemCount: state.users.length,
+          child: BlocBuilder<SearchUserBloc, SearchUserState>(
+            cubit: _searchUserBloc,
+            builder: (context, state) {
+              if (state is UserFound) {
+                if (state.users.length == 0) {
+                  return Text(
+                    BottomSheetStrings.noResultMsg,
+                    style: TextStyle(
+                      color: Colors.black26,
+                      fontWeight: FontWeight.w600,
                     ),
                   );
                 }
 
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      CupertinoActivityIndicator(),
-                      SizedBox(height: height / 120.0),
-                      Text(
-                        BottomSheetStrings.searchResultLoadingMsg,
-                        style: TextStyle(
-                          color: Colors.black26,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                return CupertinoScrollbar(
+                  child: ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () {
+                            if (_registerers.contains(state.users[index])) {
+                              _registerers.remove(state.users[index]);
+                            } else {
+                              _registerers.add(state.users[index]);
+                            }
+
+                            widget.onSelectedRegisterersChanged(_registerers);
+                          },
+                          child: Registerer(
+                            user: state.users[index],
+                            isSelected: _isSelected(state.users[index]),
+                          ));
+                    },
+                    itemCount: state.users.length,
                   ),
                 );
-              },
-            ),
+              }
+
+              return Center(
+                child: CupertinoActivityIndicator(),
+              );
+            },
           ),
         ),
       ],
@@ -147,7 +133,8 @@ class Registerer extends StatelessWidget {
   final User user;
   final bool isSelected;
 
-  const Registerer({Key key, @required this.user, this.isSelected}) : super(key: key);
+  const Registerer({Key key, @required this.user, this.isSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +189,9 @@ class Registerer extends StatelessWidget {
                       ),
                       SizedBox(width: width / 240.0),
                       Text(
-                        user.isSeller ? BottomSheetStrings.isSellerText : BottomSheetStrings.isCustomerText,
+                        user.isSeller
+                            ? BottomSheetStrings.isSellerText
+                            : BottomSheetStrings.isCustomerText,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           color: Colors.black54,
@@ -233,6 +222,4 @@ class Registerer extends StatelessWidget {
       ),
     );
   }
-
-
 }

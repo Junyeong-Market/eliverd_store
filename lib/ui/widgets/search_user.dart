@@ -34,8 +34,10 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
       builder: (context, state) {
         return Container(
           height: height * 0.8,
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.0,
+          padding: EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            bottom: kBottomNavigationBarHeight,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,14 +45,18 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: height / 64.0),
+                  SizedBox(
+                    height: 8.0,
+                  ),
                   Divider(
                     indent: 140.0,
                     endIndent: 140.0,
                     height: 16.0,
                     thickness: 4.0,
                   ),
-                  SizedBox(height: height / 64.0),
+                  SizedBox(
+                    height: 8.0,
+                  ),
                   Text(
                     TitleStrings.searchRegisterersTitle,
                     style: TextStyle(
@@ -65,61 +71,58 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
                       fontSize: 16.0,
                     ),
                   ),
-                  SizedBox(height: height / 48.0),
+                  SizedBox(
+                    height: 8.0,
+                  ),
                   RegistererCards(
                     onSelectedRegisterersChanged: _onSelectedRegisterersChanged,
                   ),
                 ],
               ),
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      ButtonTheme(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        minWidth: 0,
-                        height: 0,
-                        child: FlatButton(
-                          padding: EdgeInsets.all(0.0),
-                          child: Text(
-                            BottomSheetStrings.cancel,
-                            style: TextStyle(
-                              color: eliverdColor,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                  ButtonTheme(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    minWidth: 0,
+                    height: 0,
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        BottomSheetStrings.cancel,
+                        style: TextStyle(
+                          color: eliverdColor,
+                          fontSize: 16.0,
                         ),
                       ),
-                      ButtonTheme(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        minWidth: 0,
-                        height: 0,
-                        child: FlatButton(
-                          padding: EdgeInsets.all(0.0),
-                          child: Text(
-                            BottomSheetStrings.proceed,
-                            style: TextStyle(
-                              color: eliverdColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          onPressed: () {
-                            if (_registerers.isNotEmpty) {
-                              context
-                                  .bloc<StoreBloc>()
-                                  .add(RegisterStoreRegisterers(_registerers));
-                            }
-                          },
-                        ),
-                      ),
-                    ],
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
-                  SizedBox(height: height / 48.0),
+                  ButtonTheme(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    minWidth: 0,
+                    height: 0,
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        BottomSheetStrings.proceed,
+                        style: TextStyle(
+                          color: eliverdColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_registerers.isNotEmpty) {
+                          context
+                              .bloc<StoreBloc>()
+                              .add(RegisterStoreRegisterers(_registerers));
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
             ],

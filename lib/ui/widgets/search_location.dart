@@ -48,19 +48,23 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
         return Container(
           height: height * 0.8,
           padding: EdgeInsets.symmetric(
-            horizontal: 20.0,
+            horizontal: 16.0,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: height / 64.0),
+              SizedBox(
+                height: 8.0,
+              ),
               Divider(
                 indent: 140.0,
                 endIndent: 140.0,
                 height: 16.0,
                 thickness: 4.0,
               ),
-              SizedBox(height: height / 64.0),
+              SizedBox(
+                height: 8.0,
+              ),
               Text(
                 TitleStrings.registerLocationTitle,
                 style: TextStyle(
@@ -118,6 +122,8 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
                                 child: FlatButton(
                                   padding: EdgeInsets.all(0.0),
                                   textColor: Colors.black12,
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
                                   child: Text(
                                     '⟳',
                                     style: TextStyle(
@@ -153,21 +159,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
                   }
 
                   return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        CupertinoActivityIndicator(),
-                        SizedBox(height: 8.0),
-                        Text(
-                          BottomSheetStrings.mapLoadingMsg,
-                          style: TextStyle(
-                            color: Colors.black26,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+                    child: CupertinoActivityIndicator(),
                   );
                 },
               ),
@@ -251,14 +243,14 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
 
   Future<CameraPosition> _getCurrentLocation() async {
     Position position = await Geolocator().getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
+        desiredAccuracy: LocationAccuracy.medium);
 
     LatLng latlng = LatLng(position.latitude, position.longitude);
     String address = await _getAddressFromPosition(latlng);
 
     setState(() {
       _selectedMarker = Marker(
-          markerId: MarkerId('Selected'),
+          markerId: MarkerId('사업장 위치'),
           position: latlng,
           infoWindow: InfoWindow(
               title: BottomSheetStrings.registeredMarkerTitle,
@@ -273,7 +265,7 @@ class _SearchLocationDialogState extends State<SearchLocationDialog> {
 
     return CameraPosition(
       target: LatLng(position.latitude, position.longitude),
-      zoom: 20.0,
+      zoom: 16.0,
     );
   }
 
