@@ -54,6 +54,8 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+
+    _realnameNavigationFocus.requestFocus();
   }
 
   @override
@@ -70,56 +72,74 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    _realnameNavigationFocus.requestFocus();
-
-    return BlocProvider<AccountBloc>.value(
-      value: _accountBloc,
-      child: BlocConsumer<AccountBloc, AccountState>(
-        listener: (context, state) {
-          if (state is AccountDoneCreate) {
-            Navigator.pop(context);
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            key: SignUpPageKeys.signUpPage,
-            appBar: _brightAppBar,
-            body: ListView(
-              padding: EdgeInsets.symmetric(
-                horizontal: width * 0.075,
-              ),
-              children: <Widget>[
-                _signUpTitle,
-                SizedBox(height: height / 48.0),
-                _buildRealnameSection(state, height),
-                _buildNicknameSection(state, height),
-                _buildUserIdSection(state, height),
-                _buildPasswordSection(state, height),
-                _buildIsSellerSection(state, height),
-              ],
+    return BlocConsumer<AccountBloc, AccountState>(
+      cubit: _accountBloc,
+      listener: (context, state) {
+        if (state is AccountDoneCreate) {
+          Navigator.pop(context);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          key: SignUpPageKeys.signUpPage,
+          appBar: _buildAppBar(context),
+          body: ListView(
+            physics: ClampingScrollPhysics(),
+            padding: EdgeInsets.symmetric(
+              horizontal: 24.0,
             ),
-            bottomNavigationBar: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: width * 0.075,
-                vertical: 15.0,
+            children: <Widget>[
+              _buildTitle(),
+              SizedBox(
+                height: 16.0,
               ),
-              child: _buildSignUpBtn(),
+              _buildRealnameSection(state, height),
+              _buildNicknameSection(state, height),
+              _buildUserIdSection(state, height),
+              _buildPasswordSection(state, height),
+              _buildIsSellerSection(state, height),
+            ],
+          ),
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 8.0,
             ),
-          );
-        },
-      ),
+            child: _buildSignUpBtn(),
+          ),
+        );
+      },
     );
   }
 
-  final _brightAppBar = AppBar(
-    backgroundColor: Colors.transparent,
-    brightness: Brightness.light,
-    elevation: 0.0,
-    iconTheme: IconThemeData(color: Colors.black),
-  );
+  Widget _buildAppBar(BuildContext context) => AppBar(
+        backgroundColor: Colors.transparent,
+        leading: ButtonTheme(
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minWidth: 0,
+          height: 0,
+          child: FlatButton(
+            padding: EdgeInsets.all(0.0),
+            textColor: Colors.black,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            child: Text(
+              '􀆉',
+              style: TextStyle(
+                fontWeight: FontWeight.w200,
+                fontSize: 24.0,
+              ),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        brightness: Brightness.light,
+        elevation: 0.0,
+        iconTheme: IconThemeData(color: Colors.black),
+      );
 
   final _nameRegex = FilteringTextInputFormatter(
     RegExp("[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣^\s]"),
@@ -138,14 +158,14 @@ class _SignUpPageState extends State<SignUpPage> {
     allow: true,
   );
 
-  Widget _signUpTitle = Text(
-    TitleStrings.signUpTitle,
-    style: const TextStyle(
-      color: Colors.black,
-      fontSize: 36.0,
-      fontWeight: FontWeight.bold,
-    ),
-  );
+  Widget _buildTitle() => Text(
+        TitleStrings.signUpTitle,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 36.0,
+          fontWeight: FontWeight.bold,
+        ),
+      );
 
   Widget _buildRealnameSection(AccountState state, double height) => Visibility(
         child: Column(
@@ -156,7 +176,9 @@ class _SignUpPageState extends State<SignUpPage> {
               textWhenCompleted: SignUpStrings.realnameDesc,
               textWhenNotCompleted: SignUpStrings.realnameDescWhenImcompleted,
             ),
-            SizedBox(height: height / 120.0),
+            SizedBox(
+              height: 8.0,
+            ),
             FormTextField(
               key: SignUpPageKeys.realnameTextField,
               regex: _nameRegex,
@@ -180,7 +202,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 // TO-DO: 이름 미입력 시 Snackbar 띄우기
               },
             ),
-            SizedBox(height: height / 120.0),
           ],
         ),
         maintainSize: true,
@@ -198,7 +219,9 @@ class _SignUpPageState extends State<SignUpPage> {
               textWhenCompleted: SignUpStrings.nicknameDesc,
               textWhenNotCompleted: SignUpStrings.nicknameDescWhenImcompleted,
             ),
-            SizedBox(height: height / 120.0),
+            SizedBox(
+              height: 8.0,
+            ),
             FormTextField(
               key: SignUpPageKeys.nicknameTextField,
               regex: _nicknameRegex,
@@ -227,7 +250,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 // TO-DO: 닉네임 미입력 시 Snackbar 띄우기
               },
             ),
-            SizedBox(height: height / 120.0),
           ],
         ),
         maintainSize: true,
@@ -245,7 +267,9 @@ class _SignUpPageState extends State<SignUpPage> {
               textWhenCompleted: SignUpStrings.idDesc,
               textWhenNotCompleted: SignUpStrings.idDescWhenImcompleted,
             ),
-            SizedBox(height: height / 120.0),
+            SizedBox(
+              height: 8.0,
+            ),
             FormTextField(
               key: SignUpPageKeys.idTextField,
               regex: _idRegex,
@@ -270,11 +294,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 } else {
                   _userIdNavigationFocus.requestFocus();
                 }
-
-                // TO-DO: 아이디 미입력 시 Snackbar 띄우기
               },
             ),
-            SizedBox(height: height / 120.0),
           ],
         ),
         maintainSize: true,
@@ -292,7 +313,9 @@ class _SignUpPageState extends State<SignUpPage> {
               textWhenCompleted: SignUpStrings.passwordDesc,
               textWhenNotCompleted: SignUpStrings.passwordDescWhenImcompleted,
             ),
-            SizedBox(height: height / 120.0),
+            SizedBox(
+              height: 8.0,
+            ),
             FormTextField(
               key: SignUpPageKeys.passwordTextField,
               maxLength: 256,
@@ -314,11 +337,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 } else {
                   _passwordNavigationFocus.requestFocus();
                 }
-
-                // TO-DO: 비밀번호 미입력 시 Snackbar 띄우기
               },
             ),
-            SizedBox(height: height / 120.0),
           ],
         ),
         maintainSize: true,
@@ -352,7 +372,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ],
             ),
-            SizedBox(height: height / 120.0),
+            SizedBox(
+              height: 8.0,
+            ),
             Visibility(
               key: SignUpPageKeys.signUpErrorMsg,
               child: Text(
@@ -385,12 +407,12 @@ class _SignUpPageState extends State<SignUpPage> {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 16.0,
+              fontSize: 19.0,
             ),
           ),
           color: eliverdColor,
-          borderRadius: BorderRadius.circular(25.0),
-          padding: EdgeInsets.symmetric(vertical: 15.0),
+          borderRadius: BorderRadius.circular(10.0),
+          padding: EdgeInsets.symmetric(vertical: 16.0),
           onPressed: _passwordController.text.length != 0
               ? validateAndSignUpUser
               : null,

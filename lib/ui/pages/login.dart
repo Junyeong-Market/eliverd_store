@@ -1,3 +1,5 @@
+import 'package:Eliverd/ui/pages/register_store.dart';
+import 'package:Eliverd/ui/pages/store_selection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,9 +16,7 @@ import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/key.dart';
 
 import 'package:Eliverd/ui/pages/home.dart';
-import 'package:Eliverd/ui/pages/store_selection.dart';
 import 'package:Eliverd/ui/pages/sign_up.dart';
-import 'package:Eliverd/ui/pages/register_store.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -67,31 +67,22 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context, state) {
         if (state is Authenticated) {
           return Scaffold(
-            extendBodyBehindAppBar: true,
-            key: LoginPageKeys.loginPage,
-            appBar: _transparentAppBar,
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  _buildLoginPageLogo(width),
-                  SizedBox(height: height / 48.0),
-                  CupertinoActivityIndicator(),
-                  SizedBox(height: height / 64.0),
-                  Center(
-                    child: Text(
-                      SignInStrings.alreadyLoggedIn,
-                      style: TextStyle(
-                        color: Colors.black38,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      textAlign: TextAlign.center,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: Text(
+                    SignInStrings.alreadyLoggedIn,
+                    style: TextStyle(
+                      color: Colors.black26,
+                      fontWeight: FontWeight.w700,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 4.0),
+                CupertinoActivityIndicator(),
+              ],
             ),
           );
         }
@@ -285,14 +276,18 @@ class _LoginPageState extends State<LoginPage> {
           'Tried to navigate to next page when it is not authenticated!');
     }
 
-    final _state = state as Authenticated;
+    final stores = (state as Authenticated).stores;
 
-    if (_state.stores.length == 0) {
+    if (stores.length == 0) {
       return RegisterStorePage();
-    } else if (_state.stores.length == 1) {
-      return HomePage(currentStore: _state.stores[0]);
-    } else {
-      return StoreSelectionPage();
+    } else if (stores.length >= 2) {
+      return StoreSelectionPage(
+        stores: stores,
+      );
     }
+
+    return HomePage(
+      store: stores[0],
+    );
   }
 }

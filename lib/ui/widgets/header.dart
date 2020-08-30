@@ -32,7 +32,7 @@ class Header extends PreferredSize {
                 child: Text(
                   '􀆉',
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w200,
                     fontSize: 24.0,
                   ),
                 ),

@@ -85,7 +85,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
             context,
             MaterialPageRoute(
               builder: (context) => HomePage(
-                currentStore: _createdStore,
+                store: _createdStore,
               ),
             ),
           );
@@ -94,98 +94,108 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
       builder: (context, state) {
         return Scaffold(
           key: RegisterStorePageKeys.registerStorePage,
-          extendBodyBehindAppBar: true,
-          body: Padding(
-            padding: EdgeInsets.only(
-              left: 20.0,
-              right: 20.0,
-              top: 40.0,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            brightness: Brightness.light,
+            elevation: 0.0,
+          ),
+          body: ListView(
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(
+              horizontal: 24.0,
             ),
-            child: ListView(
-              children: <Widget>[
-                Text(
-                  TitleStrings.registerStoreTitle,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 32.0,
+            children: <Widget>[
+              Text(
+                TitleStrings.registerStoreTitle,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 24.0,
+              ),
+              Visibility(
+                child: _buildStoreNameSection(height),
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: true,
+              ),
+              Visibility(
+                child: _buildStoreDescSection(height),
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _isNameSubmitted,
+              ),
+              Visibility(
+                child: _buildRegisteredNumberSection(height),
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _isDescSubmitted,
+              ),
+              Visibility(
+                child: _buildRegisterRegisterersSection(),
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _isRegisteredNumberSubmitted,
+              ),
+              SizedBox(
+                height: 4.0,
+              ),
+              Visibility(
+                child: _buildRegisterers(height),
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _registerers.length != 0,
+              ),
+              SizedBox(
+                height: 4.0,
+              ),
+              Visibility(
+                child: _buildRegisterLocationSection(state, height),
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _registerers.length != 0,
+              ),
+              SizedBox(
+                height: 4.0,
+              ),
+              Visibility(
+                child: _buildAddressText(),
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: _storeLocation != null,
+              ),
+              SizedBox(
+                height: 4.0,
+              ),
+              Visibility(
+                child: Text(
+                  ErrorMessages.registerStoreNotProceed,
+                  style: TextStyle(
+                    color: Colors.red,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: height / 48.0),
-                Visibility(
-                  child: _buildStoreNameSection(height),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: true,
-                ),
-                Visibility(
-                  child: _buildStoreDescSection(height),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _isNameSubmitted,
-                ),
-                Visibility(
-                  child: _buildRegisteredNumberSection(height),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _isDescSubmitted,
-                ),
-                Visibility(
-                  child: _buildRegisterRegisterersSection(),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _isRegisteredNumberSubmitted,
-                ),
-                SizedBox(height: height / 120.0),
-                Visibility(
-                  child: _buildRegisterers(height),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _registerers.length != 0,
-                ),
-                SizedBox(height: height / 48.0),
-                Visibility(
-                  child: _buildRegisterLocationSection(state, height),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _registerers.length != 0,
-                ),
-                SizedBox(height: height / 120.0),
-                Visibility(
-                  child: _buildAddressText(),
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: _storeLocation != null,
-                ),
-                SizedBox(height: height / 120.0),
-                Visibility(
-                  child: Text(
-                    ErrorMessages.registerStoreNotProceed,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  maintainSize: false,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: state is StoreError,
-                ),
-              ],
-            ),
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: state is StoreError,
+              ),
+            ],
           ),
           bottomNavigationBar: Padding(
-            padding: EdgeInsets.only(
-              left: 20.0,
-              right: 20.0,
-              bottom: 20.0,
+            padding: EdgeInsets.symmetric(
+              horizontal: 8.0,
             ),
             child: BottomAppBar(
               color: Colors.transparent,
@@ -219,7 +229,9 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
             textWhenNotCompleted:
                 RegisterStoreStrings.storeNameTitleWhenImcompleted,
           ),
-          SizedBox(height: height / 120.0),
+          SizedBox(
+            height: 4.0,
+          ),
           FormTextField(
             controller: _storeNameController,
             isFocused: true,
@@ -237,7 +249,6 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
               }
             },
           ),
-          SizedBox(height: height / 120.0),
         ],
       );
 
@@ -250,7 +261,9 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
             textWhenNotCompleted:
                 RegisterStoreStrings.storeDescTitleWhenImcompleted,
           ),
-          SizedBox(height: height / 120.0),
+          SizedBox(
+            height: 4.0,
+          ),
           FormTextField(
             controller: _storeDescController,
             helperText: RegisterStoreStrings.storeDescHelperText,
@@ -268,7 +281,6 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
               }
             },
           ),
-          SizedBox(height: height / 120.0),
         ],
       );
 
@@ -281,7 +293,9 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
             textWhenNotCompleted:
                 RegisterStoreStrings.registerNumberTitleWhenImcompleted,
           ),
-          SizedBox(height: height / 120.0),
+          SizedBox(
+            height: 4.0,
+          ),
           FormTextField(
             controller: _registeredNumberController,
             regex: _registeredNumberRegex,
@@ -301,7 +315,6 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
               }
             },
           ),
-          SizedBox(height: height / 120.0),
         ],
       );
 
@@ -433,7 +446,8 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
               return Text(
                 snapshot.data,
                 style: TextStyle(
-                  fontWeight: FontWeight.w300,
+                  color: Colors.black45,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16.0,
                 ),
               );
@@ -448,6 +462,8 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
                       child: FlatButton(
                         padding: EdgeInsets.all(0.0),
                         textColor: Colors.black12,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         child: Text(
                           '⟳',
                           style: TextStyle(
@@ -480,20 +496,7 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
             }
           }
 
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                RegisterStoreStrings.waitUntilAddressFetched,
-                style: TextStyle(
-                  color: Colors.black26,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              CupertinoActivityIndicator(),
-            ],
-          );
+          return CupertinoActivityIndicator();
         },
       );
 
@@ -504,12 +507,12 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 16.0,
+            fontSize: 19.0,
           ),
         ),
         color: eliverdColor,
-        borderRadius: BorderRadius.circular(15.0),
-        padding: EdgeInsets.symmetric(vertical: 15.0),
+        borderRadius: BorderRadius.circular(10.0),
+        padding: EdgeInsets.symmetric(vertical: 16.0),
         onPressed: _storeLocation == null ? null : _registerStore,
       );
 
