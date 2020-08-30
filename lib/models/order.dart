@@ -24,7 +24,7 @@ class Order extends Equatable {
   static Order fromJson(dynamic json) => Order(
         id: json['oid'],
         tid: json['tid'],
-        customer: User.fromJson(json['customer']),
+        customer: User.fromJsonWithoutStore(json['customer']),
         partials: json['partials']
             .map<PartialOrder>((partial) => PartialOrder.fromJson(partial))
             .toList(),

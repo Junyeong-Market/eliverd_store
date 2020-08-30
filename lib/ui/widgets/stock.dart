@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:Eliverd/ui/pages/checkout_stock.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,273 +14,10 @@ import 'package:Eliverd/models/models.dart';
 
 import 'package:Eliverd/ui/widgets/category.dart';
 import 'package:Eliverd/ui/widgets/update_stock.dart';
+import 'package:Eliverd/ui/widgets/select_amount.dart';
 
 import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
-
-class StockListOnCart extends StatelessWidget {
-  final List<Stock> stocks;
-  final ValueNotifier<List<int>> amounts;
-  final Function removeHandler;
-
-  const StockListOnCart(
-      {Key key,
-      @required this.stocks,
-      @required this.amounts,
-      @required this.removeHandler})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.all(8.0),
-      itemBuilder: (context, index) => SimplifiedStockOnCart(
-        stock: stocks[index],
-        onAmountChange: (int newAmount) {
-          List<int> newAmounts = List.of(amounts.value);
-
-          newAmounts[index] = newAmount;
-
-          amounts.value = newAmounts;
-        },
-        onRemove: () {
-          removeHandler(stocks[index]);
-        },
-        previousAmount: amounts.value.isEmpty ? 1 : amounts.value[index],
-      ),
-      itemCount: stocks.length,
-    );
-  }
-}
-
-class StockListOnOrder extends StatelessWidget {
-  final List<OrderedStock> orderedStocks;
-
-  const StockListOnOrder({Key key, @required this.orderedStocks})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) =>
-          StockOnOrder(orderedStock: orderedStocks[index]),
-      itemCount: orderedStocks.length,
-    );
-  }
-}
-
-class SimplifiedStockOnCart extends StatefulWidget {
-  final Stock stock;
-  final Function onAmountChange;
-  final Function onRemove;
-  final int previousAmount;
-
-  const SimplifiedStockOnCart(
-      {Key key,
-      @required this.stock,
-      @required this.onAmountChange,
-      @required this.onRemove,
-      this.previousAmount})
-      : super(key: key);
-
-  @override
-  _SimplifiedStockOnCartState createState() => _SimplifiedStockOnCartState();
-}
-
-class _SimplifiedStockOnCartState extends State<SimplifiedStockOnCart> {
-  FixedExtentScrollController amountScrollController;
-
-  int price;
-  int amount;
-
-  @override
-  void initState() {
-    super.initState();
-
-    amount = widget.previousAmount ?? 1;
-    price = widget.stock.price * amount;
-    amountScrollController =
-        FixedExtentScrollController(initialItem: amount - 1);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 0.0,
-        right: 8.0,
-        top: 8.0,
-        bottom: 0.0,
-      ),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            flex: 1,
-            child: ConstrainedBox(
-              constraints: BoxConstraints.expand(
-                height: width * 0.25,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black12,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Center(
-                  child: Text(
-                    '사진 없음',
-                    style: const TextStyle(
-                      color: Colors.black45,
-                      fontSize: 12.0,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 4.0),
-          Flexible(
-            flex: 3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.stock.product.manufacturer.name,
-                            maxLines: 1,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.black45,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13.0,
-                            ),
-                          ),
-                          Text(
-                            widget.stock.product.name,
-                            maxLines: 1,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17.0,
-                            ),
-                          ),
-                          SizedBox(height: 1.6),
-                          CategoryWidget(
-                            categoryId: widget.stock.product.category,
-                            fontSize: 9.0,
-                            padding: 2.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                    ButtonTheme(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      minWidth: 0,
-                      height: 0,
-                      child: FlatButton(
-                        padding: EdgeInsets.all(0.0),
-                        textColor: Colors.black,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: Text(
-                          '􀆄',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                        onPressed: widget.onRemove,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '수량',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 17.0,
-                          ),
-                        ),
-                        SizedBox(width: 8.0),
-                        Container(
-                          width: 32.0,
-                          height: 24.0,
-                          child: CupertinoPicker.builder(
-                            scrollController: amountScrollController,
-                            itemExtent: 24.0,
-                            onSelectedItemChanged: (index) {
-                              setState(() {
-                                amount = index + 1;
-
-                                widget.onAmountChange(amount);
-
-                                price = widget.stock.price * amount;
-                              });
-                            },
-                            itemBuilder: (context, index) {
-                              return Text(
-                                (index + 1).toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 17.0,
-                                ),
-                              );
-                            },
-                            childCount: widget.stock.amount + 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Text(
-                        formattedPrice(price),
-                        maxLines: 1,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 19.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String formattedPrice(int price) {
-    return NumberFormat.compactCurrency(
-      locale: 'ko',
-      symbol: '₩',
-    )?.format(price);
-  }
-}
 
 class StockOnOrder extends StatelessWidget {
   final OrderedStock orderedStock;
@@ -421,7 +157,7 @@ class StockOnOrder extends StatelessWidget {
   }
 
   String formattedPrice(int price) {
-    return NumberFormat.compactCurrency(
+    return NumberFormat.currency(
       locale: 'ko',
       symbol: '₩',
     )?.format(price);
@@ -581,11 +317,16 @@ class _StockWidgetState extends State<StockWidget> {
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CheckoutStockPage(
-                                    stock: widget.stock,
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => SelectAmountDialog(
+                                  stock: widget.stock,
+                                ),
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30.0),
+                                    topRight: Radius.circular(30.0),
                                   ),
                                 ),
                               );

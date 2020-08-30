@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:Eliverd/common/color.dart';
+import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,8 +17,9 @@ import 'package:Eliverd/models/models.dart';
 
 class CheckoutStockPage extends StatefulWidget {
   final Stock stock;
+  final int amount;
 
-  const CheckoutStockPage({Key key, @required this.stock}) : super(key: key);
+  const CheckoutStockPage({Key key, @required this.stock, @required this.amount}) : super(key: key);
 
   @override
   _CheckoutStockPageState createState() => _CheckoutStockPageState();
@@ -33,7 +35,7 @@ class _CheckoutStockPageState extends State<CheckoutStockPage> {
 
     context.bloc<OrderBloc>().add(ProceedOrder(
           items: [widget.stock],
-          amounts: [1],
+          amounts: [widget.amount],
         ));
   }
 
@@ -42,55 +44,54 @@ class _CheckoutStockPageState extends State<CheckoutStockPage> {
     return BlocConsumer<OrderBloc, OrderState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            brightness: Brightness.light,
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            title: Text(
-              '결제',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
+          extendBodyBehindAppBar: true,
+          appBar: Header(
+            onBackButtonPressed: null,
+            title: '재고 결제',
           ),
-          body: state is OrderInProgress
-              ? WebView(
-                  initialUrl: state.redirectURL,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated: (WebViewController webViewController) {
-                    _controller.complete(webViewController);
-                  },
-                  navigationDelegate: (NavigationRequest request) {
-                    if (_isKakaoPayScheme(request.url)) {
-                      _launchFromDeviceBrowser(request.url);
+          body: Padding(
+            padding: EdgeInsets.only(
+              top: kToolbarHeight + 128.0,
+            ),
+            child: state is OrderInProgress
+                ? WebView(
+                    initialUrl: state.redirectURL,
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (WebViewController webViewController) {
+                      _controller.complete(webViewController);
+                    },
+                    navigationDelegate: (NavigationRequest request) {
+                      if (_isKakaoPayScheme(request.url)) {
+                        _launchFromDeviceBrowser(request.url);
 
-                      return NavigationDecision.prevent;
-                    } else if (_isEliverdHandlerURL(request.url)) {
-                      if (request.url.contains('approve')) {
-                        context
-                            .bloc<OrderBloc>()
-                            .add(ApproveOrder(request.url));
-                      } else if (request.url.contains('cancel')) {
-                        context.bloc<OrderBloc>().add(CancelOrder(request.url));
-                      } else if (request.url.contains('fail')) {
-                        context.bloc<OrderBloc>().add(FailOrder(request.url));
+                        return NavigationDecision.prevent;
+                      } else if (_isEliverdHandlerURL(request.url)) {
+                        if (request.url.contains('approve')) {
+                          context
+                              .bloc<OrderBloc>()
+                              .add(ApproveOrder(request.url));
+                        } else if (request.url.contains('cancel')) {
+                          context
+                              .bloc<OrderBloc>()
+                              .add(CancelOrder(request.url));
+                        } else if (request.url.contains('fail')) {
+                          context.bloc<OrderBloc>().add(FailOrder(request.url));
+                        }
+
+                        return NavigationDecision.prevent;
                       }
 
-                      return NavigationDecision.prevent;
-                    }
-
-                    return NavigationDecision.navigate;
-                  },
-                )
-              : Text(
-                  '아따매 좀 기다리랑께',
-                ),
+                      return NavigationDecision.navigate;
+                    },
+                  )
+                : Center(
+                    child: CupertinoActivityIndicator(),
+                  ),
+          ),
         );
       },
       listener: (context, state) {
-        if (state is OrderError) {
+        if (state is! OrderInProgress) {
           Navigator.pop(context);
 
           return;

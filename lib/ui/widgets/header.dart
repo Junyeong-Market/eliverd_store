@@ -20,6 +20,7 @@ class Header extends PreferredSize {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           AppBar(
+            automaticallyImplyLeading: onBackButtonPressed != null ? true : false,
             leading: ButtonTheme(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               minWidth: 0,
@@ -27,6 +28,7 @@ class Header extends PreferredSize {
               child: FlatButton(
                 padding: EdgeInsets.all(0.0),
                 textColor: Colors.white,
+                disabledTextColor: eliverdColor,
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 child: Text(
