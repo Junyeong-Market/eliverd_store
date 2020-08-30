@@ -15,12 +15,21 @@ class StoreAPIClient {
     @required this.httpClient,
   }) : assert(httpClient != null);
 
-  Future<Store> createStore(Map<String, dynamic> store) async {
+  Future<Store> createStore(Store store) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final session = prefs.getString('session');
 
     final url = '$baseUrl/store/';
+
+    final body = {
+      'name': store.name,
+      'description': store.description,
+      'registerer': store.registerers.map((user) => user.pid).toList(),
+      'registered_number': store.registeredNumber,
+      'lat': store.location.lat,
+      'lng': store.location.lng,
+    };
 
     final res = await this.httpClient.post(
           url,
@@ -28,7 +37,7 @@ class StoreAPIClient {
             HttpHeaders.authorizationHeader: session,
             HttpHeaders.contentTypeHeader: 'application/json',
           },
-          body: json.encode(store),
+          body: json.encode(body),
           encoding: Encoding.getByName('utf-8'),
         );
 
@@ -38,27 +47,34 @@ class StoreAPIClient {
 
     final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(decoded);
-
-    final registerers = (data['registerer'] as List)
-        .map((rawRegisterer) => User.fromJson(rawRegisterer))
-        .toList();
-
-    return Store(
-      id: data['id'],
-      name: data['name'],
-      description: data['description'],
-      registerers: registerers,
-      registeredNumber: data['registered_number'],
-    );
+    return Store.fromJson(json.decode(decoded));
   }
 
-  Future<List<Stock>> fetchStock(Store store) async {
+  Future<List<Stock>> fetchStock(Store store, [String name, String category, String orderBy]) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final session = prefs.getString('session');
 
-    final url = '$baseUrl/store/${store.id}/stocks/';
+    String url = '$baseUrl/store/${store.id}/stocks/';
+
+    final filters = { 'name': name, 'category': category, 'order_by': orderBy };
+
+    String queries = '';
+
+    filters.forEach((key, value) {
+      if (value != null && value.isNotEmpty) {
+        if (queries.isNotEmpty) {
+          queries += '&';
+        }
+
+        queries += '$key=$value';
+      }
+    });
+
+    if (queries.isNotEmpty) {
+      url += '?' + queries;
+    }
+
     final res = await this.httpClient.get(
       url,
       headers: {
@@ -72,22 +88,14 @@ class StoreAPIClient {
 
     final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(decoded)['results'] as List;
-
-    final stocks = data.map((rawStock) {
-      return Stock(
-        store: store,
-        product: Product.fromJson(rawStock['product']),
-        price: rawStock['price'],
-        amount: rawStock['amount'],
-      );
-    }).toList();
-
-    return stocks;
+    return json
+        .decode(decoded)['results']
+        .map<Stock>((stock) => Stock.fromJson(stock, store))
+        .toList();
   }
 
-  Future<void> upsertStock(
-      int storeId, Map<String, dynamic> stock) async {
+  Future<void> upsertStock(int storeId, Map<String, dynamic> stock) async {
+    print(stock);
     final url = '$baseUrl/store/$storeId/stock/';
     final res = await this.httpClient.post(
           url,
@@ -97,8 +105,10 @@ class StoreAPIClient {
           body: json.encode(stock),
           encoding: Encoding.getByName('utf-8'),
         );
+    print(res.statusCode);
+    print(utf8.decode(res.bodyBytes));
 
-    if ([200, 201].any((statusCode) => statusCode == res.statusCode)) {
+    if (res.statusCode != 200 && res.statusCode != 201) {
       throw Exception(
           'Error occurred while adding/updating/deleting stock on your store');
     }
@@ -123,29 +133,14 @@ class StoreAPIClient {
     final url = '$baseUrl/store/$storeId/';
     final res = await this.httpClient.get(url);
 
+    print(res.statusCode);
     if (res.statusCode != 200) {
       throw Exception('Error occurred while fetching a store');
     }
 
     final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(decoded);
-
-    final registerers = (data['registerer'] as List)
-        .map((rawRegisterer) => User.fromJson(rawRegisterer))
-        .toList();
-
-    final store = Store(
-      id: storeId,
-      name: data['name'],
-      description: data['description'],
-      registerers: registerers,
-      registeredNumber: data['registered_number'],
-    );
-
-    // TO-DO: location 필드 추출 로직 구성하기
-
-    return store;
+    return Store.fromJson(json.decode(decoded));
   }
 
   Future<List<Manufacturer>> searchManufacturer(String keyword) async {
@@ -158,11 +153,10 @@ class StoreAPIClient {
 
     final decoded = utf8.decode(res.bodyBytes);
 
-    final data = json.decode(decoded)['results'] as List;
-
-    return data.map((rawManufacturer) => Manufacturer(
-      id: rawManufacturer['id'],
-      name: rawManufacturer['name'],
-    )).toList();
+    return json
+        .decode(decoded)['results']
+        .map<Manufacturer>(
+            (manufacturer) => Manufacturer.fromJson(manufacturer))
+        .toList();
   }
 }

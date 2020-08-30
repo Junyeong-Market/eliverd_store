@@ -12,7 +12,7 @@ class StoreRepository {
   StoreRepository({@required this.storeAPIClient})
       : assert(storeAPIClient != null);
 
-  Future<Store> createStore(Map<String, dynamic> store) async {
+  Future<Store> createStore(Store store) async {
     final data = await storeAPIClient.createStore(store);
 
     return data;
@@ -24,36 +24,35 @@ class StoreRepository {
     return store;
   }
 
-  Future<List<Stock>> fetchStock(Store store) async {
-    final stocks = await storeAPIClient.fetchStock(store);
+  Future<List<Stock>> fetchStock(Store store,
+      [String name, String category, String orderBy]) async {
+    final stocks =
+        await storeAPIClient.fetchStock(store, name, category, orderBy);
 
     return stocks;
   }
 
-  Future<void> addStock(
-      int storeId, Map<String, dynamic> product) async {
+  Future<void> addStock(int storeId, Map<String, dynamic> product) async {
     await storeAPIClient.upsertStock(storeId, product);
   }
 
-  Future<void> updateStock(
-      int storeId, Map<String, dynamic> product) async {
+  Future<void> updateStock(Stock stock) async {
     final updateJson = {
-      'ian': product['ian'],
-      'price': product['price'],
-      'amount': product['amount'],
+      'ian': stock.product.ian,
+      'price': stock.price,
+      'amount': stock.amount,
     };
 
-    await storeAPIClient.upsertStock(storeId, updateJson);
+    await storeAPIClient.upsertStock(stock.store.id, updateJson);
   }
 
-  Future<void> removeStock(
-      int storeId, Map<String, dynamic> product) async {
+  Future<void> removeStock(Stock stock) async {
     final removeJson = {
-      'ian': product['ian'],
-      'amount': (-(json.decode(product['amount']) as int)).toString(),
+      'ian': stock.product.ian,
+      'amount': (-stock.amount).toString(),
     };
 
-    await storeAPIClient.upsertStock(storeId, removeJson);
+    await storeAPIClient.upsertStock(stock.store.id, removeJson);
   }
 
   Future<List<Manufacturer>> searchManufacturer(String keyword) async {
