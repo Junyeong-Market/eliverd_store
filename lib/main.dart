@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:Eliverd/bloc/authBloc.dart';
 import 'package:Eliverd/bloc/stockBloc.dart';
 import 'package:Eliverd/bloc/storeBloc.dart';
+import 'package:Eliverd/bloc/orderBloc.dart';
 
 import 'package:Eliverd/resources/providers/providers.dart';
 import 'package:Eliverd/resources/repositories/repositories.dart';
@@ -18,7 +19,7 @@ import 'package:Eliverd/ui/pages/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  BlocSupervisor.delegate = EliverdBlocDelegate();
+  Bloc.observer = EliverdBlocDelegate();
 
   runApp(EliverdStore());
 }
@@ -60,6 +61,20 @@ class EliverdStore extends StatelessWidget {
             ),
           ),
         ),
+        BlocProvider<OrderBloc>(
+          create: (_) => OrderBloc(
+            purchaseRepository: PurchaseRepository(
+              purchaseAPIClient: PurchaseAPIClient(
+                httpClient: http.Client(),
+              ),
+            ),
+            accountRepository: AccountRepository(
+              accountAPIClient: AccountAPIClient(
+                httpClient: http.Client(),
+              ),
+            ),
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -70,7 +85,7 @@ class EliverdStore extends StatelessWidget {
   }
 }
 
-class EliverdBlocDelegate extends BlocDelegate {
+class EliverdBlocDelegate extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object event) {
     print('onEvent $event');
@@ -84,8 +99,8 @@ class EliverdBlocDelegate extends BlocDelegate {
   }
 
   @override
-  void onError(Bloc bloc, Object error, StackTrace stackTrace) {
-    print('onError $error');
-    super.onError(bloc, error, stackTrace);
+  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+    print('${cubit.runtimeType} $error');
+    super.onError(cubit, error, stackTrace);
   }
 }
