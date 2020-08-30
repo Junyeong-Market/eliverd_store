@@ -19,8 +19,8 @@ class PurchaseAPIClient {
     @required this.httpClient,
   }) : assert(httpClient != null);
 
-  Future<String> createOrder(
-      List<Stock> items, List<int> amounts, Coordinate shippingDestination) async {
+  Future<String> createOrder(List<Stock> items, List<int> amounts,
+      Coordinate shippingDestination) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<Map<String, dynamic>> orders = [];
 
@@ -72,12 +72,14 @@ class PurchaseAPIClient {
     return data;
   }
 
-  Future<Order> fetchOrder(String orderId) async {
+  Future<List<PartialOrder>> fetchOrder(Store store, [int page]) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final session = prefs.getString('session');
 
-    final url = '$baseUrl/purchase/$orderId';
+    final url =
+        '$baseUrl/store/${store.id}/orders/' + (page != null && page >= 2 ? '?page=$page' : '');
+
     final res = await httpClient.get(
       url,
       headers: {
@@ -91,7 +93,11 @@ class PurchaseAPIClient {
 
     final decoded = utf8.decode(res.bodyBytes);
 
-    return Order.fromJson(json.decode(decoded));
+    final orders = json.decode(decoded)['results'];
+
+    return orders != null
+        ? orders.map<PartialOrder>((order) => PartialOrder.fromJson(order)).toList()
+        : [];
   }
 
   Future<Order> approveOrder(String url) async {
@@ -111,6 +117,7 @@ class PurchaseAPIClient {
     }
 
     final decoded = utf8.decode(res.bodyBytes);
+    print(decoded);
 
     return Order.fromJson(json.decode(decoded));
   }
