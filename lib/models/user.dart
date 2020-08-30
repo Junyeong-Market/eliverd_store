@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:Eliverd/models/models.dart';
+
 class User extends Equatable {
   final int pid;
   final String userId;
@@ -7,6 +9,7 @@ class User extends Equatable {
   final String nickname;
   final String realname;
   final bool isSeller;
+  final List<Store> stores;
 
   const User(
       {this.pid,
@@ -14,32 +17,16 @@ class User extends Equatable {
       this.password,
       this.nickname,
       this.realname,
-      this.isSeller});
+      this.isSeller,
+      this.stores});
 
   @override
   List<Object> get props =>
-      [pid, userId, password, nickname, realname, isSeller];
+      [pid, userId, password, nickname, realname, isSeller, stores];
 
   @override
   String toString() {
-    return 'User{ pid: $pid, userId: $userId, password: $password, nickname: $nickname, realname: $realname, isSeller: $isSeller }';
-  }
-
-  User copyWith(
-      {int pid,
-      String userId,
-      String password,
-      String nickname,
-      String realname,
-      bool isSeller}) {
-    return User(
-      pid: pid,
-      userId: userId,
-      password: password,
-      nickname: nickname,
-      realname: realname,
-      isSeller: isSeller,
-    );
+    return 'User{ pid: $pid, userId: $userId, password: $password, nickname: $nickname, realname: $realname, isSeller: $isSeller, stores: $stores }';
   }
 
   static User fromJson(dynamic json) {
@@ -48,9 +35,22 @@ class User extends Equatable {
       userId: json['user_id'],
       password: json['password'],
       nickname: json['nickname'],
+      realname: json['realname'],
       isSeller: json['is_seller'],
+      stores: json['stores'] != null && json['stores'][0] is! int
+          ? json['stores'].map<Store>((store) => Store.fromJson(store)).toList()
+          : null,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'pid': pid,
+        'user_id': userId,
+        'password': password,
+        'nickname': nickname,
+        'realname': realname,
+        'is_seller': isSeller,
+      };
 }
 
 class Session extends Equatable {
@@ -66,13 +66,5 @@ class Session extends Equatable {
   @override
   String toString() {
     return 'Session{ id: $id, pid: $pid, expireAt: $expireAt }';
-  }
-
-  Session copyWith({int id, int pid, DateTime expireAt}) {
-    return Session(
-      id: id,
-      pid: pid,
-      expireAt: expireAt,
-    );
   }
 }

@@ -16,6 +16,30 @@ class Coordinate extends Equatable {
   String toString() {
     return 'Coordinate{ lat: $lat, lng: $lng }';
   }
+
+  Map<String, dynamic> toJson() => {
+    'lat': lat,
+    'lng': lng,
+  };
+
+  String toJsonString() {
+    return 'SRID=4326;POINT($lat $lng)';
+  }
+
+  static Coordinate fromString(String location) {
+    if (location == null || location.isEmpty) {
+      return null;
+    }
+
+    final rawCoordinate = location
+        .substring(location.indexOf('(') + 1, location.indexOf(')'))
+        .split(' ');
+
+    return Coordinate(
+      lat: double.parse(rawCoordinate[0]),
+      lng: double.parse(rawCoordinate[1]),
+    );
+  }
 }
 
 class Store extends Equatable {
@@ -28,11 +52,11 @@ class Store extends Equatable {
 
   const Store(
       {this.id,
-      this.name,
-      this.description,
-      this.registerers,
-      this.registeredNumber,
-      this.location});
+        this.name,
+        this.description,
+        this.registerers,
+        this.registeredNumber,
+        this.location});
 
   @override
   List<Object> get props =>
@@ -43,67 +67,83 @@ class Store extends Equatable {
     return 'Store { id: $id, name: $name, description: $description, registerers: $registerers, registeredNumber: $registeredNumber, location: $location}';
   }
 
-  Store copyWith(
-          {int id,
-          String name,
-          String description,
-          List<User> registerers,
-          String registeredNumber,
-          Coordinate location}) =>
-      Store(
-          id: id,
-          name: name,
-          description: description,
-          registerers: registerers,
-          registeredNumber: registeredNumber,
-          location: location);
-
   static Store fromJson(dynamic json) => Store(
-      id: json['number'],
-      name: json['name'],
-      description: json['description'],
-      registerers: json['registerer'],
-      registeredNumber: json['registered_number'],
-      location: json['point']);
+    id: json['id'],
+    name: json['name'],
+    description: json['description'],
+    registerers: json['registerer']
+        .map<User>((registerer) => User.fromJson(registerer))
+        .toList(),
+    registeredNumber: json['registered_number'],
+    location: Coordinate.fromString(json['location']),
+  );
 
   Map<String, dynamic> toJson() => {
+    'id': id,
     'name': name,
     'description': description,
+    'registerer':
+    registerers.map((User registerer) => registerer.toJson()).toList(),
     'registered_number': registeredNumber,
-    'registerer': registerers.map((registerer) => registerer.pid).toList().toString(),
-    'lat': location.lat.toString(),
-    'lng': location.lng.toString(),
+    'location': location.toJsonString(),
   };
 }
 
 class Stock extends Equatable {
+  final int id;
   final Store store;
   final Product product;
   final int price;
   final int amount;
 
-  const Stock({this.store, this.product, this.price, this.amount});
+  const Stock({this.id, this.store, this.product, this.price, this.amount});
 
   @override
-  List<Object> get props => [store, product, price, amount];
+  List<Object> get props => [id, store, product, price, amount];
 
   @override
   String toString() =>
-      'Stock{store: $store, product: $product, price: $price, amount: $amount}';
+      'Stock{ id: $id, store: $store, product: $product, price: $price, amount: $amount }';
 
-  Stock copyWith({Store store, Product product, int price, int amount}) =>
-      Stock(
-        store: store,
-        product: product,
-        price: price,
-        amount: amount,
-      );
+  Stock copyWith({int price, int amount}) {
+    return Stock(
+      id: id,
+      store: store,
+      product: product,
+      price: price,
+      amount: amount,
+    );
+  }
+
+  static Stock fromJson(dynamic json, [Store store]) => Stock(
+    id: json['id'],
+    store: store ?? Store.fromJson(json['store']),
+    product: Product.fromJson(json['product']),
+    price: json['price'],
+    amount: json['amount'],
+  );
+
+  static Stock fromJsonWithoutStore(dynamic json) => Stock(
+    id: json['id'],
+    product: Product.fromJson(json['product']),
+    price: json['price'],
+    amount: json['amount'],
+  );
 
   Map<String, dynamic> toJson() => {
-        'ian': product.ian,
-        'name': product.name,
-        'manufacturer': product.manufacturer.id.toString(),
-        'price': price.toString(),
-        'amount': amount.toString(),
-      };
+    'id': id,
+    'store': store.toJson(),
+    'product': product,
+    'price': price,
+    'amount': amount,
+  };
+
+  Map<String, dynamic> toMutateRequestJson() => {
+    'name': product.name,
+    'manufacturer': product.manufacturer.id,
+    'price': price,
+    'amount': amount,
+    'ian': product.ian,
+    'category': product.category,
+  };
 }
