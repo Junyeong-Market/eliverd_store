@@ -8,8 +8,6 @@ import 'package:Eliverd/resources/repositories/repositories.dart';
 
 import 'package:Eliverd/common/string.dart';
 
-import 'package:Eliverd/models/models.dart';
-
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AccountRepository accountRepository;
