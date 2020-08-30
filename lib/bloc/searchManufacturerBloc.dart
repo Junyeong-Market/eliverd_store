@@ -11,10 +11,7 @@ class SearchManufacturerBloc extends Bloc<SearchManufacturerEvent, SearchManufac
   final StoreRepository storeRepository;
 
   SearchManufacturerBloc({@required this.storeRepository})
-      : assert(storeRepository != null);
-
-  @override
-  SearchManufacturerState get initialState => ManufacturerNotFound();
+      : assert(storeRepository != null), super(ManufacturerNotFound());
 
   @override
   Stream<SearchManufacturerState> mapEventToState(SearchManufacturerEvent event) async* {

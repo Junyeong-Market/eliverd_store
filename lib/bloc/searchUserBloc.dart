@@ -13,10 +13,7 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
   final AccountRepository accountRepository;
 
   SearchUserBloc({@required this.accountRepository})
-      : assert(accountRepository != null);
-
-  @override
-  SearchUserState get initialState => UserNotFound();
+      : assert(accountRepository != null), super(UserNotFound());
 
   @override
   Stream<SearchUserState> mapEventToState(SearchUserEvent event) async* {

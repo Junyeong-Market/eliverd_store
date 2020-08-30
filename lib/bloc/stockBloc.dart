@@ -12,15 +12,14 @@ class StockBloc extends Bloc<StockEvent, StockState> {
   final StoreRepository storeRepository;
 
   StockBloc({@required this.storeRepository})
-      : assert(storeRepository != null);
-
-  @override
-  StockState get initialState => StockNotFetchedState();
+      : assert(storeRepository != null),
+        super(StockNotFetchedState());
 
   @override
   Stream<Transition<StockEvent, StockState>> transformEvents(
-      Stream<StockEvent> events,
-      TransitionFunction<StockEvent, StockState> transitionFn,) {
+    Stream<StockEvent> events,
+    TransitionFunction<StockEvent, StockState> transitionFn,
+  ) {
     return super.transformEvents(
       events.debounceTime(const Duration(milliseconds: 500)),
       transitionFn,
@@ -40,24 +39,26 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     }
   }
 
-  Stream<StockState> _mapStockLoadedToState(StockEvent event) async* {
+  Stream<StockState> _mapStockLoadedToState(LoadStock event) async* {
     final currentState = state;
     if (!_isStockAllFetched(currentState)) {
       try {
         if (currentState is! StockFetchSuccessState) {
-          final stocks = await storeRepository.fetchStock((event as LoadStock).store);
+          final stocks = await storeRepository.fetchStock(
+              event.store, event.name, event.category, event.orderBy);
 
           yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
           return;
-        }
-        if (currentState is StockFetchSuccessState) {
-          final stocks = await storeRepository.fetchStock((event as LoadStock).store);
+        } else {
+          final stocks = await storeRepository.fetchStock(
+              event.store, event.name, event.category, event.orderBy);
           yield stocks.isEmpty
-              ? currentState.copyWith(isAllFetched: true)
+              ? (currentState as StockFetchSuccessState)
+                  .copyWith(isAllFetched: true)
               : StockFetchSuccessState(
-            stocks: stocks,
-            isAllFetched: false,
-          );
+                  stocks: stocks,
+                  isAllFetched: false,
+                );
         }
       } catch (_) {
         yield StockFetchErrorState();
@@ -68,7 +69,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
   Stream<StockState> _mapStockAddedToState(AddStock event) async* {
     if (state is StockFetchSuccessState) {
       await storeRepository.addStock(
-          event.stock.store.id, event.stock.toJson());
+          event.stock.store.id, event.stock.toMutateRequestJson());
 
       final stocks = await storeRepository.fetchStock(event.stock.store);
 
@@ -78,9 +79,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
   Stream<StockState> _mapStockUpdatedToState(UpdateStock event) async* {
     if (state is StockFetchSuccessState) {
-      await storeRepository.updateStock(
-          event.stock.store.id, event.stock.toJson());
-
+      await storeRepository.updateStock(event.stock);
 
       final stocks = await storeRepository.fetchStock(event.stock.store);
 
@@ -90,8 +89,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
   Stream<StockState> _mapStockDeletedToState(DeleteStock event) async* {
     if (state is StockFetchSuccessState) {
-      await storeRepository.removeStock(
-          event.stock.store.id, event.stock.toJson());
+      await storeRepository.removeStock(event.stock);
 
       final stocks = await storeRepository.fetchStock(event.stock.store);
 

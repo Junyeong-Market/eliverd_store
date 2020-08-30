@@ -11,10 +11,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   final StoreRepository storeRepository;
 
   StoreBloc({@required this.storeRepository})
-      : assert(storeRepository != null);
-
-  @override
-  StoreState get initialState => StoreNotCreated();
+      : assert(storeRepository != null), super(StoreNotCreated());
 
   @override
   Stream<StoreState> mapEventToState(StoreEvent event) async* {
@@ -29,7 +26,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
   Stream<StoreState> _mapCreateStoreToState(CreateStore event) async* {
     try {
-      await storeRepository.createStore(event.store.toJson());
+      await storeRepository.createStore(event.store);
 
       yield StoreCreated();
     } catch (_) {

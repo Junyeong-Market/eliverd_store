@@ -1,12 +1,14 @@
-import 'package:Eliverd/common/string.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:Eliverd/bloc/events/authEvent.dart';
 import 'package:Eliverd/bloc/states/authState.dart';
 
-import 'package:Eliverd/models/models.dart';
 import 'package:Eliverd/resources/repositories/repositories.dart';
+
+import 'package:Eliverd/common/string.dart';
+
+import 'package:Eliverd/models/models.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -16,17 +18,13 @@ class AuthenticationBloc
   AuthenticationBloc(
       {@required this.accountRepository, @required this.storeRepository})
       : assert(accountRepository != null),
-        assert(storeRepository != null);
-
-  @override
-  AuthenticationState get initialState => NotAuthenticated();
+        assert(storeRepository != null),
+        super(NotAuthenticated());
 
   @override
   Stream<AuthenticationState> mapEventToState(
       AuthenticationEvent event) async* {
-    if (event is ValidateAuthentication) {
-      yield* _mapValidateAuthenticationToState(event);
-    } else if (event is CheckAuthentication) {
+    if (event is CheckAuthentication) {
       yield* _mapCheckAuthenticationToState(event);
     } else if (event is GrantAuthentication) {
       yield* _mapGrantAuthenticationToState(event);
@@ -35,55 +33,23 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapValidateAuthenticationToState(
-      ValidateAuthentication event) async* {
-    try {
-      final data = await accountRepository.validateSession();
-
-      if (data.isEmpty) {
-        yield NotAuthenticated();
-      }
-
-      final authenticatedUser = User(
-        userId: data['user_id'],
-        nickname: data['nickname'],
-        realname: data['realname'],
-        isSeller: data['is_seller'],
-      );
-
-      final stores = await Future.wait((data['stores'] as List)
-          .map((storeId) async => await storeRepository.getStore(storeId))
-          .toList());
-
-      yield Authenticated(authenticatedUser, stores);
-    } catch (_) {
-      yield AuthenticationError(ErrorMessages.loginErrorMessage);
-    }
-  }
-
   Stream<AuthenticationState> _mapCheckAuthenticationToState(
       CheckAuthentication event) async* {
-    final session = await accountRepository.createSession();
+    try {
+      final user = await accountRepository.validateSession();
 
-    if (session != null) {
-      final data = await accountRepository.validateSession();
+      if (user == null) {
+        yield NotAuthenticated();
 
-      if (data['is_seller'] == false) {
-        yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
+        return;
       }
 
-      final authenticatedUser = User(
-        userId: data['user_id'],
-        nickname: data['nickname'],
-        realname: data['realname'],
-        isSeller: data['is_seller'],
+      yield Authenticated(
+        user: user,
+        stores: user.stores,
       );
-
-      final stores = await Future.wait((data['stores'] as List)
-          .map((storeId) async => await storeRepository.getStore(storeId))
-          .toList());
-
-      yield Authenticated(authenticatedUser, stores);
+    } catch (_) {
+      yield NotAuthenticated();
     }
   }
 
@@ -95,26 +61,22 @@ class AuthenticationBloc
 
       if (session == null) {
         yield NotAuthenticated();
+
+        return;
       }
 
-      final data = await accountRepository.validateSession();
+      final user = await accountRepository.validateSession();
 
-      if (data['is_seller'] == false) {
-        yield AuthenticationError(ErrorMessages.disallowedToManageStoreMessage);
+      if (user == null) {
+        yield NotAuthenticated();
+
+        return;
       }
 
-      final authenticatedUser = User(
-        userId: data['user_id'],
-        nickname: data['nickname'],
-        realname: data['realname'],
-        isSeller: data['is_seller'],
+      yield Authenticated(
+        user: user,
+        stores: user.stores,
       );
-
-      final stores = await Future.wait((data['stores'] as List)
-          .map((storeId) async => await storeRepository.getStore(storeId))
-          .toList());
-
-      yield Authenticated(authenticatedUser, stores);
     } catch (_) {
       yield AuthenticationError(ErrorMessages.loginErrorMessage);
     }
