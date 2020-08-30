@@ -18,8 +18,8 @@ class PurchaseRepository {
     return data;
   }
 
-  Future<Order> fetchOrder(String orderId) async {
-    final data = await purchaseAPIClient.fetchOrder(orderId);
+  Future<List<PartialOrder>> fetchOrder(Store store, [int page]) async {
+    final data = await purchaseAPIClient.fetchOrder(store, page);
 
     return data;
   }

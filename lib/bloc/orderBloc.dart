@@ -10,19 +10,17 @@ import 'package:Eliverd/bloc/events/orderEvent.dart';
 import 'package:Eliverd/bloc/states/orderState.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
-  final AccountRepository accountRepository;
   final PurchaseRepository purchaseRepository;
 
-  OrderBloc(
-      {@required this.accountRepository, @required this.purchaseRepository})
+  OrderBloc({@required this.purchaseRepository})
       : assert(PurchaseRepository != null),
         super(OrderInitial());
 
   @override
   Stream<Transition<OrderEvent, OrderState>> transformEvents(
-      Stream<OrderEvent> events,
-      TransitionFunction<OrderEvent, OrderState> transitionFn,
-      ) {
+    Stream<OrderEvent> events,
+    TransitionFunction<OrderEvent, OrderState> transitionFn,
+  ) {
     return super.transformEvents(
       events.debounceTime(const Duration(seconds: 1)),
       transitionFn,
@@ -45,10 +43,46 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   }
 
   Stream<OrderState> _mapFetchOrderToState(FetchOrder event) async* {
-    final currentState = state;
+    var currentState = state;
+
+    if (currentState is OrderFetched && currentState.orders.first.store != event.store) {
+      currentState = OrderInitial();
+    }
 
     if (!_isOrderAllFetched(currentState)) {
       try {
+        if (currentState is! OrderFetched) {
+          yield OrderInitial();
+
+          final orders = await purchaseRepository.fetchOrder(event.store);
+
+          yield orders.isEmpty || orders.length != 20
+              ? OrderFetched(
+                  orders: orders,
+                  isAllFetched: true,
+                  page: 1,
+                )
+              : OrderFetched(
+                  orders: orders,
+                  isAllFetched: false,
+                  page: 2,
+                );
+        } else if (currentState is OrderFetched) {
+          final orders = await purchaseRepository.fetchOrder(
+              event.store, currentState.page);
+
+          yield orders.isEmpty || orders.length != 20
+              ? currentState.copyWith(
+                  orders: currentState.orders,
+                  isAllFetched: true,
+                  page: currentState.page,
+                )
+              : OrderFetched(
+                  orders: currentState.orders + orders,
+                  isAllFetched: false,
+                  page: currentState.page + 1,
+                );
+        }
       } catch (_) {
         yield OrderError();
       }

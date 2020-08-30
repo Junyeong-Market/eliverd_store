@@ -10,7 +10,19 @@ abstract class OrderEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchOrder extends OrderEvent {}
+class FetchOrder extends OrderEvent {
+  final Store store;
+
+  const FetchOrder({@required this.store});
+
+  @override
+  List<Object> get props => [store];
+
+  @override
+  String toString() {
+    return 'FetchOrder{ store: $store }';
+  }
+}
 
 class ProceedOrder extends OrderEvent {
   final List<Stock> items;

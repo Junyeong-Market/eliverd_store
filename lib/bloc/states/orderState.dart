@@ -11,13 +11,13 @@ abstract class OrderState extends Equatable {
 class OrderInitial extends OrderState {}
 
 class OrderFetched extends OrderState {
-  final List<Order> orders;
+  final List<PartialOrder> orders;
   final bool isAllFetched;
   final int page;
 
   const OrderFetched({this.orders, this.isAllFetched, this.page = 1});
 
-  OrderFetched copyWith({List<Order> orders, bool isAllFetched, int page}) {
+  OrderFetched copyWith({List<PartialOrder> orders, bool isAllFetched, int page}) {
     return OrderFetched(
       orders: orders,
       isAllFetched: isAllFetched,

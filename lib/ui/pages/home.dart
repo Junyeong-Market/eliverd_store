@@ -16,6 +16,7 @@ import 'package:Eliverd/common/key.dart';
 import 'package:Eliverd/ui/pages/add_stock.dart';
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/ui/widgets/stock.dart';
+import 'package:Eliverd/ui/pages/order_lookup.dart';
 
 class HomePage extends StatefulWidget {
   final Store store;
@@ -143,7 +144,16 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 22.0,
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OrderLookupPage(
+                      store: widget.store,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           ButtonTheme(
@@ -243,32 +253,31 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (BuildContext context, int index) {
           return index >= state.stocks.length
               ? Center(
-            child: Column(
-              children: <Widget>[
-                Divider(
-                  height: 16.0,
-                  indent: 160.0,
-                  endIndent: 160.0,
-                  thickness: 2.4,
-                  color: Colors.black12,
-                ),
-                Text(
-                  '현재 총합 ${state.stocks.length}개의 재고가 있습니다.',
-                  style: TextStyle(
-                    color: Colors.black26,
-                    fontWeight: FontWeight.w600,
+                  child: Column(
+                    children: <Widget>[
+                      Divider(
+                        height: 16.0,
+                        indent: 160.0,
+                        endIndent: 160.0,
+                        thickness: 2.4,
+                        color: Colors.black12,
+                      ),
+                      Text(
+                        '현재 총합 ${state.stocks.length}개의 재고가 있습니다.',
+                        style: TextStyle(
+                          color: Colors.black26,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          )
+                )
               : StockWidget(
-            stock: state.stocks[index],
-          );
+                  stock: state.stocks[index],
+                );
         },
-        itemCount: state.isAllFetched
-            ? state.stocks.length
-            : state.stocks.length + 1,
+        itemCount:
+            state.isAllFetched ? state.stocks.length : state.stocks.length + 1,
         controller: _scrollController,
       );
     } else {
