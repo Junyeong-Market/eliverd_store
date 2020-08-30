@@ -3,9 +3,9 @@ class TitleStrings {
   static final homeTitle = '상점용 엘리버드';
   static final signUpTitle = '회원가입';
   static final storeSelectionTitle = '님의 사업장을 선택해주세요.';
-  static final registerStoreTitle = '먼저 사업장을 등록하세요.';
-  static final addProductTitle = '재고 등록';
-  static final updateProductTitle = '재고 수정';
+  static final registerStoreTitle = '사업장을 등록하세요.';
+  static final addStockTitle = '재고 등록';
+  static final updateStockTitle = '재고 수정';
   static final registerLocationTitle = '위치 등록';
   static final searchRegisterersTitle = '사업자 검색';
   static final searchManufacturerTitle = '제조사 검색';
@@ -101,7 +101,7 @@ class HomePageStrings {
 }
 
 class ProductStrings {
-  static final barcodeDescWhenImcompleted = '바코드가 있다면 등록하세요.';
+  static final barcodeDescWhenImcompleted = '바코드를 등록하세요.';
   static final nameDescWhenImcompleted = '상품 이름을 입력하세요.';
   static final priceDescWhenImcompleted = '상품 가격을 입력하세요.';
   static final manufacturerDescWhenImcompleted = '제조사를 추가하세요.';

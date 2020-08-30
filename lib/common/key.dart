@@ -33,7 +33,7 @@ class HomePageKeys {
   static final stockList = Key('__HomeStockList__');
   static final signOutBtn = Key('__HomeSignOutButton__');
   static final searchProductBtn = Key('__HomeSearchProductButton__');
-  static final addProductBtn = Key('__HomeAddProductButton__');
+  static final addStockBtn = Key('__HomeAddStockButton__');
   static final currentStoreName = Key('__HomeCurrentStoreName__');
 }
 
@@ -41,14 +41,14 @@ class StoreSelectionPageKeys {
   static final storeSelectionPage = Key('__StoreSelectionPage__');
 }
 
-class AddProductPageKeys {
-  static final addProductPage = Key('__AddProductPage__');
-  static final barcodeImage = Key('__AddProductBarcodeImage__');
-  static final productNameTextField = Key('__AddProductNameTextField__');
-  static final productPriceTextField = Key('__AddProductPriceTextField__');
-  static final productManufacturerTextField = Key('__AddProductManufacturerTextField__');
-  static final productAmountTextField = Key('__AddProductAmountTextField__');
-  static final productSubmitBtn = Key('__AddProductSubmitButton__');
+class AddStockPageKeys {
+  static final addStockPage = Key('__AddStockPage__');
+  static final barcodeImage = Key('__AddStockBarcodeImage__');
+  static final productNameTextField = Key('__AddStockNameTextField__');
+  static final productPriceTextField = Key('__AddStockPriceTextField__');
+  static final productManufacturerTextField = Key('__AddStockManufacturerTextField__');
+  static final productAmountTextField = Key('__AddStockAmountTextField__');
+  static final productSubmitBtn = Key('__AddStockSubmitButton__');
 }
 
 class RegisterStorePageKeys {
@@ -56,12 +56,12 @@ class RegisterStorePageKeys {
   static final registerStoreBtn = Key('__RegisterStoreButton__');
 }
 
-class UpdateProductPageKeys {
-  static final updateProductPage = Key('__UpdateProductPage__');
-  static final barcodeImage = Key('__UpdateProductBarcodeImage__');
-  static final productNameTextField = Key('__UpdateProductNameTextField__');
-  static final productPriceTextField = Key('__UpdateProductPriceTextField__');
-  static final productManufacturerTextField = Key('__UpdateProductManufacturerTextField__');
-  static final productAmountTextField = Key('__UpdateProductAmountTextField__');
-  static final productSubmitBtn = Key('__UpdateProductSubmitButton__');
+class UpdateStockPageKeys {
+  static final updateStockPage = Key('__UpdateStockPage__');
+  static final barcodeImage = Key('__UpdateStockBarcodeImage__');
+  static final productNameTextField = Key('__UpdateStockNameTextField__');
+  static final productPriceTextField = Key('__UpdateStockPriceTextField__');
+  static final productManufacturerTextField = Key('__UpdateStockManufacturerTextField__');
+  static final productAmountTextField = Key('__UpdateStockAmountTextField__');
+  static final productSubmitBtn = Key('__UpdateStockSubmitButton__');
 }
