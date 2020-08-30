@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 import 'package:Eliverd/models/models.dart';
 
@@ -11,11 +12,19 @@ abstract class StockEvent extends Equatable {
 
 class LoadStock extends StockEvent {
   final Store store;
+  final String category;
+  final String name;
+  final String orderBy;
 
-  const LoadStock(this.store);
+  const LoadStock({@required this.store, this.category, this.name, this.orderBy});
 
   @override
-  List<Object> get props => [store];
+  List<Object> get props => [store, category, name, orderBy];
+
+  @override
+  String toString() {
+    return 'LoadStock{ store: $store, category: $category, name: $name, orderBy: $orderBy }';
+  }
 }
 
 class AddStock extends StockEvent {
@@ -25,6 +34,11 @@ class AddStock extends StockEvent {
 
   @override
   List<Object> get props => [stock];
+
+  @override
+  String toString() {
+    return 'AddStock{ stock: $stock }';
+  }
 }
 
 class UpdateStock extends StockEvent {
@@ -34,6 +48,11 @@ class UpdateStock extends StockEvent {
 
   @override
   List<Object> get props => [stock];
+
+  @override
+  String toString() {
+    return 'UpdateStock{ stock: $stock }';
+  }
 }
 
 class DeleteStock extends StockEvent {
@@ -43,4 +62,9 @@ class DeleteStock extends StockEvent {
 
   @override
   List<Object> get props => [stock];
+
+  @override
+  String toString() {
+    return 'DeleteStock{ stock: $stock }';
+  }
 }
