@@ -68,11 +68,6 @@ class EliverdStore extends StatelessWidget {
                 httpClient: http.Client(),
               ),
             ),
-            accountRepository: AccountRepository(
-              accountAPIClient: AccountAPIClient(
-                httpClient: http.Client(),
-              ),
-            ),
           ),
         ),
       ],
