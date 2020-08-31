@@ -35,10 +35,6 @@ class AccountAPIClient {
   Future<String> createSession([String userId, String password]) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (userId == null || password == null) {
-      return null;
-    }
-
     final Map<String, dynamic> user = {
       'user_id': prefs.getString('userId') ?? userId,
       'password': prefs.getString('password') ?? password,
@@ -46,6 +42,10 @@ class AccountAPIClient {
 
     prefs.setString('userId', userId);
     prefs.setString('password', password);
+
+    if (userId.isEmpty || password.isEmpty) {
+      return null;
+    }
 
     final url = '$baseUrl/account/session/';
     final res = await this.httpClient.post(
@@ -68,34 +68,6 @@ class AccountAPIClient {
     prefs.setString('session', session);
 
     return session;
-  }
-
-  Future<Map<String, dynamic>> vs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    final session = prefs.getString('session');
-
-    if (session == null) {
-      prefs.remove('session');
-      return null;
-    }
-
-    final url = '$baseUrl/account/session/';
-    final res = await this.httpClient.get(
-      url,
-      headers: {
-        HttpHeaders.authorizationHeader: session,
-      },
-    );
-
-    if (res.statusCode != 200) {
-      prefs.remove('session');
-      throw Exception('Error occurred while validating session');
-    }
-
-    final decoded = utf8.decode(res.bodyBytes);
-
-    return json.decode(decoded);
   }
 
   Future<User> validateSession() async {
@@ -188,7 +160,7 @@ class AccountAPIClient {
 
     return json
         .decode(decoded)['results']
-        .map<User>((user) => User.fromJson(user))
+        .map<User>((user) => User.fromJsonWithoutStore(user))
         .toList();
   }
 
