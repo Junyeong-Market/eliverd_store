@@ -1,3 +1,4 @@
+import 'package:Eliverd/ui/pages/register_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +49,39 @@ class _StoreSelectionPageState extends State<StoreSelectionPage> {
               context.bloc<AuthenticationBloc>().add(RevokeAuthentication());
             },
             title: '상점을 선택하세요.',
+            actions: [
+              ButtonTheme(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                minWidth: 0,
+                height: 0,
+                child: FlatButton(
+                  padding: EdgeInsets.only(
+                    right: 16.0,
+                  ),
+                  key: HomePageKeys.addStockBtn,
+                  textColor: Colors.white,
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  child: Text(
+                    '􀅼',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w200,
+                      fontSize: 22.0,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RegisterStorePage(
+                          stores: widget.stores,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
           body: GridView.builder(
             padding: EdgeInsets.only(

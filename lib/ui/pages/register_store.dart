@@ -1,5 +1,4 @@
-import 'package:Eliverd/ui/pages/home.dart';
-import 'package:Eliverd/ui/widgets/registerers.dart';
+import 'package:Eliverd/ui/pages/store_selection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,8 +19,13 @@ import 'package:Eliverd/ui/widgets/form_text.dart';
 import 'package:Eliverd/ui/widgets/form_text_field.dart';
 import 'package:Eliverd/ui/widgets/search_user.dart';
 import 'package:Eliverd/ui/widgets/search_location.dart';
+import 'package:Eliverd/ui/widgets/registerers.dart';
 
 class RegisterStorePage extends StatefulWidget {
+  final List<Store> stores;
+
+  const RegisterStorePage({Key key, @required this.stores}) : super(key: key);
+
   @override
   _RegisterStorePageState createState() => _RegisterStorePageState();
 }
@@ -84,8 +88,8 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(
-                store: _createdStore,
+              builder: (context) => StoreSelectionPage(
+                stores: widget.stores,
               ),
             ),
           );
@@ -194,8 +198,8 @@ class _RegisterStorePageState extends State<RegisterStorePage> {
             ],
           ),
           bottomNavigationBar: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 8.0,
+            padding: EdgeInsets.all(
+              8.0,
             ),
             child: BottomAppBar(
               color: Colors.transparent,

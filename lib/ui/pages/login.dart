@@ -15,7 +15,6 @@ import 'package:Eliverd/common/color.dart';
 import 'package:Eliverd/common/string.dart';
 import 'package:Eliverd/common/key.dart';
 
-import 'package:Eliverd/ui/pages/home.dart';
 import 'package:Eliverd/ui/pages/sign_up.dart';
 
 class LoginPage extends StatefulWidget {
@@ -57,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
         }
 
         if (state is Authenticated) {
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => _buildNextPageByStoreState(state)),
@@ -279,15 +278,13 @@ class _LoginPageState extends State<LoginPage> {
     final stores = (state as Authenticated).stores;
 
     if (stores.length == 0) {
-      return RegisterStorePage();
-    } else if (stores.length >= 2) {
-      return StoreSelectionPage(
+      return RegisterStorePage(
         stores: stores,
       );
     }
 
-    return HomePage(
-      store: stores[0],
+    return StoreSelectionPage(
+      stores: stores,
     );
   }
 }
