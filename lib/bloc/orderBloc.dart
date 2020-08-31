@@ -45,45 +45,48 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Stream<OrderState> _mapFetchOrderToState(FetchOrder event) async* {
     var currentState = state;
 
-    if (currentState is OrderFetched && currentState.orders.first.store != event.store) {
+    if (currentState is OrderFetched &&
+        currentState.store != event.store) {
       currentState = OrderInitial();
     }
 
     if (!_isOrderAllFetched(currentState)) {
       try {
         if (currentState is! OrderFetched) {
-          yield OrderInitial();
+          final orders = await purchaseRepository.fetchOrder(event.store, 1);
 
-          final orders = await purchaseRepository.fetchOrder(event.store);
-
-          yield orders.isEmpty || orders.length != 20
+          yield orders.isEmpty || orders.length < 20
               ? OrderFetched(
+                  store: event.store,
                   orders: orders,
                   isAllFetched: true,
                   page: 1,
                 )
               : OrderFetched(
+                  store: event.store,
                   orders: orders,
                   isAllFetched: false,
                   page: 2,
                 );
-        } else if (currentState is OrderFetched) {
+        } else {
           final orders = await purchaseRepository.fetchOrder(
-              event.store, currentState.page);
+              event.store, (currentState as OrderFetched).page);
 
-          yield orders.isEmpty || orders.length != 20
-              ? currentState.copyWith(
-                  orders: currentState.orders,
+          yield orders.isEmpty || orders.length < 20
+              ? (currentState as OrderFetched).copyWith(
+                  orders: (currentState as OrderFetched).orders,
                   isAllFetched: true,
-                  page: currentState.page,
+                  page: (currentState as OrderFetched).page,
                 )
               : OrderFetched(
-                  orders: currentState.orders + orders,
+                  store: event.store,
+                  orders: (currentState as OrderFetched).orders + orders,
                   isAllFetched: false,
-                  page: currentState.page + 1,
+                  page: (currentState as OrderFetched).page + 1,
                 );
         }
-      } catch (_) {
+      } catch (e) {
+        print(e.toString());
         yield OrderError();
       }
     }

@@ -40,15 +40,24 @@ class StockBloc extends Bloc<StockEvent, StockState> {
   }
 
   Stream<StockState> _mapStockLoadedToState(LoadStock event) async* {
-    final currentState = state;
+    var currentState = state;
+
+    if (currentState is StockFetchSuccessState &&
+        currentState.store != event.store) {
+      currentState = StockNotFetchedState();
+    }
+
     if (!_isStockAllFetched(currentState)) {
       try {
         if (currentState is! StockFetchSuccessState) {
           final stocks = await storeRepository.fetchStock(
               event.store, event.name, event.category, event.orderBy);
 
-          yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
-          return;
+          yield StockFetchSuccessState(
+            store: event.store,
+            stocks: stocks,
+            isAllFetched: false,
+          );
         } else {
           final stocks = await storeRepository.fetchStock(
               event.store, event.name, event.category, event.orderBy);
@@ -56,11 +65,13 @@ class StockBloc extends Bloc<StockEvent, StockState> {
               ? (currentState as StockFetchSuccessState)
                   .copyWith(isAllFetched: true)
               : StockFetchSuccessState(
+                  store: event.store,
                   stocks: stocks,
                   isAllFetched: false,
                 );
         }
-      } catch (_) {
+      } catch (e) {
+        print(e.toString());
         yield StockFetchErrorState();
       }
     }
@@ -73,7 +84,11 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
       final stocks = await storeRepository.fetchStock(event.stock.store);
 
-      yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
+      yield StockFetchSuccessState(
+        store: event.stock.store,
+        stocks: stocks,
+        isAllFetched: false,
+      );
     }
   }
 
@@ -83,7 +98,11 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
       final stocks = await storeRepository.fetchStock(event.stock.store);
 
-      yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
+      yield StockFetchSuccessState(
+        store: event.stock.store,
+        stocks: stocks,
+        isAllFetched: false,
+      );
     }
   }
 
@@ -93,7 +112,11 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
       final stocks = await storeRepository.fetchStock(event.stock.store);
 
-      yield StockFetchSuccessState(stocks: stocks, isAllFetched: false);
+      yield StockFetchSuccessState(
+        store: event.stock.store,
+        stocks: stocks,
+        isAllFetched: false,
+      );
     }
   }
 

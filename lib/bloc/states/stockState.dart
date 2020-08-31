@@ -13,25 +13,26 @@ abstract class StockState extends Equatable {
 class StockNotFetchedState extends StockState {}
 
 class StockFetchSuccessState extends StockState {
+  final Store store;
   final List<Stock> stocks;
   final bool isAllFetched;
 
-  const StockFetchSuccessState({@required this.stocks, this.isAllFetched})
-      : assert(stocks != null);
+  const StockFetchSuccessState({@required this.store, @required this.stocks, this.isAllFetched});
 
-  StockFetchSuccessState copyWith({List<Stock> stocks, bool isAllFetched}) {
+  StockFetchSuccessState copyWith({Store store, List<Stock> stocks, bool isAllFetched}) {
     return StockFetchSuccessState(
+      store: store,
       stocks: stocks,
       isAllFetched: isAllFetched,
     );
   }
 
   @override
-  List<Object> get props => [stocks, isAllFetched];
+  List<Object> get props => [store, stocks, isAllFetched];
 
   @override
   String toString() {
-    return 'StockFetchSuccessState{ stocks: $stocks, isAllFetched: $isAllFetched }';
+    return 'StockFetchSuccessState{ store: $store, stocks: $stocks, isAllFetched: $isAllFetched }';
   }
 }
 

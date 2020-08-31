@@ -1,5 +1,6 @@
 import 'package:Eliverd/models/models.dart';
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 abstract class OrderState extends Equatable {
   const OrderState();
@@ -11,14 +12,16 @@ abstract class OrderState extends Equatable {
 class OrderInitial extends OrderState {}
 
 class OrderFetched extends OrderState {
+  final Store store;
   final List<PartialOrder> orders;
   final bool isAllFetched;
   final int page;
 
-  const OrderFetched({this.orders, this.isAllFetched, this.page = 1});
+  const OrderFetched({@required this.store, @required this.orders, @required this.isAllFetched, this.page = 1});
 
-  OrderFetched copyWith({List<PartialOrder> orders, bool isAllFetched, int page}) {
+  OrderFetched copyWith({Store store, List<PartialOrder> orders, bool isAllFetched, int page}) {
     return OrderFetched(
+      store: store,
       orders: orders,
       isAllFetched: isAllFetched,
       page: page,
@@ -26,7 +29,12 @@ class OrderFetched extends OrderState {
   }
 
   @override
-  List<Object> get props => [orders, isAllFetched, page];
+  List<Object> get props => [store, orders, isAllFetched, page];
+
+  @override
+  String toString() {
+    return 'OrderFetched{ store: $store, orders: $orders, isAllFetched: $isAllFetched, page: $page }';
+  }
 }
 
 class OrderInProgress extends OrderState {
