@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,15 +27,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _scrollController = ScrollController();
-  final _scrollThreshold = 200.0;
-
-  Completer<void> _refreshCompleter;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    _refreshCompleter = Completer<void>();
 
     context.bloc<StockBloc>().add(LoadStock(
           store: widget.store,
@@ -55,9 +49,6 @@ class _HomePageState extends State<HomePage> {
           context.bloc<StockBloc>().add(LoadStock(
                 store: widget.store,
               ));
-
-          _refreshCompleter?.complete();
-          _refreshCompleter = Completer();
         }
       },
       builder: (context, state) {
@@ -71,7 +62,7 @@ class _HomePageState extends State<HomePage> {
             ),
             children: [
               SizedBox(
-                height: kToolbarHeight + 120.0,
+                height: kToolbarHeight + height * 0.15,
               ),
               CupertinoTextField(
                 placeholder: '검색할 상품의 이름을 입력해주세요.',
@@ -103,28 +94,6 @@ class _HomePageState extends State<HomePage> {
         },
         title: widget.store.name,
         actions: <Widget>[
-          ButtonTheme(
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            minWidth: 0,
-            height: 0,
-            child: FlatButton(
-              padding: EdgeInsets.only(
-                right: 8.0,
-              ),
-              key: HomePageKeys.searchProductBtn,
-              textColor: Colors.white,
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              child: Text(
-                '􀌆',
-                style: TextStyle(
-                  fontWeight: FontWeight.w200,
-                  fontSize: 22.0,
-                ),
-              ),
-              onPressed: () {},
-            ),
-          ),
           ButtonTheme(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             minWidth: 0,
@@ -234,7 +203,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else if (state is StockFetchSuccessState) {
-      if (state.stocks.length == 0) {
+      if (state.stocks == null || state.stocks?.length == 0) {
         return Center(
           child: Text(
             HomePageStrings.stockEmptyMsg,
@@ -242,6 +211,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.black26,
               fontWeight: FontWeight.w600,
             ),
+            textAlign: TextAlign.center,
           ),
         );
       }
@@ -288,12 +258,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onScroll() {
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.position.pixels;
-    if (maxScroll - currentScroll <= _scrollThreshold) {
+    if (_isTop || _isBottom)
       context.bloc<StockBloc>().add(LoadStock(
-            store: widget.store,
-          ));
-    }
+        store: widget.store,
+      ));
+  }
+
+  bool get _isBottom {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= maxScroll;
+  }
+
+  bool get _isTop {
+    final minScroll = _scrollController.position.minScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll <= minScroll;
   }
 }

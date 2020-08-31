@@ -41,6 +41,8 @@ class _CheckoutStockPageState extends State<CheckoutStockPage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return BlocConsumer<OrderBloc, OrderState>(
       builder: (context, state) {
         return Scaffold(
@@ -51,7 +53,7 @@ class _CheckoutStockPageState extends State<CheckoutStockPage> {
           ),
           body: Padding(
             padding: EdgeInsets.only(
-              top: kToolbarHeight + 128.0,
+              top: kToolbarHeight + height * 0.15,
             ),
             child: state is OrderInProgress
                 ? WebView(

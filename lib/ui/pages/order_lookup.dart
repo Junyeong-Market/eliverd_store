@@ -36,10 +36,12 @@ class _OrderLookupPageState extends State<OrderLookupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (state is OrderFetched && !state.isAllFetched && _isBottom) {
+          if (state is OrderFetched && !state.isAllFetched && (_isTop || _isBottom)) {
             context.bloc<OrderBloc>().add(FetchOrder(
                   store: widget.store,
                 ));
@@ -57,7 +59,7 @@ class _OrderLookupPageState extends State<OrderLookupPage> {
           ),
           body: Padding(
             padding: EdgeInsets.only(
-              top: kToolbarHeight + 128.0,
+              top: kToolbarHeight + height * 0.15,
               left: 16.0,
               right: 16.0,
             ),
@@ -161,7 +163,7 @@ class _OrderLookupPageState extends State<OrderLookupPage> {
   }
 
   void _onScroll() {
-    if (_isBottom)
+    if (_isTop || _isBottom)
       context.bloc<OrderBloc>().add(FetchOrder(
             store: widget.store,
           ));
@@ -171,5 +173,11 @@ class _OrderLookupPageState extends State<OrderLookupPage> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
     return currentScroll >= maxScroll;
+  }
+
+  bool get _isTop {
+    final minScroll = _scrollController.position.minScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll <= minScroll;
   }
 }
