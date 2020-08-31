@@ -23,9 +23,15 @@ flutter run
 
 Android Studio, Intellij IDEA, VS Code 등의 IDE를 이용하면 더 편리하게 실행할 수 있습니다!
 
-## 🏗️ 디자인
+## 📌 기능 소개
 
-<img src="doc/images/running_app.gif" width="281.25" height="500.25">
+|![재고 추가](/docs/a.gif)|![재고 수정](/docs/b.gif)|![재고 삭제](/docs/c.gif)|
+|-|-|-|
+|**재고 추가**|**재고 수정**|**재고 삭제**|
+
+|![재고 검색](/docs/d.gif)|![재고 결제](/docs/e.gif)|![주문 내역 조회](/docs/f.gif)|
+|-|-|-|
+|**재고 검색**|**재고 결제**|**주문 내역 조회**|
 
 ## ✏️ 기여 방법
 

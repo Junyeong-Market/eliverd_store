@@ -9,7 +9,7 @@ pubspec.lock
 
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
-doc/api/
+docs/api/
 
 # Avoid committing generated Javascript files:
 *.dart.js
@@ -36,7 +36,7 @@ pubspec.lock
 
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
-doc/api/
+docs/api/
 
 # Avoid committing generated Javascript files:
 *.dart.js
