@@ -52,7 +52,7 @@ class _UpdateStockDialogState extends State<UpdateStockDialog> {
     final height = MediaQuery.of(context).size.height;
 
     return Container(
-      height: height * 0.6,
+      height: height * 0.7,
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,

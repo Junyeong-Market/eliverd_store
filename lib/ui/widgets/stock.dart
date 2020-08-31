@@ -208,14 +208,16 @@ class _StockWidgetState extends State<StockWidget> {
                         children: <Widget>[
                           Row(
                             children: [
-                              Text(
-                                widget.stock.product.name,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
+                              Flexible(
+                                child: Text(
+                                  widget.stock.product.name,
+                                  maxLines: 1,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18.0,
+                                  ),
                                 ),
                               ),
                               SizedBox(

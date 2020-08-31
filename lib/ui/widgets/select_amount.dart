@@ -38,7 +38,7 @@ class _SelectAmountDialogState extends State<SelectAmountDialog> {
     final height = MediaQuery.of(context).size.height;
 
     return Container(
-      height: height * 0.4,
+      height: height * 0.45,
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,

@@ -43,9 +43,9 @@ class StoreWidget extends StatelessWidget {
         Text(
           store.registerers.first.realname +
               ((store.registerers.length > 1)
-                  ? '외 ${store.registerers.length - 1}명의'
+                  ? ' 외 ${store.registerers.length - 1}명의'
                   : '') +
-              ' 사업자가 운영 중',
+              ' 사업자',
           maxLines: 1,
           textAlign: TextAlign.right,
           overflow: TextOverflow.ellipsis,

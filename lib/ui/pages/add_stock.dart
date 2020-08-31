@@ -108,9 +108,7 @@ class _AddStockPageState extends State<AddStockPage> {
             ],
           ),
           bottomNavigationBar: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 8.0,
-            ),
+            padding: EdgeInsets.all(8.0),
             child: BottomAppBar(
               color: Colors.transparent,
               elevation: 0.0,
@@ -209,8 +207,8 @@ class _AddStockPageState extends State<AddStockPage> {
             ),
             Center(
               child: Container(
-                height: height / 4.8,
                 width: width,
+                height: 200.0,
                 child: CupertinoButton(
                   child: Image(
                     image: AssetImage('assets/images/camera.png'),
@@ -564,9 +562,7 @@ class _AddStockPageState extends State<AddStockPage> {
             fontSize: 20.0,
           ),
         ),
-        onPressed: _category != null
-            ? _submitProduct
-            : null,
+        onPressed: _category != null ? _submitProduct : null,
         borderRadius: BorderRadius.circular(10.0),
         padding: EdgeInsets.symmetric(vertical: 16.0),
       );

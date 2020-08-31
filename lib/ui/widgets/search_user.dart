@@ -33,7 +33,7 @@ class _SearchUserDialogState extends State<SearchUserDialog> {
       },
       builder: (context, state) {
         return Container(
-          height: height * 0.8,
+          height: height * 0.9,
           padding: EdgeInsets.only(
             left: 16.0,
             right: 16.0,

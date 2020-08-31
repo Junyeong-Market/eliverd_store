@@ -21,7 +21,7 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog> {
     final height = MediaQuery.of(context).size.height;
 
     return Container(
-      height: height * 0.7,
+      height: height * 0.45,
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,
@@ -63,14 +63,15 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog> {
                 height: 16.0,
               ),
               Container(
-                height: height * 0.5,
+                height: height * 0.2,
                 child: GridView.builder(
+                  scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.all(0.0),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: 2,
                     crossAxisSpacing: 4,
                     mainAxisSpacing: 4,
-                    childAspectRatio: 1,
+                    childAspectRatio: 0.5,
                   ),
                   itemBuilder: (context, index) {
                     return InkWell(
