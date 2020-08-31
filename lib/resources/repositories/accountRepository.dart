@@ -39,11 +39,6 @@ class AccountRepository {
     return user;
   }
 
-  Future<Map<String, dynamic>> vs() async {
-    final data = await accountAPIClient.vs();
-    return data;
-  }
-
   Future<void> deleteSession() async {
     await accountAPIClient.deleteSession();
   }
