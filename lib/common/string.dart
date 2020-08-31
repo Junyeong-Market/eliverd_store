@@ -97,7 +97,7 @@ class HomePageStrings {
   static final deleteProductDesc = '재고 폐기';
 
   static final fetchingStockMsg = '재고 목록을 불러오는 중입니다. 잠시만 기다려주세요.';
-  static final stockEmptyMsg = '재고가 텅 비었네요😏. 􀅼 버튼을 클릭해서 재고를 추가해보세요!';
+  static final stockEmptyMsg = '재고가 텅 비었네요😏.\n􀅼 버튼을 클릭해서 재고를 추가해보세요!';
 }
 
 class ProductStrings {
