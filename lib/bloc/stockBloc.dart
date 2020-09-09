@@ -45,6 +45,8 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     if (currentState is StockFetchSuccessState &&
         currentState.store != event.store) {
       currentState = StockNotFetchedState();
+
+      yield StockNotFetchedState();
     }
 
     if (!_isStockAllFetched(currentState)) {
@@ -70,8 +72,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
                   isAllFetched: false,
                 );
         }
-      } catch (e) {
-        print(e.toString());
+      } catch (_) {
         yield StockFetchErrorState();
       }
     }

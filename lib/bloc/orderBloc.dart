@@ -48,6 +48,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     if (currentState is OrderFetched &&
         currentState.store != event.store) {
       currentState = OrderInitial();
+
+      yield OrderInitial();
     }
 
     if (!_isOrderAllFetched(currentState)) {
