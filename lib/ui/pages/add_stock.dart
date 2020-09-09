@@ -82,7 +82,7 @@ class _AddStockPageState extends State<AddStockPage> {
             ),
             children: <Widget>[
               SizedBox(
-                height: kToolbarHeight + 128.0,
+                height: kToolbarHeight + height * 0.15,
               ),
               _buildRegisterBarcodeSection(width, height),
               _buildBarcodeSection(width, height),

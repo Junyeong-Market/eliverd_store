@@ -45,19 +45,23 @@ class Header extends PreferredSize {
             elevation: 0.0,
             actions: actions,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 20.0,
-            ),
-            child: Text(
-              title,
-              style: const TextStyle(
-                backgroundColor: eliverdColor,
-                color: Colors.white,
-                fontSize: 36.0,
-                fontWeight: FontWeight.bold,
+          Flexible(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 20.0,
               ),
-              textAlign: TextAlign.left,
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  backgroundColor: eliverdColor,
+                  color: Colors.white,
+                  fontSize: 36.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+              ),
             ),
           ),
         ],

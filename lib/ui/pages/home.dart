@@ -14,7 +14,7 @@ import 'package:Eliverd/common/key.dart';
 import 'package:Eliverd/ui/pages/add_stock.dart';
 import 'package:Eliverd/ui/widgets/header.dart';
 import 'package:Eliverd/ui/widgets/stock.dart';
-import 'package:Eliverd/ui/pages/order_lookup.dart';
+import 'package:Eliverd/ui/pages/delivery_queue.dart';
 
 class HomePage extends StatefulWidget {
   final Store store;
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               child: Text(
-                '􀈫',
+                '􀐚',
                 style: TextStyle(
                   fontWeight: FontWeight.w200,
                   fontSize: 22.0,
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OrderLookupPage(
+                    builder: (context) => DeliveryQueuePage(
                       store: widget.store,
                     ),
                   ),
