@@ -28,6 +28,8 @@ class StoreSelectionPage extends StatefulWidget {
 class _StoreSelectionPageState extends State<StoreSelectionPage> {
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is! Authenticated) {
@@ -85,7 +87,7 @@ class _StoreSelectionPageState extends State<StoreSelectionPage> {
           ),
           body: GridView.builder(
             padding: EdgeInsets.only(
-              top: kToolbarHeight + 120.0,
+              top: kToolbarHeight + height * 0.15,
               left: 16.0,
               right: 16.0,
             ),

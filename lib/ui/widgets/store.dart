@@ -10,68 +10,74 @@ class StoreWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          width: height * 0.22,
-          height: height * 0.22,
-          decoration: BoxDecoration(
-            color: Colors.black12,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Center(
-            child:
-            Text(
-              store.name,
-              maxLines: 1,
-              textAlign: TextAlign.left,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 18.0,
+        Expanded(
+          flex: 3,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Center(
+              child:
+              Text(
+                store.name,
+                maxLines: 1,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0,
+                ),
               ),
             ),
           ),
         ),
-        SizedBox(
-          height: 8.0,
-        ),
-        Text(
-          store.registerers.first.realname +
-              ((store.registerers.length > 1)
-                  ? ' 외 ${store.registerers.length - 1}명의'
-                  : '') +
-              ' 사업자',
-          maxLines: 1,
-          textAlign: TextAlign.right,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 14.0,
-          ),
-        ),
-        Text(
-          '사업자등록번호: ${formattedRegistererNumber(store.registeredNumber)}',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 11.0,
-          ),
-        ),
-        Text(
-          store.description,
-          maxLines: 3,
-          textAlign: TextAlign.left,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.black45,
-            fontWeight: FontWeight.w500,
-            fontSize: 13.0,
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 8.0,
+              ),
+              Text(
+                store.registerers.first.realname +
+                    ((store.registerers.length > 1)
+                        ? ' 외 ${store.registerers.length - 1}명의'
+                        : '') +
+                    ' 사업자',
+                maxLines: 1,
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.0,
+                ),
+              ),
+              Text(
+                '사업자등록번호: ${formattedRegistererNumber(store.registeredNumber)}',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 11.0,
+                ),
+              ),
+              Text(
+                store.description,
+                maxLines: 3,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.black45,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13.0,
+                ),
+              ),
+            ],
           ),
         ),
       ],
