@@ -188,16 +188,6 @@ class Registerer extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: width / 240.0),
-                      Text(
-                        user.isSeller
-                            ? BottomSheetStrings.isSellerText
-                            : BottomSheetStrings.isCustomerText,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black54,
-                          fontSize: 16.0,
-                        ),
-                      ),
                       Visibility(
                         child: Text(
                           isSelected != null ? BottomSheetStrings.selected : '',

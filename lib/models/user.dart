@@ -8,25 +8,23 @@ class User extends Equatable {
   final String password;
   final String nickname;
   final String realname;
-  final bool isSeller;
   final List<Store> stores;
 
-  const User(
-      {this.pid,
-      this.userId,
-      this.password,
-      this.nickname,
-      this.realname,
-      this.isSeller,
-      this.stores});
+  const User({
+    this.pid,
+    this.userId,
+    this.password,
+    this.nickname,
+    this.realname,
+    this.stores,
+  });
 
   @override
-  List<Object> get props =>
-      [pid, userId, password, nickname, realname, isSeller, stores];
+  List<Object> get props => [pid, userId, password, nickname, realname, stores];
 
   @override
   String toString() {
-    return 'User{ pid: $pid, userId: $userId, password: $password, nickname: $nickname, realname: $realname, isSeller: $isSeller, stores: $stores }';
+    return 'User{ pid: $pid, userId: $userId, password: $password, nickname: $nickname, realname: $realname, stores: $stores }';
   }
 
   static User fromJson(dynamic json) {
@@ -36,19 +34,7 @@ class User extends Equatable {
       password: json['password'],
       nickname: json['nickname'],
       realname: json['realname'],
-      isSeller: json['is_seller'],
       stores: json['stores'].map<Store>((store) => Store.fromJson(store)).toList(),
-    );
-  }
-
-  static User fromJsonWithoutStore(dynamic json) {
-    return User(
-      pid: json['pid'],
-      userId: json['user_id'],
-      password: json['password'],
-      nickname: json['nickname'],
-      realname: json['realname'],
-      isSeller: json['is_seller'],
     );
   }
 
@@ -58,8 +44,17 @@ class User extends Equatable {
         'password': password,
         'nickname': nickname,
         'realname': realname,
-        'is_seller': isSeller,
       };
+
+  static User fromJsonWithoutStore(dynamic json) {
+    return User(
+      pid: json['pid'],
+      userId: json['user_id'],
+      password: json['password'],
+      nickname: json['nickname'],
+      realname: json['realname'],
+    );
+  }
 }
 
 class Session extends Equatable {
