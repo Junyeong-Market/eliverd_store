@@ -21,6 +21,10 @@ class PartialOrderWidget extends StatelessWidget {
             orderedStock.stock.price * orderedStock.amount)
         .reduce((a, b) => a + b);
 
+    final simplifiedStocks = partialOrder.stocks.length >= 3
+        ? partialOrder.stocks.sublist(0, 2)
+        : partialOrder.stocks;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -29,10 +33,22 @@ class PartialOrderWidget extends StatelessWidget {
           thickness: 1.0,
           color: Colors.black,
         ),
-        for (var orderedStock in partialOrder.stocks)
+        for (var orderedStock in simplifiedStocks)
           StockOnOrder(
             orderedStock: orderedStock,
           ),
+        Visibility(
+          child: Text(
+            '외 ${partialOrder.stocks.length - 2}개의 상품',
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18.0,
+            ),
+          ),
+          maintainSize: false,
+          visible: partialOrder.stocks.length >= 3,
+        ),
         SizedBox(
           height: 8.0,
         ),
@@ -200,7 +216,14 @@ class PartialOrderWidget extends StatelessWidget {
           ],
         ),
         SizedBox(
+          height: 8.0,
+        ),
+        Divider(
           height: 4.0,
+          thickness: 1.0,
+        ),
+        SizedBox(
+          height: 8.0,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -225,7 +248,7 @@ class PartialOrderWidget extends StatelessWidget {
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
-                fontSize: 17.0,
+                fontSize: 16.0,
               ),
             ),
           ],
@@ -249,20 +272,20 @@ class PartialOrderWidget extends StatelessWidget {
               ),
             ),
             Text(
-              partialOrder?.transport?.realname ?? '배정 중',
+              partialOrder?.transport?.realname ?? '배정 안됨',
               maxLines: 1,
               textAlign: TextAlign.right,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
-                fontSize: 17.0,
+                fontSize: 16.0,
               ),
             ),
           ],
         ),
         SizedBox(
-          height: 16.0,
+          height: 8.0,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -298,7 +321,7 @@ class PartialOrderWidget extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 8.0,
+              width: 4.0,
             ),
             Expanded(
               child: CupertinoButton(

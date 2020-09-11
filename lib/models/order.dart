@@ -54,10 +54,10 @@ class DeliveryStatus {
   static formatDeliveryStatus(String status) {
     switch (status) {
       case PENDING:
-        return '배송 전';
+        return '결제 대기 중';
         break;
       case READY:
-        return '배송 준비 중';
+        return '배송 전';
         break;
       case DELIVERING:
         return '배송 중';
